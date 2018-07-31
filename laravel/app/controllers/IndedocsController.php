@@ -780,7 +780,7 @@ class IndedocsController extends \BaseController {
         $res = file_get_contents("http://10.0.120.13:8088/srequerimiento/?fecha1=01/03/2018/&fecha2=31/03/2018");
         $result = json_decode($res);
         /*
-        $array = array(
+        $array = array( 
             'requerimientos' => array(
                 array(
                     "IDDETREQ" => "172901",
