@@ -158,7 +158,15 @@ class ReporteController extends BaseController
         }else {
           return false;
         }
-    return true;
+
+                  $headers = [
+
+          'Content-Type' => 'text/csv',
+          'Content-Disposition' => 'attachment; filename="reporteAct.csv"',
+
+          ];
+
+    return Response::download($hcsv, "reporteAct.csv", $headers);
   }
 
   public function postReporteortrabajo()
@@ -169,14 +177,9 @@ class ReporteController extends BaseController
         if (Input::has('exportar') && Input::get('exportar')) {
 
           //OUPUT HEADERS
-          $headers = [
 
-          'Content-Type' => 'text/csv',
-          'Content-Disposition' => 'attachment; filename="reporteAct.csv"',
-
-          ];
-          $this->arrayToCsv("php://output",(array)$rst,',');
-          return Response::download("php://output", "reporteAct.csv", $headers);
+          $this->arrayToCsv("php://output",(array)$rst);
+          
 
         }else{        
           return Response::json(
