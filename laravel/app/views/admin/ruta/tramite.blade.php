@@ -181,6 +181,18 @@
                     </div>
 
                 </section><!-- /.content -->
+
+
+<script type="text/javascript">
+    $("#txt_tramite").keyup(function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            $("#btn_buscar").click();
+        }
+    });
+</script>
+
+
 @stop
 @section('formulario')
      @include( 'admin.ruta.form.ruta' )
