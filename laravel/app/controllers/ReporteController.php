@@ -149,12 +149,12 @@ class ReporteController extends BaseController
 
           $headers = [
           'Content-Type' => 'text/csv',
-          'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+          'Content-Disposition' => 'attachment; filename="myfile.csv"',
           ];
 
           ///$this->arrayToCsv(,(array)$rst,',');
           $file="php://output";
-          
+
           if($hcsv = fopen($file,"w")){
             if(is_array($rst)) foreach ($rst as $resline) {
                   if(is_array($resline))foreach ($resline as &$str) {
