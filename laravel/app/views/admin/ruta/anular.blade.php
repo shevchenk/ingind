@@ -183,9 +183,10 @@
                 </section><!-- /.content -->
 <script type="text/javascript">
     $("#txt_tramitepa").keyup(function(event) {
-        if (event.keyCode === 13) {
             event.preventDefault();
+        if (event.keyCode === 13) {
             $("#btn_buscarpa").click();
+            return false;
         }
     });
 </script>
