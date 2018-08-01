@@ -176,7 +176,7 @@ class ReporteController extends BaseController
           header("Content-Disposition: attachment; filename=\"reporteAct.csv\";" );
           header("Content-Transfer-Encoding: binary"); 
 
-          echo arrayToCsv("php://output",json_decode($rst,true));
+          arrayToCsv("php://output",json_decode($rst,true));
 
 
           die();
