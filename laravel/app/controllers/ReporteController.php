@@ -139,35 +139,6 @@ class ReporteController extends BaseController
         );
    }
 
-  private function arrayToCsv($file_directory, $res, $delimiter = ',', $firstLineHeader = true){
-    if($hcsv = fopen($file_directory,"w")){
-      if(is_array($res)) foreach ($res as $resline) {
-            if(is_array($resline))foreach ($resline as &$str) {
-                $haydelimitador = strpos($str, $delimiter);
-                if ($haydelimitador === false) {
-                  } else {
-                  $str='"'.$str.'"';
-                }
-            }
-
-            fwrite($hcsv,implode($delimiter,(array)$resline)."\n");
-          }else{
-            return false; 
-          }
-          //fclose($hcsv);
-        }else {
-          return false;
-        }
-
-                  $headers = [
-
-          'Content-Type' => 'text/csv',
-          'Content-Disposition' => 'attachment; filename="reporteAct.csv"',
-
-          ];
-
-    return Response::download($hcsv, "reporteAct.csv", $headers);
-  }
 
   public function postReporteortrabajo()
    {
@@ -176,10 +147,31 @@ class ReporteController extends BaseController
 
         if (Input::has('exportar') && Input::get('exportar')) {
 
-          //OUPUT HEADERS
+          $headers = [
+          'Content-Type' => 'text/csv',
+          'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+          ];
 
-          $this->arrayToCsv("php://output",(array)$rst);
+          ///$this->arrayToCsv(,(array)$rst,',');
+          $file="php://output";
           
+          if($hcsv = fopen($file,"w")){
+            if(is_array($rst)) foreach ($rst as $resline) {
+                  if(is_array($resline))foreach ($resline as &$str) {
+                      $haydelimitador = strpos($str, ',');
+                      if ($haydelimitador === false) {
+                        } else {
+                        $str='"'.$str.'"';
+                      }
+                  }
+                  fwrite($hcsv,implode(',',(array)$resline)."\n");
+                }else{
+                  return false; 
+                }
+                fclose($hcsv);
+              }
+
+          return Response::download($file, "download.csv", $headers);
 
         }else{        
           return Response::json(
