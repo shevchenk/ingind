@@ -139,6 +139,22 @@ class ReporteController extends BaseController
         );
    }
 
+  private function arrayToCsv($res, $delimiter = ',', $firstLineHeader = true){
+      if(is_array($res)) foreach ($res as $resline) {
+        $buffer = "";
+          if(is_array($resline))foreach ($resline as &$str) {
+              $haydelimitador = strpos($str, $delimiter);
+              if ($haydelimitador === false) {
+                } else {
+                $str='"'.$str.'"';
+              }
+          }
+          $buffer .= implode($resline,$delimiter)."\n";
+        }else{
+          return false;
+        }
+      return $buffer;
+  }
 
   public function postReporteortrabajo()
    {
@@ -147,31 +163,19 @@ class ReporteController extends BaseController
 
         if (Input::has('exportar') && Input::get('exportar')) {
 
-          $headers = [
-          'Content-Type' => 'text/csv',
-          'Content-Disposition' => 'attachment; filename="myfile.csv"',
-          ];
+          $headers = array(
+              'Content-Type: application/octet-stream',
+              'Content-Disposition: attachment; filename=\"$table.csv\";',
+              'Content-Transfer-Encoding: binary',
+              'Cache-Control: must-revalidate, post-check=0, pre-check=0',
 
-          ///$this->arrayToCsv(,(array)$rst,',');
-          $file="php://output";
+          );
 
-          if($hcsv = fopen($file,"w")){
-            if(is_array($rst)) foreach ($rst as $resline) {
-                  if(is_array($resline))foreach ($resline as &$str) {
-                      $haydelimitador = strpos($str, ',');
-                      if ($haydelimitador === false) {
-                        } else {
-                        $str='"'.$str.'"';
-                      }
-                  }
-                  fwrite($hcsv,implode(',',(array)$resline)."\n");
-                }else{
-                  return false; 
-                }
-                fclose($hcsv);
-              }
 
-          return Response::download($file, "download.csv", $headers);
+        Response::stream(function() use($rst) {
+          echo $rst;
+        }, 200, $headers);
+
 
         }else{        
           return Response::json(
