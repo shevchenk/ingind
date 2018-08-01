@@ -149,6 +149,9 @@ class ReporteController extends BaseController
                   $str='"'.$str.'"';
                 }
             }
+            var_dump($delimiter);
+            var_dump($resline);
+            die();
             fwrite($hcsv,implode($delimiter,$resline)."\n");
           }else{
             return false; 
