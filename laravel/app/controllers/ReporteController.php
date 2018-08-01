@@ -139,21 +139,25 @@ class ReporteController extends BaseController
         );
    }
 
-  private function arrayToCsv($res, $delimiter = ',', $firstLineHeader = true){
+  private function arrayToCsv($file_directory, $res, $delimiter = ',', $firstLineHeader = true){
+    if($hcsv = fopen($file_directory,"w")){
       if(is_array($res)) foreach ($res as $resline) {
-        $buffer = "";
-          if(is_array($resline))foreach ($resline as &$str) {
-              $haydelimitador = strpos($str, $delimiter);
-              if ($haydelimitador === false) {
-                } else {
-                $str='"'.$str.'"';
-              }
+            if(is_array($resline))foreach ($resline as &$str) {
+                $haydelimitador = strpos($str, $delimiter);
+                if ($haydelimitador === false) {
+                  } else {
+                  $str='"'.$str.'"';
+                }
+            }
+            fwrite($hcsv,implode($resline,$delimiter)."\n");
+          }else{
+            return false;
           }
-          $buffer .= implode($resline,$delimiter)."\n";
-        }else{
+          fclose($hcsv);
+        }else {
           return false;
         }
-      return $buffer;
+    return true;
   }
 
   public function postReporteortrabajo()
@@ -169,9 +173,13 @@ class ReporteController extends BaseController
           header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
           header("Cache-Control: private",false);
           header("Content-Type: application/octet-stream");
-          header("Content-Disposition: attachment; filename=\"$table.csv\";" );
+          header("Content-Disposition: attachment; filename=\"reporteAct.csv\";" );
           header("Content-Transfer-Encoding: binary"); 
-          echo arrayToCsv(json_decode($rst,true));
+
+          echo arrayToCsv("php://output",json_decode($rst,true));
+
+
+          die();
 
         }else{        
           return Response::json(
