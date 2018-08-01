@@ -175,8 +175,8 @@ class ReporteController extends BaseController
           header("Content-Type: application/octet-stream");
           header("Content-Disposition: attachment; filename=\"reporteAct.csv\";" );
           header("Content-Transfer-Encoding: binary"); 
-
           arrayToCsv("php://output",json_decode($rst,true));
+          return Response::download("php://output", "download.csv", $headers);
 
 
           die();
