@@ -160,7 +160,7 @@ class ReporteController extends BaseController
         AuditoriaAcceso::getAuditoria();
         $rst=Persona::OrdenTrabjbyPersona();
 
-        if (Input::has('export') && Input::get('export')) {
+        if (Input::has('exportar') && Input::get('exportar')) {
           header('Content-Type: text/csv');
           header('Content-Disposition: attachment; filename="reporte.csv"');
 
