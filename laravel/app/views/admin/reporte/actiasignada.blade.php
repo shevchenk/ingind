@@ -132,13 +132,12 @@
         $('#area_id').val(area_id);
         var fecha=$("#fecha").val();
         if($.trim(area_id)!==''){
-        if ( fecha!=="") {
-                dataG = {area_id:area_id.join(','),fecha:fecha,distinto:'|',exportar:'1'};
-                post("",dataG,"POST");
-        } else {
-            alert("Seleccione Fecha");
-        }}
-        else {  alert("Seleccione Área"); }
+            if(fecha!==""){
+                post("reporte/reporteortrabajo",{area_id:area_id.join(','),fecha:fecha,distinto:'|',exportar:'1'});
+            }else{
+                alert("Seleccione Fecha");
+            }
+        }else{alert("Seleccione Área");}
     
 
     }
