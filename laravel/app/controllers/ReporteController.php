@@ -163,10 +163,14 @@ class ReporteController extends BaseController
 
         if (Input::has('exportar') && Input::get('exportar')) {
 
-          header("Content-type: text/csv");
-          header("Content-Disposition: attachment; filename=file.csv");
-          header("Pragma: no-cache");
+          //OUPUT HEADERS
+          header("Pragma: public");
           header("Expires: 0");
+          header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+          header("Cache-Control: private",false);
+          header("Content-Type: application/octet-stream");
+          header("Content-Disposition: attachment; filename=\"$table.csv\";" );
+          header("Content-Transfer-Encoding: binary"); 
           echo arrayToCsv(json_decode($rst,true));
 
         }else{        
