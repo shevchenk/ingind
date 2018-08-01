@@ -134,7 +134,7 @@
         if($.trim(area_id)!==''){
         if ( fecha!=="") {
                 dataG = {area_id:area_id.join(','),fecha:fecha,distinto:'|',exportar:'1'};
-                post("",{dataG},"POST");
+                post("",dataG,"POST");
         } else {
             alert("Seleccione Fecha");
         }}
