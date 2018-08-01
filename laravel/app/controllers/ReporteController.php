@@ -154,7 +154,7 @@ class ReporteController extends BaseController
           }else{
             return false; 
           }
-          fclose($hcsv);
+          //fclose($hcsv);
         }else {
           return false;
         }
