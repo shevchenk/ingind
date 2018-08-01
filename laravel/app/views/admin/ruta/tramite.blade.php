@@ -185,8 +185,8 @@
 
 <script type="text/javascript">
     $("#txt_tramite").keydown(function(event) {
-            event.preventDefault();
         if (event.keyCode === 13) {
+            event.preventDefault();
             $("#btn_buscar").click();
             return false;
         }
