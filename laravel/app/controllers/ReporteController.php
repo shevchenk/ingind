@@ -139,16 +139,41 @@ class ReporteController extends BaseController
         );
    }
 
+  private function arrayToCsv($res, $delimiter = ',', $firstLineHeader = true){
+    if(is_array($res)) foreach ($res as $resline) {
+          if(is_array($resline))foreach ($resline as &$str) {
+              $haydelimitador = strpos($str, $delimiter);
+              if ($haydelimitador === false) {
+                } else {
+                $str='"'.$str.'"';
+              }
+          }
+          $buffer .= implode($resline,$delimiter)."\n";
+        }else{
+          return false;
+        }
+    return $file;
+  }
+
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
         $rst=Persona::OrdenTrabjbyPersona();
-        return Response::json(
-            array(
-                'rst'=>1,
-                'datos'=>$rst
-            )
-        );
+
+        if (Input::has('export') && Input::get('export')) {
+          header('Content-Type: text/csv');
+          header('Content-Disposition: attachment; filename="reporte.csv"');
+
+          echo arrayToCsv(json_decode($rst,true));
+
+        }else{        
+          return Response::json(
+              array(
+                  'rst'=>1,
+                  'datos'=>$rst
+              )
+          );
+        }
    }
      public function postCuadroauditoriaacceso()
    {
