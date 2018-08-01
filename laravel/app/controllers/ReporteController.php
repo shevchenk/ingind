@@ -149,7 +149,7 @@ class ReporteController extends BaseController
                   $str='"'.$str.'"';
                 }
             }
-            fwrite($hcsv,implode($resline,$delimiter)."\n");
+            fwrite($hcsv,implode($delimiter,$resline)."\n");
           }else{
             return false;
           }
@@ -176,7 +176,7 @@ class ReporteController extends BaseController
           header("Content-Type: application/octet-stream");
           header("Content-Disposition: attachment; filename=\"reporteAct.csv\";" );
           header("Content-Transfer-Encoding: binary"); */
-          $this->arrayToCsv("php://output",(array)$rst);
+          $this->arrayToCsv("php://output",(array)$rst,',');
           return Response::download("php://output", "download.csv", $headers);
 
         }else{        
