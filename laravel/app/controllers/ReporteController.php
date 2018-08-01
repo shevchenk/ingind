@@ -140,7 +140,8 @@ class ReporteController extends BaseController
    }
 
   private function arrayToCsv($res, $delimiter = ',', $firstLineHeader = true){
-    if(is_array($res)) foreach ($res as $resline) {
+      if(is_array($res)) foreach ($res as $resline) {
+        $buffer = "";
           if(is_array($resline))foreach ($resline as &$str) {
               $haydelimitador = strpos($str, $delimiter);
               if ($haydelimitador === false) {
@@ -152,7 +153,7 @@ class ReporteController extends BaseController
         }else{
           return false;
         }
-    return $file;
+      return $buffer;
   }
 
   public function postReporteortrabajo()
@@ -161,9 +162,11 @@ class ReporteController extends BaseController
         $rst=Persona::OrdenTrabjbyPersona();
 
         if (Input::has('exportar') && Input::get('exportar')) {
-          header('Content-Type: text/csv');
-          header('Content-Disposition: attachment; filename="reporte.csv"');
 
+          header("Content-type: text/csv");
+          header("Content-Disposition: attachment; filename=file.csv");
+          header("Pragma: no-cache");
+          header("Expires: 0");
           echo arrayToCsv(json_decode($rst,true));
 
         }else{        
