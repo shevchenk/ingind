@@ -1,5 +1,5 @@
 <?php
-
+use Symfony\Component\HttpFoundation\StreamedResponse;
 class ReporteController extends BaseController
 {
 
