@@ -169,16 +169,16 @@ function exportar(){
 
                             itemsFormatted.push({
                                
-                                a1:item.respuesta,
-                                a2:item.area.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a3:item.actividad.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a4:item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a5:(item.ot_tiempo_transcurrido+"").replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a6:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a7:item.persona.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a8:item.descripcion_resultado.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a9:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a91:item.flujo.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a1:''+item.resultado,
+                                a2:''+item.area.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a3:''+item.actividad.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a4:''+item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a5:''+(item.ot_tiempo_transcurrido+"").replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a6:''+''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a7:''+item.persona.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a8:''+item.descripcion_resultado.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a9:''+''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a91:''+item.flujo.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
 
                             });
 
