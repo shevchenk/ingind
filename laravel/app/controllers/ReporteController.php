@@ -177,7 +177,7 @@ class ReporteController extends BaseController
                // $list = $this->users->getAllUsers()->toArray();
 
                 # add headers for each column in the CSV download
-                array_unshift($list, array_keys($list[0]));
+                //array_unshift($list, array_keys($list[0]));
 
                $callback = function() use ($list) 
                 {
