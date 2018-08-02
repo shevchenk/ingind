@@ -147,17 +147,17 @@ function exportar(){
                     $(".overlay,.loading-img").remove();
                     if(obj.rst==1){  
                         var headers = {
-                            
-                           a0:'Respuesta',
-                           a1:'Área',
-                           a2:'Actividad',
-                           a3:'Fecha Inicio - Fin Asignación',
-                           a4:'Tiempo transcurrido',
-                           a5:'Documentos Asignados',
-                           a6:'Persona',
-                           a7:'Respuesta de Actividad',
-                           a8:'Documentos Respuesta',
-                           a9:'Proceso',
+
+                           a1:'Respuesta',
+                           a2:'Área',
+                           a3:'Actividad',
+                           a4:'Fecha Inicio - Fin Asignación',
+                           a5:'Tiempo transcurrido',
+                           a6:'Documentos Asignados',
+                           a7:'Persona',
+                           a8:'Respuesta de Actividad',
+                           a9:'Documentos Respuesta',
+                           a91:'Proceso',
                         };
 
                         itemsNotFormatted = obj.datos;
@@ -167,19 +167,18 @@ function exportar(){
                         // format the data
                         itemsNotFormatted.forEach((item) => {
 
-
                             itemsFormatted.push({
                                
-                                a0:item.respuesta,
-                                a1:item.area.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a2:item.actividad.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a3:item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a4:(item.ot_tiempo_transcurrido+"").replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a5:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a6:item.persona.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a7:item.descripcion_resultado.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a8:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
-                                a9:item.flujo.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a1:item.respuesta,
+                                a2:item.area.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a3:item.actividad.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a4:item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a5:(item.ot_tiempo_transcurrido+"").replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a6:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a7:item.persona.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a8:item.descripcion_resultado.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a9:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a91:item.flujo.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
 
                             });
 
