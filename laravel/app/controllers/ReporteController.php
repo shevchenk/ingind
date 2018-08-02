@@ -159,7 +159,7 @@ class ReporteController extends BaseController
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
-        $list=(array)Persona::OrdenTrabjbyPersona();
+        $rst=$this->arrayToCsv(Persona::OrdenTrabjbyPersona());
 
         if (Input::has('exportar') && Input::get('exportar')) {
 
@@ -174,21 +174,20 @@ class ReporteController extends BaseController
                     ,   'Pragma'              => 'public'
                 ];
 
-               // $list = $this->users->getAllUsers()->toArray();
+                $list = $this->users->getAllUsers()->toArray();
 
                 # add headers for each column in the CSV download
-                //array_unshift($list, array_keys($list[0]));
+                array_unshift($list, array_keys($list[0]));
 
                $callback = function() use ($list) 
                 {
                     $FH = fopen('php://output', 'w');
-                    foreach ($list as $row) { 
-                        fputcsv($FH, $row);
-                    }
+                    fputs($FH, $list, strlen($list));
                     fclose($FH);
                 };
 
-            return Response::download($callback, 'Users-' . date('d-m-Y'), $headers);
+                // return Response::stream($callback, 200, $headers); // Old version
+                return response()->download($callback, 'Users-' . date('d-m-Y'), $headers);
 
 
 
