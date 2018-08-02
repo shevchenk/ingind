@@ -155,7 +155,7 @@ class ReporteController extends BaseController
         }
       return $buffer;
   }
-
+ 
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
