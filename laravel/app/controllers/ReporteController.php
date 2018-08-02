@@ -171,6 +171,8 @@ class ReporteController extends BaseController
 
           );
 
+echo $rst; 
+die();
 
         Response::stream(function() use($rst) {
           echo $rst;
