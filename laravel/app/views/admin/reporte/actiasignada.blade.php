@@ -135,80 +135,77 @@
             if(fecha!==""){
 
 
-var headers = {
-    model: 'Phone Model'.replace(/,/g, ''), // remove commas to avoid errors
-    chargers: "Chargers",
-    cases: "Cases",
-    earphones: "Earphones"
-};
+                $.ajax({
+                    url         : 'reporte/reporteortrabajo',
+                    type        : 'POST',
+                    cache       : false,
+                    dataType    : 'json',
+                    data        : {area_id:area_id.join(','),fecha:fecha,distinto:'|'},
+                    beforeSend : function() {
+                        $("body").append('<div class="overlay"></div><div class="loading-img"></div>');
+                    },
+                    success : function(obj) {
+                        $(".overlay,.loading-img").remove();
+                        if(obj.rst==1){  
+                            var headers = {
+                               a1:'Área',
+                               a2:'Actividad',
+                               a3:'Fecha Inicio - Fin Asignación',
+                               a4:'Tiempo transcurrido',
+                               a5:'Documentos Asignados',
+                               a6:'Persona',
+                               a7:'Respuesta de Actividad',
+                               a8:'Documentos Respuesta',
+                               a9:'Proceso',
+                            };
 
-itemsNotFormatted = [
-    {
-        model: 'Samsung S7',
-        chargers: '55',
-        cases: '56',
-        earphones: '57',
-        scratched: '2'
-    },
-    {
-        model: 'Pixel XL',
-        chargers: '77',
-        cases: '78',
-        earphones: '79',
-        scratched: '4'
-    },
-    {
-        model: 'iPhone 7',
-        chargers: '88',
-        cases: '89',
-        earphones: '90',
-        scratched: '6'
-    }
-];
+                            itemsNotFormatted = obj.datos;
 
-var itemsFormatted = [];
+                            var itemsFormatted = [];
 
-// format the data
-itemsNotFormatted.forEach((item) => {
-    itemsFormatted.push({
-        model: item.model.replace(/,/g, ''), // remove commas to avoid errors,
-        chargers: item.chargers,
-        cases: item.cases,
-        earphones: item.earphones
-    });
-});
+                            // format the data
+                            itemsNotFormatted.forEach((item) => {
+                                itemsFormatted.push({
+                                    a1: item.model.replace(/,/g, ''), // remove commas to avoid errors,
+                                    chargers: item.chargers.replace(/,/g, ''),
+                                    cases: item.cases.replace(/,/g, ''),
+                                    earphones: item.earphones.replace(/,/g, ''),
 
-var fileTitle = 'orders'; // or 'my-unique-title'
+                                    a1:item.area,
+                                    a2:item.actividad,
+                                    a3:item.fecha_inicio+' - '+item.dtiempo_final,
+                                    a4:item.ot_tiempo_transcurrido,
+                                    a5:'',
+                                    a6:item.persona,
+                                    a7:item.descripcion_resultado,
+                                    a8:'',
+                                    a9:item.flujo,
 
-exportCSVFile(headers, itemsFormatted, fileTitle);
+                                });
+                            });
 
+                            var fileTitle = 'orders'; // or 'my-unique-title'
 
-//                post("reporte/reporteortrabajo",{area_id:area_id.join(','),fecha:fecha,distinto:'|',exportar:'1'});
+                            exportCSVFile(headers, itemsFormatted, fileTitle);
+
+                        }
+                    },
+                    error: function(){
+                        $(".overlay,.loading-img").remove();
+                        $("#msj").html('<div class="alert alert-dismissable alert-danger">'+
+                                            '<i class="fa fa-ban"></i>'+
+                                            '<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+
+                                            '<b>Ocurrio una interrupción en el proceso,Favor de intentar nuevamente.'+
+                                        '</div>');
+                    }
+                });
+
             }else{
                 alert("Seleccione Fecha");
             }
         }else{alert("Seleccione Área");}
     
 
-    }
-    function post(path, params, method) {
-    method = method || "post"; // Set method to post by default if not specified.
-
-    // The rest of this code assumes you are not using a library.
-    // It can be made less wordy if you use one.
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
-
-    for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-            hiddenField.setAttribute("value", params[key]);
-
-            form.appendChild(hiddenField);
-        }
     }
 
     document.body.appendChild(form);
