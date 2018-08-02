@@ -147,6 +147,7 @@ function exportar(){
                     $(".overlay,.loading-img").remove();
                     if(obj.rst==1){  
                         var headers = {
+                           a0:'Respuesta',
                            a1:'Área',
                            a2:'Actividad',
                            a3:'Fecha Inicio - Fin Asignación',
@@ -167,6 +168,8 @@ function exportar(){
 
 
                             itemsFormatted.push({
+                               
+                                a0:item.respuesta,
                                 a1:item.area.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
                                 a2:item.actividad.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
                                 a3:item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
