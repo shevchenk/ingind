@@ -159,60 +159,30 @@ class ReporteController extends BaseController
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
-        $rst=$this->arrayToCsv(Persona::OrdenTrabjbyPersona());
-
         if (Input::has('exportar') && Input::get('exportar')) {
 
 
 
+          $response = new StreamedResponse();
+              $response->setCallback(function() {
+                  $handle = fopen('php://output', 'w+');
 
-            $headers = [
-                        'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0'
-                    ,   'Content-type'        => 'text/csv'
-                    ,   'Content-Disposition' => 'attachment; filename=galleries.csv'
-                    ,   'Expires'             => '0'
-                    ,   'Pragma'              => 'public'
-                ];
+                  $results = $this->arrayToCsv((array)Persona::OrdenTrabjbyPersona());
+                  fputs($handle,$result,strlen($result));
 
+                  fclose($handle);
+              });
+          $response->setStatusCode(200);
+          $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+          $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
 
-
-               $callback = function() use ($rst) 
-                {
-                    $FH = fopen('php://output', 'w');
-                    fputs($FH, $rst, strlen($rst));
-                    fclose($FH);
-                };
-
-                // return Response::stream($callback, 200, $headers); // Old version
-                return Response::download($callback, 'Users-' . date('d-m-Y'), $headers);
+          return $response;
 
 
+        }else{     
 
+          $rst = Persona::OrdenTrabjbyPersona()
 
-
-
-
-
-
-
-
-
-
-
-          $headers = array(
-              'Content-Type: application/octet-stream',
-              'Content-Disposition: attachment; filename="x.csv";',
-              'Content-Transfer-Encoding: binary',
-              'Cache-Control: must-revalidate, post-check=0, pre-check=0',
-
-          );
-
-        Response::stream(function() use($rst) {
-          echo $rst;
-        }, 200, $headers);
-
-
-        }else{        
           return Response::json(
               array(
                   'rst'=>1,
