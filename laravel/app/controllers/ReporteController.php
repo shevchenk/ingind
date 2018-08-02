@@ -188,7 +188,7 @@ class ReporteController extends BaseController
                     fclose($FH);
                 };
 
-            return response::download($callback, 'Users-' . date('d-m-Y'), $headers);
+            return Response::download($callback, 'Users-' . date('d-m-Y'), $headers);
 
 
 
