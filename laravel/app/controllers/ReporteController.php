@@ -140,7 +140,7 @@ class ReporteController extends BaseController
    }
 
   private function arrayToCsv($res, $delimiter = ',', $firstLineHeader = true){
-        $buffer = "";
+      $buffer = "";
       if(is_array($res)) foreach ($res as $resline) {
           if(is_array($resline))foreach ($resline as &$str) {
               $haydelimitador = strpos($str, $delimiter);
@@ -159,9 +159,49 @@ class ReporteController extends BaseController
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
-        $rst=$this->arrayToCsv(Persona::OrdenTrabjbyPersona());
+        $list=array()Persona::OrdenTrabjbyPersona();
 
         if (Input::has('exportar') && Input::get('exportar')) {
+
+
+
+
+            $headers = [
+                        'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0'
+                    ,   'Content-type'        => 'text/csv'
+                    ,   'Content-Disposition' => 'attachment; filename=galleries.csv'
+                    ,   'Expires'             => '0'
+                    ,   'Pragma'              => 'public'
+                ];
+
+               // $list = $this->users->getAllUsers()->toArray();
+
+                # add headers for each column in the CSV download
+                array_unshift($list, array_keys($list[0]));
+
+               $callback = function() use ($list) 
+                {
+                    $FH = fopen('php://output', 'w');
+                    foreach ($list as $row) { 
+                        fputcsv($FH, $row);
+                    }
+                    fclose($FH);
+                };
+
+            return response()->download($callback, 'Users-' . date('d-m-Y'), $headers);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           $headers = array(
               'Content-Type: application/octet-stream',
