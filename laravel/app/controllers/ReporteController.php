@@ -184,7 +184,7 @@ class ReporteController extends BaseController
                 };
 
                 // return Response::stream($callback, 200, $headers); // Old version
-                return response()->download($callback, 'Users-' . date('d-m-Y'), $headers);
+                return Response::download($callback, 'Users-' . date('d-m-Y'), $headers);
 
 
 
