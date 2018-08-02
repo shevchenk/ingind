@@ -1,5 +1,7 @@
 <?php
+
 use Symfony\Component\HttpFoundation\StreamedResponse;
+
 class ReporteController extends BaseController
 {
 
@@ -161,7 +163,7 @@ class ReporteController extends BaseController
         AuditoriaAcceso::getAuditoria();
         if (Input::has('exportar') && Input::get('exportar')) {
  
-
+/*
 
           $response = new StreamedResponse();
               $response->setCallback(function() {
@@ -178,7 +180,7 @@ class ReporteController extends BaseController
 
           return $response;
 
-
+*/
         }else{     
 
           $rst = Persona::OrdenTrabjbyPersona();
