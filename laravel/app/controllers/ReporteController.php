@@ -140,8 +140,8 @@ class ReporteController extends BaseController
    }
 
   private function arrayToCsv($res, $delimiter = ',', $firstLineHeader = true){
-      if(is_array($res)) foreach ($res as (array)$resline) {
         $buffer = "";
+      if(is_array($res)) foreach ($res as $resline) {
           if(is_array($resline))foreach ($resline as &$str) {
               $haydelimitador = strpos($str, $delimiter);
               if ($haydelimitador === false) {
