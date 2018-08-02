@@ -159,7 +159,7 @@ class ReporteController extends BaseController
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
-        $rst=Persona::OrdenTrabjbyPersona();
+        $rst=$this->arrayToCsv(Persona::OrdenTrabjbyPersona());
 
         if (Input::has('exportar') && Input::get('exportar')) {
 
@@ -170,9 +170,6 @@ class ReporteController extends BaseController
               'Cache-Control: must-revalidate, post-check=0, pre-check=0',
 
           );
-
-echo $rst; 
-die();
 
         Response::stream(function() use($rst) {
           echo $rst;
