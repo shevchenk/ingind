@@ -163,7 +163,24 @@ function exportar(){
                         var itemsFormatted = [];
 
                         // format the data
+
+                            itemsFormatted.push({
+                                a1:"1",
+                                a2:" x ",
+                                a3:" x ",
+                                a4:" x ",
+                                a5:" x ",
+                                a6:" x ",
+                                a7:" x ",
+                                a8:" x ",
+                                a9:" x ",
+
+                            });
+
+/*
                         itemsNotFormatted.forEach((item) => {
+
+
                             itemsFormatted.push({
                                 a1:item.area.replace(/,/g, '. '),
                                 a2:item.actividad.replace(/,/g, '. '),
@@ -176,6 +193,8 @@ function exportar(){
                                 a9:item.flujo.replace(/,/g, '. '),
 
                             });
+*/
+
                         });
 
                         var fileTitle = 'orders'; // or 'my-unique-title'
