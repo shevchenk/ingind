@@ -149,7 +149,7 @@ class ReporteController extends BaseController
                 $str='"'.$str.'"';
               }
           }
-          $buffer .= implode($delimiter,(array)$resline)."\r\n";
+          $buffer .= implode($delimiter,(array)$resline)."\n";
         }else{
           return false;
         }
@@ -165,12 +165,12 @@ class ReporteController extends BaseController
 
           $headers = array(
               'Content-Type: application/octet-stream',
-              'Content-Disposition: attachment; filename=\"$table.csv\";',
+              'Content-Disposition: attachment; filename="x.csv";',
               'Content-Transfer-Encoding: binary',
               'Cache-Control: must-revalidate, post-check=0, pre-check=0',
 
           );
-          die($rst);
+
         Response::stream(function() use($rst) {
           echo $rst;
         }, 200, $headers);
