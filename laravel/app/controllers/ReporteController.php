@@ -170,7 +170,7 @@ class ReporteController extends BaseController
               'Cache-Control: must-revalidate, post-check=0, pre-check=0',
 
           );
-
+          die($rst);
         Response::stream(function() use($rst) {
           echo $rst;
         }, 200, $headers);
