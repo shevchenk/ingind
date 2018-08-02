@@ -181,7 +181,7 @@ class ReporteController extends BaseController
 
         }else{     
 
-          $rst = Persona::OrdenTrabjbyPersona()
+          $rst = Persona::OrdenTrabjbyPersona();
 
           return Response::json(
               array(
