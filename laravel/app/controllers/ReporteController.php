@@ -159,7 +159,7 @@ class ReporteController extends BaseController
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
-        $list=array()Persona::OrdenTrabjbyPersona();
+        $list=(array)Persona::OrdenTrabjbyPersona();
 
         if (Input::has('exportar') && Input::get('exportar')) {
 
