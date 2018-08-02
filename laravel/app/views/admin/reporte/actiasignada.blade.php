@@ -123,93 +123,88 @@
 
 <script type="text/javascript">
 
-          $("#generar").click(function (){});
+$("#generar").click(function (){});
+
+function exportar(){
+
+    area_id = $('#slct_area_id').val();
+    $('#area_id').val(area_id);
+    var fecha=$("#fecha").val();
+    if($.trim(area_id)!==''){
+        if(fecha!==""){
 
 
-    function exportar(){
+            $.ajax({
+                url         : 'reporte/reporteortrabajo',
+                type        : 'POST',
+                cache       : false,
+                dataType    : 'json',
+                data        : {area_id:area_id.join(','),fecha:fecha,distinto:'|'},
+                beforeSend : function() {
+                    $("body").append('<div class="overlay"></div><div class="loading-img"></div>');
+                },
+                success : function(obj) {
+                    $(".overlay,.loading-img").remove();
+                    if(obj.rst==1){  
+                        var headers = {
+                           a1:'Área',
+                           a2:'Actividad',
+                           a3:'Fecha Inicio - Fin Asignación',
+                           a4:'Tiempo transcurrido',
+                           a5:'Documentos Asignados',
+                           a6:'Persona',
+                           a7:'Respuesta de Actividad',
+                           a8:'Documentos Respuesta',
+                           a9:'Proceso',
+                        };
 
-        area_id = $('#slct_area_id').val();
-        $('#area_id').val(area_id);
-        var fecha=$("#fecha").val();
-        if($.trim(area_id)!==''){
-            if(fecha!==""){
+                        itemsNotFormatted = obj.datos;
 
+                        var itemsFormatted = [];
 
-                $.ajax({
-                    url         : 'reporte/reporteortrabajo',
-                    type        : 'POST',
-                    cache       : false,
-                    dataType    : 'json',
-                    data        : {area_id:area_id.join(','),fecha:fecha,distinto:'|'},
-                    beforeSend : function() {
-                        $("body").append('<div class="overlay"></div><div class="loading-img"></div>');
-                    },
-                    success : function(obj) {
-                        $(".overlay,.loading-img").remove();
-                        if(obj.rst==1){  
-                            var headers = {
-                               a1:'Área',
-                               a2:'Actividad',
-                               a3:'Fecha Inicio - Fin Asignación',
-                               a4:'Tiempo transcurrido',
-                               a5:'Documentos Asignados',
-                               a6:'Persona',
-                               a7:'Respuesta de Actividad',
-                               a8:'Documentos Respuesta',
-                               a9:'Proceso',
-                            };
+                        // format the data
+                        itemsNotFormatted.forEach((item) => {
+                            itemsFormatted.push({
+                                a1: item.model.replace(/,/g, ''), // remove commas to avoid errors,
+                                chargers: item.chargers.replace(/,/g, ''),
+                                cases: item.cases.replace(/,/g, ''),
+                                earphones: item.earphones.replace(/,/g, ''),
 
-                            itemsNotFormatted = obj.datos;
+                                a1:item.area,
+                                a2:item.actividad,
+                                a3:item.fecha_inicio+' - '+item.dtiempo_final,
+                                a4:item.ot_tiempo_transcurrido,
+                                a5:'',
+                                a6:item.persona,
+                                a7:item.descripcion_resultado,
+                                a8:'',
+                                a9:item.flujo,
 
-                            var itemsFormatted = [];
-
-                            // format the data
-                            itemsNotFormatted.forEach((item) => {
-                                itemsFormatted.push({
-                                    a1: item.model.replace(/,/g, ''), // remove commas to avoid errors,
-                                    chargers: item.chargers.replace(/,/g, ''),
-                                    cases: item.cases.replace(/,/g, ''),
-                                    earphones: item.earphones.replace(/,/g, ''),
-
-                                    a1:item.area,
-                                    a2:item.actividad,
-                                    a3:item.fecha_inicio+' - '+item.dtiempo_final,
-                                    a4:item.ot_tiempo_transcurrido,
-                                    a5:'',
-                                    a6:item.persona,
-                                    a7:item.descripcion_resultado,
-                                    a8:'',
-                                    a9:item.flujo,
-
-                                });
                             });
+                        });
 
-                            var fileTitle = 'orders'; // or 'my-unique-title'
+                        var fileTitle = 'orders'; // or 'my-unique-title'
 
-                            exportCSVFile(headers, itemsFormatted, fileTitle);
+                        exportCSVFile(headers, itemsFormatted, fileTitle);
 
-                        }
-                    },
-                    error: function(){
-                        $(".overlay,.loading-img").remove();
-                        $("#msj").html('<div class="alert alert-dismissable alert-danger">'+
-                                            '<i class="fa fa-ban"></i>'+
-                                            '<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+
-                                            '<b>Ocurrio una interrupción en el proceso,Favor de intentar nuevamente.'+
-                                        '</div>');
                     }
-                });
+                },
+                error: function(){
+                    $(".overlay,.loading-img").remove();
+                    $("#msj").html('<div class="alert alert-dismissable alert-danger">'+
+                                        '<i class="fa fa-ban"></i>'+
+                                        '<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+
+                                        '<b>Ocurrio una interrupción en el proceso,Favor de intentar nuevamente.'+
+                                    '</div>');
+                }
+            });
 
-            }else{
-                alert("Seleccione Fecha");
-            }
-        }else{alert("Seleccione Área");}
-    
+        }else{
+            alert("Seleccione Fecha");
+        }
+    }else{alert("Seleccione Área");}
 
-    }
 
-    document.body.appendChild(form);
-    form.submit();
 }
 
 
