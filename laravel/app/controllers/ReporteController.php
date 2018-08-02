@@ -149,7 +149,7 @@ class ReporteController extends BaseController
                 $str='"'.$str.'"';
               }
           }
-          $buffer .= implode((array)$resline,$delimiter)."\n";
+          $buffer .= implode($delimiter,(array)$resline)."\n";
         }else{
           return false;
         }
