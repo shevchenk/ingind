@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-md-1 col-sm-1">                            
                         <label class="control-label" style="color: white">aaaaa</label>
-                        <input type="button" class="btn btn-info" id="exportar" name="exportar" onclick="exportar();" value="Exportar">
+                        <input type="button" class="btn btn-success" id="exportar" name="exportar" onclick="exportar();" value="Exportar">
                     </div>
                     <!--                                            <div class="col-md-1 col-sm-2" style="padding:24px">
                                                                     <a class='btn btn-success btn-md' id="btnexport" name="btnexport"><i class="glyphicon glyphicon-download-alt"></i> Export Actividades</i></a>
