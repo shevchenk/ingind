@@ -165,20 +165,15 @@ function exportar(){
                         // format the data
                         itemsNotFormatted.forEach((item) => {
                             itemsFormatted.push({
-                                a1: item.model.replace(/,/g, ''), // remove commas to avoid errors,
-                                chargers: item.chargers.replace(/,/g, ''),
-                                cases: item.cases.replace(/,/g, ''),
-                                earphones: item.earphones.replace(/,/g, ''),
-
-                                a1:item.area,
-                                a2:item.actividad,
-                                a3:item.fecha_inicio+' - '+item.dtiempo_final,
-                                a4:item.ot_tiempo_transcurrido,
-                                a5:'',
-                                a6:item.persona,
-                                a7:item.descripcion_resultado,
-                                a8:'',
-                                a9:item.flujo,
+                                a1:item.area.replace(/,/g, '. '),
+                                a2:item.actividad.replace(/,/g, '. '),
+                                a3:item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. '),
+                                a4:item.ot_tiempo_transcurrido.replace(/,/g, '. '),
+                                a5:''.replace(/,/g, '. '),
+                                a6:item.persona.replace(/,/g, '. '),
+                                a7:item.descripcion_resultado.replace(/,/g, '. '),
+                                a8:''.replace(/,/g, '. '),
+                                a9:item.flujo.replace(/,/g, '. '),
 
                             });
                         });
