@@ -176,10 +176,10 @@ class ReporteController extends BaseController
 
 
 
-               $callback = function() use ($list) 
+               $callback = function() use ($rst) 
                 {
                     $FH = fopen('php://output', 'w');
-                    fputs($FH, $list, strlen($list));
+                    fputs($FH, $rst, strlen($rst));
                     fclose($FH);
                 };
 
