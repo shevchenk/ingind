@@ -163,37 +163,21 @@ function exportar(){
                         var itemsFormatted = [];
 
                         // format the data
-
-                            itemsFormatted.push({
-                                a1:"1",
-                                a2:" x ",
-                                a3:" x ",
-                                a4:" x ",
-                                a5:" x ",
-                                a6:" x ",
-                                a7:" x ",
-                                a8:" x ",
-                                a9:" x ",
-
-                            });
-
-/*
                         itemsNotFormatted.forEach((item) => {
 
 
                             itemsFormatted.push({
-                                a1:item.area.replace(/,/g, '. '),
-                                a2:item.actividad.replace(/,/g, '. '),
-                                a3:item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. '),
-                                a4:(item.ot_tiempo_transcurrido+"").replace(/,/g, '. '),
-                                a5:''.replace(/,/g, '. '),
-                                a6:item.persona.replace(/,/g, '. '),
-                                a7:item.descripcion_resultado.replace(/,/g, '. '),
-                                a8:''.replace(/,/g, '. '),
-                                a9:item.flujo.replace(/,/g, '. '),
+                                a1:item.area.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a2:item.actividad.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a3:item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a4:(item.ot_tiempo_transcurrido+"").replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a5:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a6:item.persona.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a7:item.descripcion_resultado.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a8:''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a9:item.flujo.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
 
                             });
-*/
 
                         });
 
