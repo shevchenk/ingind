@@ -147,6 +147,7 @@ function exportar(){
                     $(".overlay,.loading-img").remove();
                     if(obj.rst==1){  
                         var headers = {
+                            
                            a0:'Respuesta',
                            a1:'Área',
                            a2:'Actividad',
