@@ -181,6 +181,15 @@
                     </div>
 
                 </section><!-- /.content -->
+<script type="text/javascript">
+    $("#txt_tramitepa").keydown(function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            $("#btn_buscarpa").click();
+            return false;
+        }
+    });
+</script>
 @stop
 @section('formulario')
      @include( 'admin.ruta.form.ruta' )

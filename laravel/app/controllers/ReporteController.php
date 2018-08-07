@@ -1,5 +1,7 @@
 <?php
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 class ReporteController extends BaseController
 {
 
@@ -139,16 +141,57 @@ class ReporteController extends BaseController
         );
    }
 
+  private function arrayToCsv($res, $delimiter = ',', $firstLineHeader = true){
+      $buffer = "";
+      if(is_array($res)) foreach ($res as $resline) {
+          if(is_array($resline))foreach ($resline as &$str) {
+              $haydelimitador = strpos($str, $delimiter);
+              if ($haydelimitador === false) {
+                } else {
+                $str='"'.$str.'"';
+              }
+          }
+          $buffer .= implode((array)$resline,$delimiter)."\n";
+        }else{
+          return false;
+        }
+      return $buffer;
+  }
+ 
   public function postReporteortrabajo()
    {
         AuditoriaAcceso::getAuditoria();
-        $rst=Persona::OrdenTrabjbyPersona();
-        return Response::json(
-            array(
-                'rst'=>1,
-                'datos'=>$rst
-            )
-        );
+        if (Input::has('exportar') && Input::get('exportar')) {
+ 
+/*
+
+          $response = new StreamedResponse();
+              $response->setCallback(function() {
+                  $handle = fopen('php://output', 'w+');
+
+                  $results = $this->arrayToCsv((array)Persona::OrdenTrabjbyPersona());
+                  fputs($handle,$result,strlen($result));
+
+                  fclose($handle);
+              });
+          $response->setStatusCode(200);
+          $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+          $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
+
+          return $response;
+
+*/
+        }else{     
+
+          $rst = Persona::OrdenTrabjbyPersona();
+
+          return Response::json(
+              array(
+                  'rst'=>1,
+                  'datos'=>$rst
+              )
+          );
+        }
    }
      public function postCuadroauditoriaacceso()
    {
