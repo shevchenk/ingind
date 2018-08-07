@@ -222,7 +222,7 @@ footer .izq {
         <h4 class="nombre-anio">“Año del Buen Servicio al Ciudadano”</h4>
     <?php }
         if ($anio==2018) {  ?> 
-        <h4 class="nombre-anio">“Año del Diálogo y la Reconciliación Nacional”</h4>
+        <h4 class="nombre-anio" style="margin-left: -22px;">“Año del Diálogo y la Reconciliación Nacional”</h4>
     <?php } ?>
 	<h4 class="nombre-anio">&nbsp;</h4>
     <h4 class="nombre-vistaprevia">{{ $vistaprevia }}</h4>
@@ -308,10 +308,14 @@ footer .izq {
     <h4 class="nombre-municipio">MUNICIPALIDAD DISTRITAL DE INDEPENDENCIA</h4>
     <!--            <h4 class="gerencia">Gerencia x</h4>--><br><br><br><br><br>
     <?php if ($anio==2017) {   ?> 
-        <h4 class="nombre-anio">“Año del Buen Servicio al Ciudadano”</h4>
+            <h4 class="nombre-anio">“Año del Buen Servicio al Ciudadano”</h4>
     <?php }
-        if ($anio==2018) {  ?> 
-        <h4 class="nombre-anio">“Año del Diálogo y la Reconciliación Nacional”</h4>
+          if ($anio==2018) {  ?>
+          <?php if($tamano == 5): ?>
+              <h4 class="nombre-anio" style="margin-left: -20px;">“Año del Diálogo y la Reconciliación Nacional”</h4>
+          <?php else: ?>
+              <h4 class="nombre-anio">“Año del Diálogo y la Reconciliación Nacional”</h4>
+          <?php endif; ?>
     <?php } ?>
 	<h4 class="nombre-anio">&nbsp;</h4>
     <h4 class="nombre-vistaprevia">{{ $vistaprevia }}</h4>
@@ -404,7 +408,7 @@ footer .izq {
                 <table style="width: 100% !important">
                    <tr>
                        <td class="c1">
-                             <b>ASUNTO&nbsp;&nbsp;</b><b style="padding-left: 2em;"">:</b> 
+                             <b>ASUNTO&nbsp;&nbsp;</b><b style="padding-left: 2em;">:</b> 
                        </td>
                        <td class="c2">
                             {{ $asunto }}
