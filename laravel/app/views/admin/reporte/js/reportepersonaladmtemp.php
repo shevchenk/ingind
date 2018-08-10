@@ -195,16 +195,16 @@ HTMLMostrarReporte=function(datos){
                 else  var docu = $.trim(data.docu);
                 var color="";
                 if(data.faltas == 1){
-                    color="255,52,52,100";
+                    color="255,52,52";
                 }else{
-                    color="255,52,52,0";
+                    color="0,0,0";
                 }
 
-                html+="<tr style='font-size: 12px; background-color:rgba("+color+") !important;'>"+
+                html+="<tr style='font-size: 12px'>"+
                         '<td width="3%">'+con+'</td>'+
                         '<td width="4%"><a href="'+data.foto+'" alt="'+data.nombres+'" target="_blank" ><img style="min-height: 200px !important; min-width: 200px !important;" src="'+data.foto+'" alt="'+data.nombres+'" class="img-rounded"></td>'+
                         "<td width='4%'>"+data.area+"</td>"+
-                        "<td width='5%'>"+data.nombres+"</td>"+
+                        "<td width='5%' style=\"color:rgba("+color+");\">"+data.nombres+"</td>"+
                         "<td width='4%'>"+data.dni+"</td>"+
                         "<td width='5%'>"+data.cargo+"</td>"+
                         "<td width='4%'>"+data.regimen+"</td>"+
