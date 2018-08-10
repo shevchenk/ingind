@@ -194,7 +194,7 @@ HTMLMostrarReporte=function(datos){
                 if($.trim(data.docu) == '') var docu = 0;
                 else  var docu = $.trim(data.docu);
                 var color="";
-                if(data.faltas == 1){
+                if(data.faltas > 2){
                     color="255,52,52";
                 }else{
                     color="0,0,0";
