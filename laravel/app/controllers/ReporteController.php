@@ -162,24 +162,18 @@ class ReporteController extends BaseController
    {
         AuditoriaAcceso::getAuditoria();
         if (Input::has('exportar') && Input::get('exportar')) {
- 
 /*
-
           $response = new StreamedResponse();
               $response->setCallback(function() {
                   $handle = fopen('php://output', 'w+');
-
                   $results = $this->arrayToCsv((array)Persona::OrdenTrabjbyPersona());
                   fputs($handle,$result,strlen($result));
-
                   fclose($handle);
               });
           $response->setStatusCode(200);
           $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
           $response->headers->set('Content-Disposition', 'attachment; filename="export.csv"');
-
           return $response;
-
 */
         }else{     
 
