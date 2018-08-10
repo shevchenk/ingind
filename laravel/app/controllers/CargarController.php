@@ -2056,18 +2056,1569 @@ class CargarController extends BaseController {
     // --
 
     // (RA - 2018/07/11): Carga de Archivo para los Gastos Contables.
-    public function postCargatributaria() {
+    public function postCargatributaria() {        
+        set_time_limit(0);
+        ini_set('max_execution_time', 0);
         ini_set('memory_limit', '512M');
 
         if (isset($_FILES['carga']) and $_FILES['carga']['size'] > 0) {
-
-            //$xlsx = new SimpleXLSX( 'D:\MUNICIPALIDAD\Trabajos Asignados\Ramesh - Carga de Excel para Tributarios\prueba.xlsx' );
+            // $xlsx = new SimpleXLSX( 'D:\MUNICIPALIDAD\Trabajos Asignados\Ramesh - Carga de Excel para Tributarios\prueba.xlsx' );
             $xlsx = new SimpleXLSX( $_FILES['carga']['tmp_name'] );
+            //echo '<pre>'; print_r($xlsx->rows()); exit;
 
-            echo '<pre>';
-            print_r($xlsx->rows());
-            exit;            
-            
+            function dateunixstamp($excelDateTime) {
+                $d = floor($excelDateTime); // seconds since 1900 
+                $t = $excelDateTime - $d; 
+                return ($d > 0) ? ( $d - 25569 ) * 86400 + $t * 86400 : $t * 86400;
+                //$ts = ($fields[3] - 25569)*86400; //echo date('Y-m-d', $ts);
+            }
+
+            if(count($xlsx->rows()))
+            {
+                foreach($xlsx->rows() as $c => $fields)
+                {
+                    if($c >= 4)
+                    {
+                        //print_r($fields);
+                        DB::beginTransaction();
+                        if($fields[2]) // INSERTA CABECERAS CON EL NOMBRE DEL REQUERIMIENTO
+                        {
+                            $requerimiento = $fields[2];
+                            $fecha_requerimiento = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[3])));
+                            $fecha_requerimiento_notifa = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[4])));
+                            $razon_social_req = $fields[5];
+                            $sumilla_req = $fields[5];
+                            $dni_req = $fields[6];
+
+                            //DB::beginTransaction();
+                            //$cadena = 'REQUERIMIENTO N°034-2017-GFCM/MDI';
+                            $cad_req = substr($requerimiento, 14, 100);
+                            $arr_req = explode('-', $cad_req);  
+
+                            preg_match('/^(\N|)(\ |)/i', $arr_req[0], $matches, PREG_OFFSET_CAPTURE); // N° 000002
+                            if($matches <= 0)
+                                $doc_numero = trim($arr_req[0]);
+                            else
+                            {
+                                $arr_bus = array('N° ','Nº ', 'N°', 'Nº');
+                                $doc_numero = trim(str_replace($arr_bus, '', $arr_req[0]));
+                            }
+                                
+                            $selects = "SELECT tr.*
+                                        FROM tablas_relacion tr 
+                                        WHERE tr.id_union LIKE '%REQ%'
+                                            AND tr.id_union LIKE '%".$doc_numero."%'
+                                            AND tr.id_union LIKE '%".$arr_req[1]."%'
+                                            AND (id_union LIKE '%GFCM%' OR id_union LIKE '%GFYCM%')
+                                            AND tr.estado = 1
+                                            LIMIT 1;";
+                            $tabla_relacion = DB::select($selects);
+
+                            if(count($tabla_relacion) > 0)
+                            {
+                                // Busca la Ruta
+                                $selectruta = "SELECT r.id
+                                                FROM rutas r
+                                                WHERE r.tabla_relacion_id = ".$tabla_relacion[0]->id."
+                                                    AND r.estado=1
+                                                    LIMIT 1;";
+                                $rutas = DB::select($selectruta);
+
+                                if(count($rutas) > 0)
+                                {
+                                    // Anula el documento al encontrarlo                                    
+                                    $r = Ruta::find($rutas[0]->id);
+                                    $r['estado']=0;
+                                    $r['usuario_updated_at']=Auth::user()->id;
+                                    $r->save();
+
+                                    $tr = TablaRelacion::find($tabla_relacion[0]->id);
+                                    $tr['estado']=0;
+                                    $tr['usuario_updated_at']=Auth::user()->id;
+                                    $tr->save();
+                                    DB::commit();
+                                    // --
+
+                                    $fecha_req = $fecha_requerimiento;
+                                    $fecha_notif_req = $fecha_requerimiento_notifa;
+                                    $fecha_req = $fecha_req.' '.date('H:i:s'); // date('Y-m-d H:i:s')
+
+                                    //PROCESO DE FISCALIZACION TRIBUTARIA-PRICOS
+                                    $rutaFlujo = RutaFlujo::find(5567);
+                                    $tablarelacion = new TablaRelacion;
+                                    $tablarelacion->software_id = 1;
+                                    $tablarelacion->id_union = $requerimiento;
+                                    $tablarelacion->razon_social = $razon_social_req;
+                                    $tablarelacion->sumilla = $sumilla_req;
+                                    $tablarelacion->dni = $dni_req;
+                                    $tablarelacion->estado = 1;
+                                    //$tablarelacion->fecha_tramite = date('Y-m-d H:i:s');
+                                    $tablarelacion->fecha_tramite = $fecha_req;
+                                    $tablarelacion->tipo_persona = 3;
+                                    $tablarelacion->area_id = $rutaFlujo->area_id;
+                                    $tablarelacion->usuario_created_at = Auth::user()->id;
+                                    $tablarelacion->save();
+                                    
+                                    // ENCONTRAR RUTA
+                                    $ruta = new Ruta;
+                                    $ruta['tabla_relacion_id'] = $tablarelacion->id;
+                                    $ruta['fecha_inicio'] = $fecha_req;
+                                    $ruta['ruta_flujo_id'] = $rutaFlujo->id;
+                                    $ruta['flujo_id'] = $rutaFlujo->flujo_id;
+                                    $ruta['persona_id'] = $rutaFlujo->persona_id;
+                                    $ruta['area_id'] = $rutaFlujo->area_id;
+                                    $ruta['usuario_created_at'] = Auth::user()->id;
+                                    $ruta->save();
+
+                                    $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    foreach ($qrutaDetalle as $rd)
+                                    {
+                                        $cero='';
+                                        if($rd->norden<10){
+                                            $cero='0';
+                                        }
+                                        $rutaDetalle = new RutaDetalle;
+                                        $rutaDetalle['ruta_id'] = $ruta->id;
+                                        $rutaDetalle['area_id'] = $rd->area_id;
+                                        $rutaDetalle['tiempo_id'] = $rd->tiempo_id;
+                                        // Calcula fecha Final
+                                        $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                        $fproy= DB::select($sql);
+                                        $rutaDetalle['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                        $rutaDetalle['dtiempo'] = $rd->dtiempo;
+                                        $rutaDetalle['detalle'] = $rd->detalle;
+                                        $rutaDetalle['norden'] =$cero.$rd->norden;
+                                        $rutaDetalle['estado_ruta'] = $rd->estado_ruta;
+                                        $rutaDetalle['usuario_created_at'] = Auth::user()->id;
+                                        if ($rutaDetalle->norden == 1) {
+                                            $rutaDetalle['fecha_inicio'] = $fecha_req;
+                                        }
+                                        $rutaDetalle['dtiempo_final'] = date('Y-m-d H:i:s');
+                                        $rutaDetalle->save();
+                                        $ruta_detalle_id = $rutaDetalle->id;
+                                                                    
+                                        $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('orden', 'ASC')
+                                                ->get();
+                                        
+                                        if (count($qrutaDetalleVerbo) > 0) {
+                                            foreach ($qrutaDetalleVerbo as $rdv) {
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $ruta_detalle_id;
+                                                $rutaDetalleVerbo['nombre'] = $rdv->nombre;
+                                                $rutaDetalleVerbo['condicion'] = $rdv->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $rdv->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = $rdv->verbo_id;
+                                                $rutaDetalleVerbo['documento_id'] = $rdv->documento_id;
+                                                $rutaDetalleVerbo['orden'] = $rdv->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                //if($categoria->tipo==1){
+                                                //$rutaDetalleVerbo['usuario_updated_at'] = $persona->id;
+                                                //}
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+                                            }
+                                        }
+                                    }
+
+                                    // ***************************************************************************
+                                    // ********************* RECORRIDO DE SEGUNDO BLOQUE (2) *********************
+                                    $rutaFlujo = RutaFlujo::find(5601); //Inspección Presunta
+                                    $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    if (count($qrutaDetalle) > 0)
+                                    {
+                                        foreach ($qrutaDetalle as $rd)
+                                        {
+                                            $cero='';
+                                            if($rd->norden<10){
+                                                $cero='0';
+                                            }
+                                            $rutaDetalle = new RutaDetalle;
+                                            $rutaDetalle['ruta_id'] = $ruta->id;
+                                            $rutaDetalle['area_id'] = $rd->area_id;
+                                            $rutaDetalle['tiempo_id'] = $rd->tiempo_id;
+                                            // Calcula fecha Final
+                                            $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                            $fproy= DB::select($sql);
+                                            $rutaDetalle['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                            $rutaDetalle['dtiempo'] = $rd->dtiempo;
+                                            $rutaDetalle['detalle'] = $rd->detalle;
+                                            $rutaDetalle['norden'] =$cero.$rd->norden;
+                                            $rutaDetalle['estado_ruta'] = $rd->estado_ruta;
+                                            $rutaDetalle['usuario_created_at'] = Auth::user()->id;
+                                            //if ($rutaDetalle->norden == 1) {
+                                                $rutaDetalle['fecha_inicio'] = $fecha_req;
+                                            //}
+                                            $rutaDetalle['dtiempo_final'] = date('Y-m-d H:i:s');
+                                            $rutaDetalle->save();
+                                                                                        
+                                            $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                    //->where('orden', '=', '0')
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('orden', 'ASC')
+                                                    ->get();
+                                            
+                                            $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[7]."%';";
+                                            $doc_digital = DB::select($selectdd);
+                                            //if (count($qrutaDetalleVerbo) > 0) {
+                                                //foreach ($qrutaDetalleVerbo as $rdv) {
+                                                    /*$rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                    //$rutaDetalleVerbo['ruta_detalle_id'] = $ruta_detalle_id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle->id;
+                                                    $rutaDetalleVerbo['nombre'] = $rdv->nombre;
+                                                    $rutaDetalleVerbo['condicion'] = $rdv->condicion;
+                                                    $rutaDetalleVerbo['rol_id'] = $rdv->rol_id;
+                                                    $rutaDetalleVerbo['verbo_id'] = $rdv->verbo_id;
+                                                    $rutaDetalleVerbo['documento_id'] = $rdv->documento_id;
+                                                    $rutaDetalleVerbo['orden'] = $rdv->orden;
+                                                    $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                    $rutaDetalleVerbo->save();*/
+
+                                                    $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle->id;
+                                                    $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                    $rutaDetalleVerbo['observacion'] = $fields[7];
+                                                    $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion; // $rdv->condicion;
+                                                    $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                    if(count($doc_digital) > 0) {
+                                                        $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                        $rutaDetalleVerbo['verbo_id'] = 1;
+                                                    } else {
+                                                        $rutaDetalleVerbo['verbo_id'] = 29;
+                                                    }
+                                                    $rutaDetalleVerbo['documento_id'] = 82;
+                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                    $rutaDetalleVerbo['finalizo'] = 1;
+                                                    $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo->save();
+
+                                                    $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle->id;
+                                                    $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                    $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[8])));
+                                                    $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion; // $rdv->condicion;
+                                                    $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                    $rutaDetalleVerbo['documento_id'] = 82;
+                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                    $rutaDetalleVerbo['finalizo'] = 1;
+                                                    $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo->save();
+                                                //}
+                                            //}
+
+                                            $referido = new Referido;
+                                            $referido['ruta_id'] = $ruta->id;
+                                            $referido['ruta_detalle_id'] = $rutaDetalle->id;
+                                            $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                            $referido['tipo'] = 1;
+                                            $referido['referido'] = '';
+                                            $referido['fecha_hora_referido'] = $rutaDetalle->dtiempo_final;
+                                            $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                            $referido['usuario_created_at'] =Auth::user()->id;
+                                            $referido->save();
+                                        }
+                                    }
+
+                                    // -- --
+                                    $rutaFlujo = RutaFlujo::find(5630); //REPROGRAMACIÓN
+                                    $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    if (count($qrutaDetalle) > 0)
+                                    {
+                                        foreach ($qrutaDetalle as $rd)
+                                        {
+                                            $cero='';
+                                            if($rd->norden<10){
+                                                $cero='0';
+                                            }
+                                            $rutaDetalle2 = new RutaDetalle;
+                                            $rutaDetalle2['ruta_id'] = $ruta->id;
+                                            $rutaDetalle2['area_id'] = $rd->area_id;
+                                            $rutaDetalle2['tiempo_id'] = $rd->tiempo_id;
+                                            // Calcula fecha Final
+                                            $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                            $fproy= DB::select($sql);
+                                            $rutaDetalle2['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                            $rutaDetalle2['dtiempo'] = $rd->dtiempo;
+                                            $rutaDetalle2['detalle'] = $rd->detalle;
+                                            $rutaDetalle2['norden'] =$cero.$rd->norden;
+                                            $rutaDetalle2['estado_ruta'] = $rd->estado_ruta;
+                                            $rutaDetalle2['usuario_created_at'] = Auth::user()->id;
+                                            //if ($rutaDetalle2->norden == 1) {
+                                                $rutaDetalle2['fecha_inicio'] = $fecha_req;
+                                            //}
+                                            $rutaDetalle2['dtiempo_final'] = date('Y-m-d H:i:s');
+                                            $rutaDetalle2->save();
+
+                                            $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
+                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('orden', 'ASC')
+                                                    ->get();
+                                                    //->where('nombre', '=', '-')
+                                            
+                                            /*if (count($qrutaDetalleVerbo) > 0) {
+                                                foreach ($qrutaDetalleVerbo as $rdv) {*/
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[9]."%';";
+                                                $doc_digital = DB::select($selectdd);
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[9];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion; // $rdv->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[10])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[11]."%';";
+                                                $doc_digital = DB::select($selectdd);
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[11];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[12]."%';";
+                                                $doc_digital = DB::select($selectdd);
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[12];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[13])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+                                            /*  }
+                                            }*/
+
+                                            $referido = new Referido;
+                                            $referido['ruta_id'] = $ruta->id;
+                                            $referido['ruta_detalle_id'] = $rutaDetalle2->id;
+                                            $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                            $referido['tipo'] = 1;
+                                            $referido['referido'] = '';
+                                            $referido['fecha_hora_referido'] = $rutaDetalle2->dtiempo_final;
+                                            $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                            $referido['usuario_created_at'] =Auth::user()->id;
+                                            $referido->save();
+                                        }
+                                    }
+
+
+                                    // ***************************************************************************
+                                    // ********************** RECORRIDO DE TERCER BLOQUE (3) *********************
+                                    $rutaFlujo = RutaFlujo::find(5600); //BASE CIERTA
+                                    $qrutaDetalle3 = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    if (count($qrutaDetalle3) > 0)
+                                    {
+                                        foreach ($qrutaDetalle3 as $rd)
+                                        {
+                                            $cero='';
+                                            if($rd->norden<10){
+                                                $cero='0';
+                                            }
+                                            $rutaDetalle3 = new RutaDetalle;
+                                            $rutaDetalle3['ruta_id'] = $ruta->id;
+                                            $rutaDetalle3['area_id'] = $rd->area_id;
+                                            $rutaDetalle3['tiempo_id'] = $rd->tiempo_id;
+                                            // Calcula fecha Final
+                                            $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                            $fproy= DB::select($sql);
+                                            $rutaDetalle3['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                            $rutaDetalle3['dtiempo'] = $rd->dtiempo;
+                                            $rutaDetalle3['detalle'] = $rd->detalle;
+                                            $rutaDetalle3['norden'] =$cero.$rd->norden;
+                                            $rutaDetalle3['estado_ruta'] = $rd->estado_ruta;
+                                            $rutaDetalle3['usuario_created_at'] = Auth::user()->id;
+                                            //if ($rutaDetalle3->norden == 1) {
+                                                $rutaDetalle3['fecha_inicio'] = $fecha_req;
+                                            //}
+                                            $rutaDetalle3['dtiempo_final'] = date('Y-m-d H:i:s');
+                                            $rutaDetalle3->save();
+
+                                            $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('orden', 'ASC')
+                                                    ->get();
+                                                                                        
+                                            /*if (count($qrutaDetalleVerbo) > 0) {
+                                                foreach ($qrutaDetalleVerbo as $rdv) {*/
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[14]."%';";
+                                                $doc_digital = DB::select($selectdd);
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[14];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[19]."%';";
+                                                $doc_digital = DB::select($selectdd);
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[19];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[20]."%';";
+                                                $doc_digital = DB::select($selectdd);
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[20];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[21])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+                                            /*  }
+                                            }*/
+
+                                            $referido = new Referido;
+                                            $referido['ruta_id'] = $ruta->id;
+                                            $referido['ruta_detalle_id'] = $rutaDetalle3->id;
+                                            $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                            $referido['tipo'] = 1;
+                                            $referido['referido'] = '';
+                                            $referido['fecha_hora_referido'] = $rutaDetalle3->dtiempo_final;
+                                            $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                            $referido['usuario_created_at'] =Auth::user()->id;
+                                            $referido->save();
+                                        }
+                                    }
+
+
+                                    // ***************************************************************************
+                                    // ********************** RECORRIDO DE CUARTO BLOQUE (4) *********************
+                                    $rutaFlujo = RutaFlujo::find(5605); //PRE LIQUIDACION
+                                    $qrutaDetalle4 = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    if (count($qrutaDetalle4) > 0)
+                                    {
+                                        foreach ($qrutaDetalle4 as $rd)
+                                        {
+                                            $cero='';
+                                            if($rd->norden<10){
+                                                $cero='0';
+                                            }
+                                            $rutaDetalle4 = new RutaDetalle;
+                                            $rutaDetalle4['ruta_id'] = $ruta->id;
+                                            $rutaDetalle4['area_id'] = $rd->area_id;
+                                            $rutaDetalle4['tiempo_id'] = $rd->tiempo_id;
+                                            // Calcula fecha Final
+                                            $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                            $fproy= DB::select($sql);
+                                            $rutaDetalle4['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                            $rutaDetalle4['dtiempo'] = $rd->dtiempo;
+                                            $rutaDetalle4['detalle'] = $rd->detalle;
+                                            $rutaDetalle4['norden'] =$cero.$rd->norden;
+                                            $rutaDetalle4['estado_ruta'] = $rd->estado_ruta;
+                                            $rutaDetalle4['usuario_created_at'] = Auth::user()->id;
+                                            //if ($rutaDetalle4->norden == 1) {
+                                                $rutaDetalle4['fecha_inicio'] = $fecha_req;
+                                            //}
+                                            $rutaDetalle4['dtiempo_final'] = date('Y-m-d H:i:s');
+                                            $rutaDetalle4->save();
+
+                                            $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('orden', 'ASC')
+                                                    ->get();
+
+                                                // PRE-RESOLUCION DE DETERMINACIÓN
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[22];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[23];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[24];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[25];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[26];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                // PRE-RESOLUCION DE MULTA
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[27];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[28];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[29];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[30];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle4->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[31];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                            $referido = new Referido;
+                                            $referido['ruta_id'] = $ruta->id;
+                                            $referido['ruta_detalle_id'] = $rutaDetalle4->id;
+                                            $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                            $referido['tipo'] = 1;
+                                            $referido['referido'] = '';
+                                            $referido['fecha_hora_referido'] = $rutaDetalle4->dtiempo_final;
+                                            $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                            $referido['usuario_created_at'] =Auth::user()->id;
+                                            $referido->save();
+                                        }
+                                    }
+
+
+                                    // ***************************************************************************
+                                    // ********************* RECORRIDO DE SEGUNDO BLOQUE (5) *********************
+                                    $rutaFlujo = RutaFlujo::find(5607); // EMISION DE VALORES
+                                    $qrutaDetalle5 = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    if (count($qrutaDetalle5) > 0)
+                                    {
+                                        foreach ($qrutaDetalle5 as $rd)
+                                        {
+                                            $cero='';
+                                            if($rd->norden<10){
+                                                $cero='0';
+                                            }
+                                            $rutaDetalle5 = new RutaDetalle;
+                                            $rutaDetalle5['ruta_id'] = $ruta->id;
+                                            $rutaDetalle5['area_id'] = $rd->area_id;
+                                            $rutaDetalle5['tiempo_id'] = $rd->tiempo_id;
+                                            // Calcula fecha Final
+                                            $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                            $fproy= DB::select($sql);
+                                            $rutaDetalle5['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                            $rutaDetalle5['dtiempo'] = $rd->dtiempo;
+                                            $rutaDetalle5['detalle'] = $rd->detalle;
+                                            $rutaDetalle5['norden'] =$cero.$rd->norden;
+                                            $rutaDetalle5['estado_ruta'] = $rd->estado_ruta;
+                                            $rutaDetalle5['usuario_created_at'] = Auth::user()->id;
+                                            //if ($rutaDetalle5->norden == 1) {
+                                                $rutaDetalle5['fecha_inicio'] = $fecha_req;
+                                            //}
+                                            $rutaDetalle5['dtiempo_final'] = date('Y-m-d H:i:s');
+                                            $rutaDetalle5->save();
+
+                                            $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('orden', 'ASC')
+                                                    ->get();
+
+                                                // RESOLUCION DE DETERMINACIÓN
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[36];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[37];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[38];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[39];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[40];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                // RESOLUCION DE MULTA
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[45];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[46];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[47];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[48];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle5->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[49];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                            $referido = new Referido;
+                                            $referido['ruta_id'] = $ruta->id;
+                                            $referido['ruta_detalle_id'] = $rutaDetalle5->id;
+                                            $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                            $referido['tipo'] = 1;
+                                            $referido['referido'] = '';
+                                            $referido['fecha_hora_referido'] = $rutaDetalle5->dtiempo_final;
+                                            $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                            $referido['usuario_created_at'] =Auth::user()->id;
+                                            $referido->save();
+                                        }
+                                    }
+
+
+                                    // ***************************************************************************
+                                    // *********************** RECORRIDO DE SEXTO BLOQUE (6) *********************
+                                    $rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
+                                    $qrutaDetalle6 = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    if (count($qrutaDetalle6) > 0)
+                                    {
+                                        foreach ($qrutaDetalle6 as $rd)
+                                        {
+                                            $cero='';
+                                            if($rd->norden<10){
+                                                $cero='0';
+                                            }
+                                            $rutaDetalle6 = new RutaDetalle;
+                                            $rutaDetalle6['ruta_id'] = $ruta->id;
+                                            $rutaDetalle6['area_id'] = $rd->area_id;
+                                            $rutaDetalle6['tiempo_id'] = $rd->tiempo_id;
+                                            // Calcula fecha Final
+                                            $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                            $fproy= DB::select($sql);
+                                            $rutaDetalle6['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                            $rutaDetalle6['dtiempo'] = $rd->dtiempo;
+                                            $rutaDetalle6['detalle'] = $rd->detalle;
+                                            $rutaDetalle6['norden'] =$cero.$rd->norden;
+                                            $rutaDetalle6['estado_ruta'] = $rd->estado_ruta;
+                                            $rutaDetalle6['usuario_created_at'] = Auth::user()->id;
+                                            //if ($rutaDetalle6->norden == 1) {
+                                                $rutaDetalle6['fecha_inicio'] = $fecha_req;
+                                            //}
+                                            $rutaDetalle6['dtiempo_final'] = date('Y-m-d H:i:s');
+                                            $rutaDetalle6->save();
+
+                                            $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('orden', 'ASC')
+                                                    ->get();
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[50]."%';";
+                                                $doc_digital = DB::select($selectdd);                                                
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[50];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+                                                
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[52];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[53];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[54];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[55];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[56])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$fields[57]."%';";
+                                                $doc_digital = DB::select($selectdd);                                                
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[57];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[58])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[59];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[60])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[61])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                            $referido = new Referido;
+                                            $referido['ruta_id'] = $ruta->id;
+                                            $referido['ruta_detalle_id'] = $rutaDetalle6->id;
+                                            $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                            $referido['tipo'] = 1;
+                                            $referido['referido'] = '';
+                                            $referido['fecha_hora_referido'] = $rutaDetalle6->dtiempo_final;
+                                            $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                            $referido['usuario_created_at'] =Auth::user()->id;
+                                            $referido->save();
+                                        }
+                                    }
+
+
+                                    // ***************************************************************************
+                                    // ********************* RECORRIDO DE SEPTIMO BLOQUE (7) *********************
+                                    $rutaFlujo = RutaFlujo::find(5617); // GERENCIA DE RENTAS
+                                    $qrutaDetalle7 = DB::table('rutas_flujo_detalle')
+                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('norden', 'ASC')
+                                                ->get();
+
+                                    if (count($qrutaDetalle7) > 0)
+                                    {
+                                        foreach ($qrutaDetalle7 as $rd)
+                                        {
+                                            $cero='';
+                                            if($rd->norden<10){
+                                                $cero='0';
+                                            }
+                                            $rutaDetalle7 = new RutaDetalle;
+                                            $rutaDetalle7['ruta_id'] = $ruta->id;
+                                            $rutaDetalle7['area_id'] = $rd->area_id;
+                                            $rutaDetalle7['tiempo_id'] = $rd->tiempo_id;
+                                            $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                            $fproy= DB::select($sql);
+                                            $rutaDetalle7['fecha_proyectada'] = $fproy[0]->fproy;
+                                            $rutaDetalle7['dtiempo'] = $rd->dtiempo;
+                                            $rutaDetalle7['detalle'] = $rd->detalle;
+                                            $rutaDetalle7['norden'] =$cero.$rd->norden;
+                                            $rutaDetalle7['estado_ruta'] = $rd->estado_ruta;
+                                            $rutaDetalle7['usuario_created_at'] = Auth::user()->id;
+                                            //if ($rutaDetalle7->norden == 1) {
+                                                $rutaDetalle7['fecha_inicio'] = $fecha_req;
+                                            //}
+                                            $rutaDetalle7['dtiempo_final'] = date('Y-m-d H:i:s');
+                                            $rutaDetalle7->save();
+
+                                            $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('orden', 'ASC')
+                                                    ->get();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle7->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[62];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;                                                
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle7->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[63])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle7->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[64];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;                                                
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle7->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $fields[65];
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;                                                
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle7->id;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[66])));
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo->save();
+
+                                            $referido = new Referido;
+                                            $referido['ruta_id'] = $ruta->id;
+                                            $referido['ruta_detalle_id'] = $rutaDetalle7->id;
+                                            $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                            $referido['tipo'] = 1;
+                                            $referido['referido'] = '';
+                                            $referido['fecha_hora_referido'] = $rutaDetalle7->dtiempo_final;
+                                            $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                            $referido['usuario_created_at'] =Auth::user()->id;
+                                            $referido->save();
+                                        }
+                                    }
+                                    // --
+
+                                }
+                            }
+                            
+                        }
+                        else
+                        {
+                            // ***************************************************************************
+                            // ********************* RECORRIDO DE SEGUNDO BLOQUE (2) *********************
+                            if($fields[11])
+                            {
+                                $rutaFlujo = RutaFlujo::find(5630); //Re-programación
+                                $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                            ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                            ->where('estado', '=', '1')
+                                            ->orderBy('norden', 'ASC')
+                                            ->get();
+
+                                if (count($qrutaDetalle) > 0)
+                                {
+                                    foreach ($qrutaDetalle as $rd)
+                                    {
+                                        $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
+                                                ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                ->where('estado', '=', '1')
+                                                //->where('nombre', '=', '-')
+                                                ->orderBy('orden', 'ASC')
+                                                ->get();
+
+                                        $selectdd="SELECT *
+                                                    FROM doc_digital_temporal
+                                                        WHERE UPPER(titulo) LIKE '%".$fields[11]."%';";
+                                        $doc_digital = DB::select($selectdd);
+
+                                        $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                        $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
+                                        $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                        $rutaDetalleVerbo['observacion'] = $fields[11];
+                                        $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                        $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                        if(count($doc_digital) > 0) {
+                                            $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                            $rutaDetalleVerbo['verbo_id'] = 1;
+                                        } else {
+                                            $rutaDetalleVerbo['verbo_id'] = 29;
+                                        }
+                                        $rutaDetalleVerbo['documento_id'] = 82;
+                                        $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                        $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                        $rutaDetalleVerbo['finalizo'] = 1;
+                                        $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                        $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                        $rutaDetalleVerbo->save();
+                                    }
+                                }
+                            }
+
+
+                            // ***************************************************************************
+                            // ********************** RECORRIDO DE TERCER BLOQUE (3) *********************
+                            if($fields[19])
+                            {
+                                $rutaFlujo = RutaFlujo::find(5600); //Re-programación
+                                $qrutaDetalle3 = DB::table('rutas_flujo_detalle')
+                                            ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                            ->where('estado', '=', '1')
+                                            ->orderBy('norden', 'ASC')
+                                            ->get();
+
+                                if (count($qrutaDetalle3) > 0)
+                                {
+                                    foreach ($qrutaDetalle3 as $rd)
+                                    {
+                                        $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                ->where('estado', '=', '1')
+                                                //->where('orden', '=', '4')
+                                                ->orderBy('orden', 'ASC')
+                                                ->get();
+
+                                        $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                        $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;;
+                                        $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                        $rutaDetalleVerbo['observacion'] = $fields[19];
+                                        $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                        $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                        $rutaDetalleVerbo['verbo_id'] = 1;
+                                        $rutaDetalleVerbo['documento_id'] = 82;
+                                        $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                        $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                        $rutaDetalleVerbo['finalizo'] = 1;
+                                        $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                        $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                        $rutaDetalleVerbo->save();
+                                    }
+                                }
+                            }
+
+
+                            // ***************************************************************************
+                            // ********************** RECORRIDO DE CUARTO BLOQUE (6) *********************
+                            if($fields[50])
+                            {
+                                $rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
+                                $qrutaDetalle6 = DB::table('rutas_flujo_detalle')
+                                            ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                            ->where('estado', '=', '1')
+                                            ->orderBy('norden', 'ASC')
+                                            ->get();
+
+                                if (count($qrutaDetalle6) > 0)
+                                {
+                                    foreach ($qrutaDetalle6 as $rd)
+                                    {                                        
+                                        $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                ->where('estado', '=', '1')
+                                                ->orderBy('orden', 'ASC')
+                                                ->get();
+
+                                            $selectdd="SELECT *
+                                                        FROM doc_digital_temporal
+                                                            WHERE UPPER(titulo) LIKE '%".$fields[50]."%';";
+                                            $doc_digital = DB::select($selectdd);                                                
+                                            $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                            $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                            $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                            $rutaDetalleVerbo['observacion'] = $fields[50];
+                                            $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                            $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                            if(count($doc_digital) > 0) {
+                                                $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                $rutaDetalleVerbo['verbo_id'] = 1;
+                                            } else {
+                                                $rutaDetalleVerbo['verbo_id'] = 29;
+                                            }
+                                            $rutaDetalleVerbo['documento_id'] = 82;
+                                            $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                            $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                            $rutaDetalleVerbo['finalizo'] = 1;
+                                            $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                            $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                            $rutaDetalleVerbo->save();
+                                                                                        
+                                    }
+                                }
+                            }
+
+                        }                        
+                        DB::commit();
+                    }
+                }
+            }
+            //exit;
+
             return Response::json(
                             array(
                                 'rst' => '1',
