@@ -106,8 +106,7 @@ tr:last-child td.last {
 
                     <div class="row form-group" >
                         <div class="col-sm-12">
-                                <div class="col-sm-2"></div>
-                               
+
                                 <div class="col-sm-2 text-center">
                                     <label class="control-label">Fecha Inicial</label>
                                     <div class="input-group">
@@ -125,7 +124,7 @@ tr:last-child td.last {
                                 </div>
                             
 
-                                  <div class="col-sm-4"><input type="hidden" id="area_id" name="area_id">
+                                  <div class="col-sm-4">
                                 <label class="control-label">Area:</label>
                                 <select class="form-control" name="area_id[]" id="slct_area_id" multiple>
                                 </select>
@@ -139,6 +138,27 @@ tr:last-child td.last {
                                     <!-- <a class='btn btn-success btn-md' id="btnexport" name="btnexport" href='' target="_blank"><i class="glyphicon glyphicon-download-alt"></i> Export</i></a> -->
                                     <a class='btn btn-success btn-md' id="btnexport" name="btnexport" href='#'><i class="glyphicon glyphicon-download-alt"></i> Export</i></a>
                                 </div>
+
+
+                                <div class="col-sm-12 text-center">
+                                    <label class="control-label">Filtro</label>  
+                                      <div class="checkbox">
+                                        <label><input name="filtro[]" type="checkbox" value="1.1">3 Faltas o más</label>
+                                        <label><input name="filtro[]" type="checkbox" value="1.2">1 o más permisos medicos</label>
+                                      </div>
+                                      <div class="checkbox">
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.1">C.A.S.</label>
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.2">TERCEROS</label>
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.3">EMPLEADO NOMBRADO</label>
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.4">EMPLEADO CONTRATADO</label>
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.5">FUNCIONARIOS CAS</label>
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.6">OBREROS</label>
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.7">FUNCIONARIOS</label>
+                                        <label><input name="filtro[]" type="checkbox" checked="checked" value="2.8">C.A.S. REINCORPORADOS</label>
+                                      </div>
+                                    </div>
+                                </div>
+
                             </div>
                     </div>
                     
