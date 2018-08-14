@@ -21,8 +21,10 @@
 @section('contenido')
             <!-- Content Header (Page header) -->
                 <section class="content-header">
-                    <h1>
-                        Anular Trámite
+                    <h1 style="text-align: center; font-size: 35px">
+                        <b>
+                            Anular Trámite
+                        </b>
                         <small> </small>
                     </h1>
                     <ol class="breadcrumb">
@@ -34,64 +36,82 @@
 
                 <!-- Main content -->
                 <section class="content">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <!-- Inicia contenido -->
-                            <div class="box">
-                                <form name="form_validar" id="form_validar" method="POST" action="">
-                                    <div class="row form-group" >
-                                        <div class="col-sm-12">
-                                            <!--div class="col-sm-3">
-                                                <label class="control-label">Proceso:</label>
-                                                <select class="form-control" name="slct_flujo2_id" id="slct_flujo2_id">
-                                                </select>
+                    <!--<div class="row">-->
+                                <form name="form_validar" id="form_validar" method="POST">
+                                    <div class="col-xl-12">
+                                        <fieldset>
+                                            <div class="row form-group" >                                           
+                                                <div class="col-sm-12">
+
+                                                    <!--CUADRO DE TEXTO-->
+                                                    <div class="col-sm-3"></div>
+                                                    <!--*******************************-->
+                                                    <div class="col-sm-6">
+                                                        <!--<label class="control-label">Trámite:</label>-->
+                                                        <input style="text-align: center" type="text" class="form-control" placeholder="Ingrese Nro Trámite:" id="txt_tramite" name="txt_tramite"/>
+                                                    </div>
+
+                                                    <!--*******************************-->
+                                                    <div class="col-sm-3"></div>
+                                                    <!--*******************************-->  
+
+                                                </div>
+
+                                                <div class="col-sm-12">
+                                                    <!--*******************************-->
+                                                    <div class="col-sm-5"></div>
+                                                    <!--*******************************-->
+                                                    <!--BOTON MOSTRAR-->
+                                                    <div class="col-sm-2">
+                                                        <label class="control-label"></label>                                
+                                                        <input type="button" class="form-control btn btn-primary" id="btn_buscar" name="btn_buscar" value="Buscar Trámite">
+                                                    </div>
+                                                    <!--*******************************-->
+                                                    <div class="col-sm-5"></div>
+                                                    <!--*******************************-->
+                                                </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                                <label class="control-label">Area del Dueño del Proceso:</label>
-                                                <select class="form-control" disabled name="slct_area2_id" id="slct_area2_id">
-                                                </select>
-                                            </div-->
-                                            <div class="col-sm-3">
-                                                <label class="control-label">Ingrese Nro Trámite:</label>
-                                                <input type="text" id="txt_tramite" name="txt_tramite">
-                                                <a class="btn btn-warning btn-sm" id="btn_buscar">
-                                                    <i class="fa fa-search fa-lg"></i>&nbsp;
-                                                </a>
-                                            </div>
-                                        </div>
+                                        </fieldset>
                                     </div>
-                                    <div class="row form-group" id="tabla_ruta_detalle" style="display:none;">
-                                        <div class="col-sm-12">
-                                            <div class="box-body table-responsive">
-                                                <table id="t_ruta_detalle" class="table table-bordered table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th style="width:90px !important;">Nro Trámite</th>
-                                                            <th style="width:90px !important;">Fecha Trámite</th>
-                                                            <th style="width:90px !important;">Tipo Solicitante</th>
-                                                            <th style="width:150px !important;">Solicitante</th>
-                                                            <th style="width:350px !important;">Sumilla</th>
-                                                            <th> [ ] </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tb_ruta_detalle">
-                                                        
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Nro Trámite</th>
-                                                            <th>Fecha Trámite</th>
-                                                            <th>Tipo Solicitante</th>
-                                                            <th>Solicitante</th>
-                                                            <th>Sumilla</th>
-                                                            <th> [ ] </th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
+
+                                    <div class="col-xs-12">
+                                        <!--<div class="box">-->
+                                            <div class="row form-group" id="tabla_ruta_detalle" style="display:none;">
+                                                <div class="col-sm-12">
+                                                    <div class="box-body table-responsive">
+                                                        <!--<table id="t_ruta_detalle" class="table table-bordered table-hover">-->
+                                                        <table id="t_ruta_detalle" class="table table-bordered" width="100%">
+                                                            <thead>
+                                                                <tr style="background-color:#E5E5E5;">
+                                                                    <th style="width:5%; text-align: center; border: black 2px solid;">#</th>
+                                                                    <th style="width:20%; text-align: center; border: black 2px solid;">Nro Trámite</th>
+                                                                    <th style="width:10%; text-align: center; border: black 2px solid;">Fecha Trámite</th>
+                                                                    <th style="width:20%; text-align: center; border: black 2px solid;">Tipo Solicitante</th>
+                                                                    <th style="width:20%; text-align: center; border: black 2px solid;">Solicitante</th>
+                                                                    <th style="width:15%; text-align: center; border: black 2px solid;">Sumilla</th>
+                                                                    <th style="width:10%; text-align: center; border: black 2px solid;"> [ ] </th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody id="tb_ruta_detalle"></tbody>
+
+                                                            <thead>
+                                                                <tr style="background-color:#E5E5E5;">
+                                                                    <th style="text-align: center; border: black 2px solid;">#</th>
+                                                                    <th style="text-align: center; border: black 2px solid;">Nro Trámite</th>
+                                                                    <th style="text-align: center; border: black 2px solid;">Fecha Trámite</th>
+                                                                    <th style="text-align: center; border: black 2px solid;">Tipo Solicitante</th>
+                                                                    <th style="text-align: center; border: black 2px solid;">Solicitante</th>
+                                                                    <th style="text-align: center; border: black 2px solid;">Sumilla</th>
+                                                                    <th style="text-align: center; border: black 2px solid;"> [ ] </th>
+                                                                </tr>
+                                                            </thead>
+
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        <!--</div>-->
                                     </div>
                                 </form>
 
@@ -174,11 +194,9 @@
                                             </a>
                                         </div>
                                     </div>
-                                </form>
-                            </div><!-- /.box -->
-                            <!-- Finaliza contenido -->
-                        </div>
-                    </div>
+                                </form>                           
+                        
+                    <!--</div>-->
 
                 </section><!-- /.content -->
 @stop
