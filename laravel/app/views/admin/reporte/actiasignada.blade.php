@@ -48,6 +48,10 @@
                         <label class="control-label" style="color: white">aaaaa</label>
                         <input type="button" class="btn btn-info" id="generar" name="generar" value="Productividad">
                     </div>
+                    <div class="col-md-1 col-sm-1">                            
+                        <label class="control-label" style="color: white">aaaaa</label>
+                        <input type="button" class="btn btn-success" id="exportar" name="exportar" onclick="exportar();" value="Exportar">
+                    </div>
                     <!--                                            <div class="col-md-1 col-sm-2" style="padding:24px">
                                                                     <a class='btn btn-success btn-md' id="btnexport" name="btnexport"><i class="glyphicon glyphicon-download-alt"></i> Export Actividades</i></a>
                                                                 </div>-->
@@ -117,7 +121,147 @@
             </div>
             </section><!-- /.content -->
 
+<script type="text/javascript">
 
+$("#generar").click(function (){});
+
+function exportar(){
+
+    area_id = $('#slct_area_id').val();
+    $('#area_id').val(area_id);
+    var fecha=$("#fecha").val();
+    if($.trim(area_id)!==''){
+        if(fecha!==""){
+
+
+            $.ajax({
+                url         : 'reporte/reporteortrabajo',
+                type        : 'POST',
+                cache       : false,
+                dataType    : 'json',
+                data        : {area_id:area_id.join(','),fecha:fecha,distinto:'|'},
+                beforeSend : function() {
+                    $("body").append('<div class="overlay"></div><div class="loading-img"></div>');
+                },
+                success : function(obj) {
+                    $(".overlay,.loading-img").remove();
+                    if(obj.rst==1){  
+                        var headers = {
+
+                           a1:'Respuesta',
+                           a2:'Área',
+                           a3:'Actividad',
+                           a4:'Fecha Inicio - Fin Asignación',
+                           a5:'Tiempo transcurrido',
+                           a6:'Documentos Asignados',
+                           a7:'Persona',
+                           a8:'Respuesta de Actividad',
+                           a9:'Documentos Respuesta',
+                           a91:'Proceso',
+                        };
+
+                        itemsNotFormatted = obj.datos;
+
+                        var itemsFormatted = [];
+
+                        // format the data
+                        itemsNotFormatted.forEach((item) => {
+
+                            itemsFormatted.push({
+                               
+                                a1:''+item.resultado,
+                                a2:''+item.area.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a3:''+item.actividad.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a4:''+item.fecha_inicio+' - '+item.dtiempo_final.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a5:''+(item.ot_tiempo_transcurrido+"").replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a6:''+''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a7:''+item.persona.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a8:''+item.descripcion_resultado.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a9:''+''.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+                                a91:''+item.flujo.replace(/,/g, '. ').replace(/\n/g, ' ').replace(/\r/g, ' '),
+
+                            });
+
+                        });
+
+                        var fileTitle = 'orders'; // or 'my-unique-title'
+
+                        exportCSVFile(headers, itemsFormatted, fileTitle);
+
+                    }
+                },
+                error: function(){
+                    $(".overlay,.loading-img").remove();
+                    $("#msj").html('<div class="alert alert-dismissable alert-danger">'+
+                                        '<i class="fa fa-ban"></i>'+
+                                        '<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>'+
+                                        '<b>Ocurrio una interrupción en el proceso,Favor de intentar nuevamente.'+
+                                    '</div>');
+                }
+            });
+
+        }else{
+            alert("Seleccione Fecha");
+        }
+    }else{alert("Seleccione Área");}
+
+
+}
+
+
+
+
+function convertToCSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+        for (var index in array[i]) {
+            if (line != '') line += ','
+
+            line += array[i][index];
+        }
+
+        str += line + '\r\n';
+    }
+
+    return str;
+}
+
+function exportCSVFile(headers, items, fileTitle) {
+    if (headers) {
+        items.unshift(headers);
+    }
+
+    // Convert Object to JSON
+    var jsonObject = JSON.stringify(items);
+
+    var csv = this.convertToCSV(jsonObject);
+
+    var exportedFilenmae = fileTitle + '.csv' || 'export.csv';
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilenmae);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", exportedFilenmae);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+}
+
+
+
+</script>
             @stop
             @section('formulario')
             @include( 'admin.reporte.form.produccionperxarea' )

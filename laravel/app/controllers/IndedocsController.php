@@ -776,10 +776,11 @@ class IndedocsController extends \BaseController {
         set_time_limit(0);
         //ini_set('max_execution_time', 300);
         ini_set('max_execution_time', 0);
-        $res = file_get_contents("http://10.0.120.13:8088/srequerimiento/?fecha1=2018/04/01&fecha2=2018/04/30");
+        //$res = file_get_contents("http://10.0.120.13:8088/srequerimiento/?fecha1=2018/03/01&fecha2=2018/03/30");
+        $res = file_get_contents("http://10.0.120.13:8088/srequerimiento/?fecha1=01/08/2018/&fecha2=13/08/2018");
         $result = json_decode($res);
         /*
-        $array = array(
+        $array = array(  
             'requerimientos' => array(
                 array(
                     "IDDETREQ" => "172901",
