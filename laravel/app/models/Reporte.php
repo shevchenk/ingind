@@ -681,7 +681,7 @@ class Reporte extends Eloquent
                         INNER JOIN flujos f ON r.flujo_id=f.id 
                         LEFT JOIN rutas_detalle rd ON re.ruta_detalle_id=rd.id 
                         LEFT JOIN areas a ON rd.area_id=a.id  
-                        LEFT JOIN doc_digital_temporal dd ON re.documento_id = dd.id $qExtra
+                        LEFT JOIN doc_digital_temporal dd ON re.doc_digital_id = dd.id $qExtra
                         WHERE re.tabla_relacion_id='".$referido->tabla_relacion_id."'
                         UNION
                         SELECT re.ruta_id,re.ruta_detalle_id,sustento,fecha_hora_sustento fecha_hora,f.nombre proceso,a.nombre area,rd.norden,'s' tipo,null as doc_digital_id
