@@ -10,12 +10,10 @@ class DocumentoDigital extends Base {
         if(Input::get('id')){
             return DB::table('doc_digital as dd')
                     ->join('plantilla_doc as pd', 'dd.plantilla_doc_id', '=', 'pd.id')
-                    ->leftjoin('doc_digital_area as dda', function($leftjoin)
-                    {
+                    ->leftjoin('doc_digital_area as dda', function($leftjoin){
                         $leftjoin->on('dda.doc_digital_id', '=', 'dd.id')
                                 ->where('dda.estado', '=', 1);
-                    })
-                    ->leftjoin('areas as a','dda.area_id', '=', 'a.id')
+                    })->leftjoin('areas as a','dda.area_id', '=', 'a.id')
                     ->leftjoin('personas as p','dda.persona_id', '=', 'p.id')
                     ->select('dd.id', 'dd.titulo', 'dd.asunto', 'pd.descripcion as plantilla', 'dd.plantilla_doc_id' ,'a.nombre as area','dda.area_id as area_id','p.nombre as pnombre','p.paterno as ppaterno','p.materno as pmaterno','dd.cuerpo','dd.tipo_envio','dda.persona_id','dda.tipo','dd.envio_total','pd.tipo_documento_id','dd.fecha_i_vacaciones','dd.fecha_f_vacaciones')
                     ->where( 
@@ -46,6 +44,13 @@ class DocumentoDigital extends Base {
                             }
                             $query->where('dd.estado','=',1);
                         }
+                    )->whereRaw(
+                        function(){
+                            if(Auth::user()->rol_id != 8 && Auth::user()->rol_id != 9)
+                                return 'IF(dd.doc_privado=1,dd.persona_id,\''.Auth::user()->id.'\')=\''.Auth::user()->id.'\'';
+                            else
+                                return " 1 ";
+                        }
                     )
 //                    ->orderBy('dd.id')
                     ->get();
@@ -65,7 +70,6 @@ class DocumentoDigital extends Base {
                                 . 'FROM rutas r '
                                 . 'where r.estado=1 AND dd.id=r.doc_digital_id ) AS ruta')    
                             )
-                   	
                    	->where( 
                         function($query){
                             if(Auth::user()->vista_doc==0){
@@ -74,14 +78,6 @@ class DocumentoDigital extends Base {
                                 $query->where('dd.estado','=','1');
                             
                             $usu_id=Auth::user()->id;
-/*                            $sql="  SELECT count(id) cant
-                                    FROM cargo_persona
-                                    WHERE estado=1
-                                    AND cargo_id=12
-                                    AND persona_id=".Auth::user()->id;
-                            $csql=DB::select($sql);
-                            if( $csql[0]->cant==0 ){*/
-                                //$query->where('dd.area_id','=',Auth::user()->area_id);
                                 $query->whereRaw('dd.area_id IN (
                                         SELECT DISTINCT(a.id)
                                         FROM area_cargo_persona acp
@@ -104,11 +100,16 @@ class DocumentoDigital extends Base {
                                                     INNER JOIN rutas_detalle_verbo as rdv on rdv.ruta_detalle_id=rd.id and rdv.estado=1
                                                     where r.estado=1 AND dd.id=rdv.doc_digital_id)=0
                                                     ))');
-                            /* }*/
+                            
+                        }
+                    )->whereRaw(
+                        function(){
+                            if(Auth::user()->rol_id != 8 && Auth::user()->rol_id != 9)
+                                return 'IF(dd.doc_privado=1,dd.persona_id,\''.Auth::user()->id.'\')=\''.Auth::user()->id.'\'';
+                            else
+                                return " 1 ";
                         }
                     )
-//                    ->orderBy('ruta','desc') 
-//                    ->orderBy('rutadetallev','desc')
                     ->get();            
         } 
     }
