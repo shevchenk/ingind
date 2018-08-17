@@ -17,6 +17,7 @@ var PersonasG={
         rol:"",
         modalidad:"",
         vista_doc:"",
+        doc_privados:"",
         estado:1
         };
 
@@ -94,6 +95,7 @@ $(document).ready(function() {
             $('#form_personas_modal #txt_password').val( '' );
             $('#form_personas_modal #slct_modalidad').val( PersonasG.modalidad );
             $('#form_personas_modal #slct_vista_doc').val( PersonasG.vista_doc );
+            $('#form_personas_modal #slct_doc_privados').val( PersonasG.doc_privados );
             
 
             $('#form_personas_modal #slct_estado').val( PersonasG.estado );
@@ -146,6 +148,10 @@ BtnEditar=function(btn,id){
     PersonasG.modalidad=$(tr).find("td:eq(9) input[name='txt_modalidad']").val(); 
     PersonasG.vista_doc=$(tr).find("td:eq(10) input[name='txt_vista_doc']").val(); 
     
+    PersonasG.doc_privados=$("#ID_txt_doc_privados").val(); 
+    console.log(PersonasG);
+
+    
     PersonasG.estado=$(tr).find("td:eq(11)>span").attr("data-estado");
     $("#BtnEditar").click();
 };
@@ -181,7 +187,7 @@ GeneraFn=function(row,fn){ // No olvidar q es obligatorio cuando queire funcion 
     }
 
     if(typeof(fn)!='undefined' && fn.col==10){
-        return row.vista_doc+"<input type='hidden'name='txt_vista_doc' value='"+row.vista_doc_id+"'>";
+        return row.vista_doc+"<input type='hidden' name='txt_vista_doc' value='"+row.vista_doc_id+"'><input type='hidden' name='txt_doc_privados' id='ID_txt_doc_privados' value='"+row.doc_privados+"'>";
     }
 
     else if(typeof(fn)!='undefined' && fn.col==11){
