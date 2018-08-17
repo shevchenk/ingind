@@ -420,6 +420,7 @@ public function postCargar()
                     // Inicializa valores en caso no tenga datos...
                     $rutaFlujoDetalle['tiempo_id']="1";
                     $rutaFlujoDetalle['dtiempo']="0";
+                    $rutaFlujoDetalle['detalle']="";
                     $rutaFlujoDetalle['ruta_flujo_id2']=null;
 
                     if( trim($post)!='' and $post*1>=0 ){
@@ -436,6 +437,7 @@ public function postCargar()
                             if( trim($dtg[1])!='' ){
                                 $rutaFlujoDetalle['tiempo_id']=$dtg[1];
                                 $rutaFlujoDetalle['dtiempo']=$dtg[2];
+                                $rutaFlujoDetalle['detalle']=$dtg[3];
                                 if(isset($dtg[4])){
                                 $rutaFlujoDetalle['ruta_flujo_id2']=$dtg[4];}
                             }
@@ -689,6 +691,7 @@ public function postCargar()
                 // Inicializa valores en caso no tenga datos...
                 $rutaFlujoDetalle['tiempo_id']="1";
                 $rutaFlujoDetalle['dtiempo']="0";
+                $rutaFlujoDetalle['detalle']="";
 
                 if( trim($post)!='' and $post*1>=0 ){
                     $detalleTiempoG=explode( ",", $tiempoG[$post] );
@@ -704,6 +707,7 @@ public function postCargar()
                         if( trim($dtg[1])!='' ){
                             $rutaFlujoDetalle['tiempo_id']=$dtg[1];
                             $rutaFlujoDetalle['dtiempo']=$dtg[2];
+                            $rutaFlujoDetalle['detalle']=$dtg[3];
                         }
                     }
 
@@ -817,6 +821,10 @@ public function postCargar()
                         $verificando=false;
                         $veriuno=false;
                     }
+                    elseif($qrinicial[$i]->detalle!=$qrinicialaux[$i]->detalle){
+                        $verificando=false;
+                        $veriuno=false;
+                    }
                     elseif($qrinicial[$i]->estado_ruta!=$qrinicialaux[$i]->estado_ruta){
                         $verificando=false;
                         $veriuno=false;
@@ -837,6 +845,7 @@ public function postCargar()
                         $rda['area_id']=$qdetalleedit[0]->area_id;
                         $rda['tiempo_id']=$qdetalleedit[0]->tiempo_id;
                         $rda['dtiempo']=$qdetalleedit[0]->dtiempo;
+                        $rda['detalle']=$qdetalleedit[0]->detalle;
                         $rda['estado_ruta']=$qdetalleedit[0]->estado_ruta;
                         $rda->save();
                         }
@@ -991,6 +1000,7 @@ public function postCargar()
                     $rd['area_id']=$qrinicialaux[$i]->area_id;
                     $rd['tiempo_id']=$qrinicialaux[$i]->tiempo_id;
                     $rd['dtiempo']=$qrinicialaux[$i]->dtiempo;
+                    $rd['detalle']=$qrinicialaux[$i]->detalle;
                     $rd['estado_ruta']=$qrinicialaux[$i]->estado_ruta;
                     $rd['norden']=$qrinicialaux[$i]->norden;
                     $rd->save();
@@ -1100,6 +1110,7 @@ public function postCargar()
                 // Inicializa valores en caso no tenga datos...
                 $rutaFlujoDetalle['tiempo_id']="1";
                 $rutaFlujoDetalle['dtiempo']="0";
+                $rutaFlujoDetalle['detalle']="";
 
                 if( trim($post)!='' and $post*1>=0 ){
                     $detalleTiempoG=explode( ",", $tiempoG[$post] );
@@ -1115,6 +1126,7 @@ public function postCargar()
                         if( trim($dtg[1])!='' ){
                             $rutaFlujoDetalle['tiempo_id']=$dtg[1];
                             $rutaFlujoDetalle['dtiempo']=$dtg[2];
+                            $rutaFlujoDetalle['detalle']=$dtg[3];
                         }
                     }
 
@@ -1199,6 +1211,7 @@ public function postCargar()
                     $rd['area_id']=$qdetalle[$i]->area_id;
                     $rd['tiempo_id']=$qdetalle[$i]->tiempo_id;
                     $rd['dtiempo']=$qdetalle[$i]->dtiempo;
+                    $rd['detalle']=$qdetalle[$i]->detalle;
                     $rd['norden']=$qdetalle[$i]->norden;
 
                     if($qdetalle[$i]->norden==$iniciara){
