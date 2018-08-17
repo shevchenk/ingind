@@ -41,16 +41,11 @@ class DocumentoDigital extends Base {
                                         AND cp.persona_id= '.$usu_id.'
                                     )');
                                 }
-                            }
+                            } 
                             $query->where('dd.estado','=',1);
                         }
-                    )->whereRaw(
-                        function(){
-                            if(Auth::user()->rol_id != 8 && Auth::user()->rol_id != 9)
-                                return 'IF(dd.doc_privado=1,dd.persona_id,\''.Auth::user()->id.'\')=\''.Auth::user()->id.'\'';
-                            else
-                                return " 1 ";
-                        }
+                    )->whereRaw( 
+                        (Auth::user()->rol_id != 8 && Auth::user()->rol_id != 9) ? 'IF(dd.doc_privado=1,dd.persona_id,\''.Auth::user()->id.'\')=\''.Auth::user()->id.'\'' : " 1 ")
                     )
 //                    ->orderBy('dd.id')
                     ->get();
