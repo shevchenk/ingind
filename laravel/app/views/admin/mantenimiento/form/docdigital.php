@@ -184,11 +184,17 @@
             </div>
         </div>
 
+<?php 
+      $dni = Auth::user()->dni; 
+      if($dni == '41024605' || $dni == '41272025'):
+        ?>
         <div class="row">
-              <div class="col-xs-12" align="center">
-                <label class="checkbox"><input type="checkbox" name="doc_privado" value="1">DOCUMENTO PRIVADO</label>
-              </div>
+            <div class="col-xs-12" align="center">
+              <label class="checkbox"><input type="checkbox" name="doc_privado" id="docid" value="1">DOCUMENTO PRIVADO</label>
+            </div>
         </div>
+<?php endif;?>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <!-- <button type="submit" class="btn btn-primary">Guardar</button> -->
