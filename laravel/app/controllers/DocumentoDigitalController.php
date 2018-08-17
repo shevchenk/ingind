@@ -98,7 +98,7 @@ class DocumentoDigitalController extends \BaseController {
                 $cant  = DocumentoDigital::getCargarCount( $array );
                 $aData = DocumentoDigital::getCargar( $array );
             }
-            
+
             if(Input::get("tipo")==2){
                 $cant  = DocumentoDigital::getCargarRelacionAreaCount( $array );
                 $aData = DocumentoDigital::getCargarRelacionArea( $array );
@@ -477,6 +477,9 @@ class DocumentoDigitalController extends \BaseController {
             $DocDigital->titulo = Input::get('titulofinal');
             $DocDigital->asunto = Input::get('asunto');
             $DocDigital->correlativo = Input::get('titulo');
+
+//            $DocDigital->doc_privado = (Input::has('doc_privado') ? Input::get('doc_privado') : 0);
+
             $DocDigital->cuerpo = $html;
             $DocDigital->plantilla_doc_id = Input::get('plantilla');
             $plantilla= PlantillaDocumento::find(Input::get('plantilla'));

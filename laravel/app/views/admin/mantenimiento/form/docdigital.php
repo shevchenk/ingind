@@ -174,7 +174,7 @@
             </div> -->
             <div class="row">
               <div class="col-xs-2">
-              &nbsp;
+              
               </div>
               <div class="col-xs-7">
                 <div class="form-group">
@@ -182,6 +182,12 @@
                 </div>
               </div>
             </div>
+        </div>
+
+        <div class="row">
+              <div class="col-xs-12" align="center">
+                <label class="checkbox"><input type="checkbox" name="doc_privado" value="1">DOCUMENTO PRIVADO</label>
+              </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
