@@ -457,7 +457,8 @@ class RutaFlujo extends Eloquent
                                     'rfd.norden','rf.flujo_id',
                                     DB::raw(
                                         'IFNULL(rfd.tiempo_id,"") AS tiempo_id,
-                                        IFNULL(rfd.dtiempo,"") AS dtiempo,
+                                        IFNULL(rfd.dtiempo,"") AS dtiempo,       
+                                        IFNULL(rfd.detalle,"") AS detalle,                                   
                                         CONCAT(
                                             p.paterno," ",p.materno," ",p.nombre
                                         ) AS persona,
@@ -522,10 +523,11 @@ class RutaFlujo extends Eloquent
                                     'a2.imagen','a2.imagenc','a2.imagenp',
                                     'rf.persona_id','f.nombre as flujo','rfd.estado_ruta',
                                     'rfd.area_id as area_id2','a2.nombre as area2',
-                                    'rfd.norden','rf.flujo_id','rf.tipo_ruta',
+                                    'rfd.norden','rf.flujo_id','rf.tipo_ruta',                                   
                                     DB::raw(
                                         'IFNULL(rfd.tiempo_id,"") AS tiempo_id,
                                         IFNULL(rfd.dtiempo,"") AS dtiempo,
+                                        IFNULL(rfd.detalle,"") AS detalle,                                         
                                         IFNULL(rfd.ruta_flujo_id2,"") AS ruta_flujo_id2,
                                         IFNULL(
                                         (SELECT f2.nombre
@@ -758,6 +760,7 @@ class RutaFlujo extends Eloquent
                 // Inicializa valores en caso no tenga datos...
                 $rutaFlujoDetalle['tiempo_id']="1";
                 $rutaFlujoDetalle['dtiempo']="0";
+                $rutaFlujoDetalle['detalle']="";
 
                 if( trim($post)!='' and $post*1>=0 ){
                     $detalleTiempoG=explode( ",", $tiempoG[$post] );
@@ -773,6 +776,7 @@ class RutaFlujo extends Eloquent
                         if( trim($dtg[1])!='' ){
                             $rutaFlujoDetalle['tiempo_id']=$dtg[1];
                             $rutaFlujoDetalle['dtiempo']=$dtg[2];
+                            $rutaFlujoDetalle['detalle']=$dtg[3];
                         }
                     }
 

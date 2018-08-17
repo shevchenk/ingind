@@ -158,7 +158,7 @@ $(document).ready(function() {
             tiempoGIdAuxi.push(id);
             tiempoGAuxi.push([]);
             tid=tiempoGAuxi.length-1;
-            tiempoGAuxi[tid].push(posicioninicial+"__");
+            tiempoGAuxi[tid].push(posicioninicial+"___");
 
             verboGAuxi.push([]);
             verboGAuxi[tid].push(posicioninicial+"______");
@@ -170,7 +170,7 @@ $(document).ready(function() {
                 validapos=areasGIdAuxi.indexOf(id.split("_")[0],posicioninicialf);
                 posicioninicialf=validapos;
                 if( i>=tiempoGAuxi[tid].length ){
-                    tiempoGAuxi[tid].push(validapos+"__");
+                    tiempoGAuxi[tid].push(validapos+"___");
 
                     verboGAuxi[tid].push(validapos+"______");
                 }
@@ -210,7 +210,7 @@ $(document).ready(function() {
             tiempoGId.push(id);
             tiempoG.push([]);
             tid=tiempoG.length-1;
-            tiempoG[tid].push(posicioninicial+"__");
+            tiempoG[tid].push(posicioninicial+"___");
 
             verboG.push([]);
             verboG[tid].push(posicioninicial+"______");
@@ -222,7 +222,7 @@ $(document).ready(function() {
                 validapos=areasGId.indexOf(id,posicioninicialf);
                 posicioninicialf=validapos;
                 if( i>=tiempoG[tid].length ){
-                    tiempoG[tid].push(validapos+"__");
+                    tiempoG[tid].push(validapos+"___");
 
                     verboG[tid].push(validapos+"______");
                 }
@@ -379,20 +379,24 @@ guardarTodo=function(){
 guardarTiempo=function(){
     var id=$("#form_ruta_tiempo #txt_area_id_modal").val();
     var tid=tiempoGId.indexOf(id);
+    var detalleprocesoaux="";
 
     for(var i=0; i<tiempoG[tid].length; i++){
         detalle=tiempoG[tid][i].split("_");
         detalle[1]=$("#slct_tipo_tiempo_"+detalle[0]+"_modal").val();
         detalle[2]=$("#txt_tiempo_"+detalle[0]+"_modal").val();
-        detalle[3]=$("#txt_micro_"+detalle[0]+"_modal").val();
+        detalle[3]=$("#txt_detalle_"+detalle[0]+"_modal").val();//
+        //detalle[3]=$("#txt_micro_"+detalle[0]+"_modal").val();
         detalle[4]=$("#txt_ruta_flujo_id2_"+detalle[0]+"_modal").val();
 
         //alert("guardando: "+ detalle.join("_") +" tt=> "+$("#slct_tipo_tiempo_"+detalle[0]+"_modal").val()+"; t=> "+$("#txt_tiempo_"+detalle[0]+"_modal").val());
         if ( modificaG.indexOf(detalle[0])<0 && tiempoG[tid][i]!=detalle.join("_") ){
             modificaG.push(detalle[0]);
         }
+        
         tiempoG[tid][i]=detalle.join("_");
     }
+    
     alert('Timepo(s) Actualizado(s)');
 }
 
@@ -536,6 +540,7 @@ guardarVerbo=function(){
     }
 }
 
+/*ESTA ES LA 2DA PESTAÑA ASIG. TIEMPO*/
 pintarTiempoG=function(tid){
     var htm="";var detalle="";var detalle2="";
     $("#tb_tiempo").html(htm);
@@ -543,7 +548,7 @@ pintarTiempoG=function(tid){
 
     posicionDetalleVerboG=0; // Inicializando posicion del detalle al pintar
 
-    var subdetalle1="";var subdetalle2="";var subdetalle3="";var subdetalle4="";var subdetalle5="";var subdetalle6="";var imagen="";
+    var subdetalle1="";var subdetalle2="";var subdetalle3="";var subdetalle4="";var subdetalle5="";var subdetalle6="";var detalleproceso="";var imagen="";
     var bloqueado="disabled";
     $("#btn_guardar_tiempo").hide();
     $("#btn_guardar_verbo").hide();
@@ -558,6 +563,7 @@ pintarTiempoG=function(tid){
     for(var i=0;i<tiempoG[tid].length;i++){
         // tiempo //
         detalle=tiempoG[tid][i].split("_");
+        
 
         htm=   '<tr>'+
                     '<td>'+(detalle[0]*1+1)+'</td>'+
@@ -569,6 +575,12 @@ pintarTiempoG=function(tid){
                     '<td>'+
                         '<input class="form-control" type="number" id="txt_tiempo_'+detalle[0]+'_modal" value="'+detalle[2]+'" '+bloqueado+'>'+
                     '</td>'+
+                    /*ACA SE ESTA AÑADIENDO EL DETALLE DEL PROCESO*/
+                    '<td>'+                        
+                        '<textarea class="form-control" id="txt_detalle_'+detalle[0]+'_modal" placeholder="Ing. Acción" '+bloqueado+'>'+detalle[3]+'</textarea>'+
+                        
+                    '</td>'+
+                  
                     /*'<td>'+
                         '<input class="form-control" type="hidden" id="txt_ruta_flujo_id2_'+detalle[0]+'_modal" name="txt_ruta_flujo_id_modal" value="'+detalle[4]+'" readOnly>'+
                         '<input class="form-control" type="text" id="txt_micro_'+detalle[0]+'_modal" name="txt_micro_modal" value="'+detalle[3]+'" disabled>'+
@@ -672,7 +684,7 @@ pintarTiempoGAuxi=function(tid){
 
     posicionDetalleVerboG=0; // Inicializando posicion del detalle al pintar
 
-    var subdetalle1="";var subdetalle2="";var subdetalle3="";var subdetalle4="";var subdetalle5="";var subdetalle6="";var imagen="";
+    var subdetalle1="";var subdetalle2="";var subdetalle3="";var subdetalle4="";var subdetalle5="";var subdetalle6="";var imagen="";var detalleproceso="";
     var bloqueado="disabled";
     $("#btn_guardar_tiempo").hide();
     $("#btn_guardar_verbo").hide();
@@ -681,6 +693,7 @@ pintarTiempoGAuxi=function(tid){
     for(var i=0;i<tiempoGAuxi[tid].length;i++){
         // tiempo //
         detalle=tiempoGAuxi[tid][i].split("_");
+       
 
         htm=   '<tr>'+
                     '<td>'+(detalle[0]*1+1)+'</td>'+
@@ -692,9 +705,13 @@ pintarTiempoGAuxi=function(tid){
                     '<td>'+
                         '<input class="form-control" type="number" id="txt_tiempo_'+detalle[0]+'_modal" value="'+detalle[2]+'" '+bloqueado+'>'+
                     '</td>'+
+                    '<td>'+                        
+                        '<textarea class="form-control" id="txt_detalle_'+detalle[0]+'_modal" placeholder="Ing. Acción" '+bloqueado+'>'+detalle[3]+'</textarea>'+
+                        
+                    '</td>'+
                     '<td>'+
                         '<input class="form-control" type="hidden" id="txt_ruta_flujo_id2_'+detalle[0]+'_modal" name="txt_ruta_flujo_id_modal" value="'+detalle[4]+'" readOnly>'+
-                        '<input class="form-control" type="text" id="txt_micro_'+detalle[0]+'_modal" name="txt_micro_modal" value="'+detalle[3]+'" disabled>'+
+                        /*'<input class="form-control" type="text" id="txt_micro_'+detalle[0]+'_modal" name="txt_micro_modal" value="'+detalle[3]+'" disabled>'+*/
                     '</td>'+
                      '<td>'+
                         '<span class="btn btn-primary" data-toggle="modal" data-target="#procesoModal" data-texto="txt_proceso" data-id="txt_flujo_id" id="btn_buscar" onClick="Posicion(this)">'+
@@ -1421,7 +1438,7 @@ validandoconteo=0;
             $("#txt_persona").val(data.persona);
             //$("#slct_tipo_ruta").val(data.tipo_ruta);
         }
-        adicionarRutaDetalleAutomatico(data.area2,data.area_id2,data.tiempo_id+"_"+data.dtiempo,data.verbo,data.imagen,data.imagenc,data.imagenp,data.estado_ruta,data.flujo2,data.ruta_flujo_id2);
+        adicionarRutaDetalleAutomatico(data.area2,data.area_id2,data.tiempo_id+"_"+data.dtiempo+"_"+data.detalle,data.verbo,data.imagen,data.imagenc,data.imagenp,data.estado_ruta,data.flujo2,data.ruta_flujo_id2);
     });
     permisoG=permiso;
     pintarAreasG(permiso);
@@ -1446,13 +1463,13 @@ posicionDetalleVerboGAuxi=0;
 validandoconteo=0;
     $.each(datos,function(index,data){
         validandoconteo++;
-        adicionarRutaDetalleAutomaticoAuxi(data.area2,data.area_id2,data.tiempo_id+"_"+data.dtiempo,data.verbo,data.imagen,data.imagenc,data.imagenp,data.estado_ruta,data.flujo2,data.ruta_flujo_id2);
+        adicionarRutaDetalleAutomaticoAuxi(data.area2,data.area_id2,data.tiempo_id+"_"+data.dtiempo+"_"+data.detalle,data.verbo,data.imagen,data.imagenc,data.imagenp,data.estado_ruta,data.flujo2,data.ruta_flujo_id2);
     });
     pintarAreasGAuxi(permiso);
     //alertatodo();
 }
 
-adicionarRutaDetalleAutomatico=function(valorText,valor,tiempo,verbo,imagen,imagenc,imagenp,estruta,flujo2,ruta_flujo_id2){
+adicionarRutaDetalleAutomatico=function(valorText,valor,tiempoG,verbo,imagen,imagenc,imagenp,estruta,flujo2,ruta_flujo_id2){
     valor=""+valor;
     var adjunta=false; var position=areasGId.indexOf(valor);
     if( position>=0 ){
