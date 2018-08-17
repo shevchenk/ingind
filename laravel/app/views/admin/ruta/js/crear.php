@@ -1469,7 +1469,7 @@ validandoconteo=0;
     //alertatodo();
 }
 
-adicionarRutaDetalleAutomatico=function(valorText,valor,tiempoG,verbo,imagen,imagenc,imagenp,estruta,flujo2,ruta_flujo_id2){
+adicionarRutaDetalleAutomatico=function(valorText,valor,tiempo,verbo,imagen,imagenc,imagenp,estruta,flujo2,ruta_flujo_id2){
     valor=""+valor;
     var adjunta=false; var position=areasGId.indexOf(valor);
     if( position>=0 ){
