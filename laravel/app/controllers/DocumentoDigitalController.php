@@ -478,7 +478,7 @@ class DocumentoDigitalController extends \BaseController {
             $DocDigital->asunto = Input::get('asunto');
             $DocDigital->correlativo = Input::get('titulo');
 
-//            $DocDigital->doc_privado = (Input::has('doc_privado') ? Input::get('doc_privado') : 0);
+            $DocDigital->doc_privado = (Input::has('doc_privado') ? Input::get('doc_privado') : 0);
 
             $DocDigital->cuerpo = $html;
             $DocDigital->plantilla_doc_id = Input::get('plantilla');
