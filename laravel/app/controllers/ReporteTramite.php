@@ -104,7 +104,7 @@ class ReporteTramite extends Eloquent
                     INNER JOIN flujos f ON r.flujo_id=f.id 
                     LEFT JOIN rutas_detalle rd ON re.ruta_detalle_id=rd.id
                     LEFT JOIN areas a ON rd.area_id=a.id  
-                    WHERE re.tabla_relacion_id='".$referido->tabla_relacion_id."'
+                    WHERE re.estado=1 and re.tabla_relacion_id='".$referido->tabla_relacion_id."'
                     UNION
                     SELECT re.ruta_id,re.ruta_detalle_id,sustento,fecha_hora_sustento fecha_hora,f.nombre proceso,a.nombre area,rd.norden,'s' tipo
                     FROM sustentos s
@@ -113,6 +113,7 @@ class ReporteTramite extends Eloquent
                     LEFT JOIN areas a ON rd.area_id=a.id  
                     INNER JOIN rutas r ON re.ruta_id=r.id 
                     INNER JOIN flujos f ON r.flujo_id=f.id
+                    WHERE s.estado = 1 and re.estado = 1
                     ORDER BY ruta_id,norden,tipo";
             $r=DB::select($sql);
             return $r;

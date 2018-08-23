@@ -49,6 +49,7 @@ class ReportePersonalController extends BaseController
             $fecha_fin = Input::get('fecha_fin');
             $tipo = Input::get('tipo');
             $ar=Input::get('area_id');
+            $filtro=Input::get('filtro');
 
             if(count($ar) > 0 && $ar!="" ){
                 $areas = " AND a.id IN (".implode(",",$ar).")";
@@ -56,15 +57,98 @@ class ReportePersonalController extends BaseController
                 $areas = "";
             }
 
+            $qryFiltro = "";
+            $qryRegimen = "";
+
+            if(count($filtro) > 0 && $filtro!="" )
+                foreach ($filtro as $item) {
+                    switch ($item) {
+
+                    case '1.1': // 3 Faltas o más
+                       $qryFiltro .= "AND SUM(faltas) > 2 ";
+                        break;
+                    case '1.2': // 1 o más permisos medicos
+                       $qryFiltro .= "AND SUM(descanso_med) > 0 ";
+                        break;
+                    case '2.1': // C.A.S.
+                       $qryRegimen .= "'C.A.S.',";
+                        break;
+                    case '2.2': // TERCEROS
+                       $qryRegimen .= "'TERCEROS',";
+                        break;
+                    case '2.3': // EMPLEADO NOMBRADO
+                       $qryRegimen .= "'EMPLEADO NOMBRADO',";
+                        break;
+                    case '2.4': // EMPLEADO CONTRATADO
+                       $qryRegimen .= "'EMPLEADO CONTRATADO',";
+                        break;
+                    case '2.5': // FUNCIONARIOS CAS
+                       $qryRegimen .= "'FUNCIONARIOS CAS',";
+                        break;
+                    case '2.6': // OBREROS
+                       $qryRegimen .= "'OBREROS',";
+                        break;
+                    case '2.7': // FUNCIONARIOS
+                       $qryRegimen .= "'FUNCIONARIOS',";
+                        break;
+                    case '2.8': // C.A.S. REINCORPORADOS
+                       $qryRegimen .= "'C.A.S. REINCORPORADOS',";
+                        break;
+                    default:
+                        # code...
+                        break;
+                }
+            }
+
+            $qryRegimen = ( strlen($qryRegimen) > 2 ? ' AND sat.regimen IN ('.substr($qryRegimen, 0,-1).')' : '' );
+            $qryFiltro = ( strlen($qryFiltro) > 3 ? ' HAVING 1 '.$qryFiltro : '' );
+            
             if($tipo=='1'){
               $qryTipo = "GROUP BY nombres";
-            }elseif($tipo=='6'){
+            }elseif($tipo=='6'){    
               $qryTipo = "GROUP BY area";
             }else{
               $qryTipo = "GROUP BY nombres";
             }
 
-            $sql = "SELECT sat.persona_id,sat.foto,a.nombre as area,sat.nombres,sat.dni,sat.cargo,sat.regimen,SUM(sat.faltas) as faltas,SUM(sat.tardanza) as tardanza,SUM(sat.lic_sg) as lic_sg,SUM(sat.sancion_dici) as sancion_dici,SUM(sat.lic_sindical) as lic_sindical,SUM(sat.descanso_med) as descanso_med,SUM(sat.min_permiso) as min_permiso,SUM(sat.comision) as comision,SUM(sat.citacion) as citacion,SUM(sat.essalud) as essalud,SUM(sat.permiso) as permiso,SUM(sat.compensatorio) as compensatorio,SUM(sat.onomastico) as onomastico FROM sw_asistencias_temp as sat INNER JOIN areas as a WHERE sat.fecha_asistencia BETWEEN '$fecha_ini' AND '$fecha_fin' AND sat.area = a.id $areas AND sat.nombres != '' $qryTipo ORDER BY SUM(sat.faltas) DESC";
+            $sql = "SELECT 
+            sat.persona_id,
+            sat.foto,
+            a.nombre as area,
+            sat.nombres,
+            sat.dni,
+            sat.cargo,
+            sat.regimen,
+            SUM(sat.faltas) as faltas,
+            SUM(sat.tardanza) as tardanza,
+            SUM(sat.lic_sg) as lic_sg,
+            SUM(sat.sancion_dici) as sancion_dici,
+            SUM(sat.lic_sindical) as lic_sindical,
+            SUM(sat.descanso_med) as descanso_med,
+            SUM(sat.min_permiso) as min_permiso,
+            SUM(sat.comision) as comision,
+            SUM(sat.citacion) as citacion,
+            SUM(sat.essalud) as essalud,
+            SUM(sat.permiso) as permiso,
+            SUM(sat.compensatorio) as compensatorio,
+            SUM(sat.onomastico) as onomastico 
+
+            FROM sw_asistencias_temp as sat 
+            INNER JOIN areas as a 
+
+            WHERE sat.fecha_asistencia 
+            BETWEEN '$fecha_ini' 
+            AND '$fecha_fin' 
+            AND sat.area = a.id $areas 
+            AND sat.nombres != '' 
+
+            $qryRegimen
+            
+            GROUP BY nombres
+
+            $qryFiltro            
+            
+            ORDER BY SUM(sat.faltas) DESC";
 
             $lis = DB::select($sql);
 

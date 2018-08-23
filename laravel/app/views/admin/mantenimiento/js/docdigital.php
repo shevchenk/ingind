@@ -73,7 +73,9 @@ $(document).ready(function() {
     $('#fechaModal').on('hidden.bs.modal', function (event) {
        if(MostrarOcultarModalfecha==2){
         MostrarAjax('docdigitales');
+        $('#docid').prop('checked', false);
         $("#docdigitalModal").modal('show');
+        $('#docid').prop('checked', false);
         }
     });
     
@@ -260,5 +262,8 @@ FlotanteFecha=function(flotante){
     }
 
 };
+
+
+$('#docid').prop('checked', false);
 
 </script>

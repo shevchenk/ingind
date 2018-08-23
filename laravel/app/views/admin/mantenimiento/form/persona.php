@@ -133,7 +133,7 @@
                       <option value='M' selected>Masculino</option>
                   </select>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-2">
                   <label class="control-label">Modalidad:
                   </label>
                   <select class="form-control" name="slct_modalidad" id="slct_modalidad">
@@ -142,6 +142,16 @@
                       <option value='2'>Tercero</option>
                   </select>
                 </div>
+
+                <div class="col-sm-2">
+                  <label class="control-label" style="color: red;">Documentos Privados:
+                  </label>
+                  <select class="form-control" name="slct_doc_privados" id="slct_doc_privados">                      
+                      <option value='1'>Si</option>
+                      <option value='0'>No</option>
+                  </select>
+                </div>
+
               </div>
 
             </div>

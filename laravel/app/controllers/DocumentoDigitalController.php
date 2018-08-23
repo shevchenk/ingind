@@ -87,13 +87,18 @@ class DocumentoDigitalController extends \BaseController {
                                         WHERE acp.estado=1
                                         AND cp.persona_id='.$usu_id.'
                         )";
-            }  
+            }
+
+            if(Auth::user()->rol_id != 8 && Auth::user()->rol_id != 9)
+                $array['where'].=' AND (IF(dd.doc_privado=1,dd.persona_id,\''.Auth::user()->id.'\')=\''.Auth::user()->id.'\')'; 
+
             $array['order']=" order by `created_at` desc ";
             
             if( Input::get("tipo")==1 ){
                 $cant  = DocumentoDigital::getCargarCount( $array );
                 $aData = DocumentoDigital::getCargar( $array );
             }
+
             if(Input::get("tipo")==2){
                 $cant  = DocumentoDigital::getCargarRelacionAreaCount( $array );
                 $aData = DocumentoDigital::getCargarRelacionArea( $array );
@@ -472,6 +477,9 @@ class DocumentoDigitalController extends \BaseController {
             $DocDigital->titulo = Input::get('titulofinal');
             $DocDigital->asunto = Input::get('asunto');
             $DocDigital->correlativo = Input::get('titulo');
+
+            $DocDigital->doc_privado = (Input::has('doc_privado') ? Input::get('doc_privado') : 0);
+
             $DocDigital->cuerpo = $html;
             $DocDigital->plantilla_doc_id = Input::get('plantilla');
             $plantilla= PlantillaDocumento::find(Input::get('plantilla'));

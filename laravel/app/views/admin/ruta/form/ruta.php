@@ -27,32 +27,38 @@
                   </button>
                 </li>
             </ul>
-
-
-        
+       
 
             <div class="tab-content">
                 <div class="tab-pane" id="tab_tiempo">
+                    <!--INICIO DE FORM-->
                     <form id="form_ruta_tiempo" name="form_areas" action="" method="post" style="overflow: auto;height:500px;">
-                      <div class="form-group">
+
+                      <div class="form-group"><!--INICIO DIV CLASS GROUP*-->
+                        <!--esto es para que se muestre el area-->
                         <label class="control-label">Area:
                         </label>
                         <input type="text" class="form-control" placeholder="Area" id="txt_nombre" readonly>
+                        <!--********************************-->
+                        <!--esto es para seleccionar el formato del tiempo-->
                         <select name="slct_tipo_tiempo_modal" id="slct_tipo_tiempo_modal" style="display:none" > 
                           <option value="">.::Seleccione::.</option>
                           <option value="1">Horas</option>
                           <option value="5">Minutos</option>
                           <option value="2">Dias</option>
                         </select>
-                      </div>
-                      <div class="form-group">
+                        <!--********************************-->
+                      </div><!--FIN DIV CLASS GROUP-->
+
+                      <div class="form-group"><!--INICIO DIV CLASS GROUP-->
                         <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
+                        <table class="table table-bordered table-striped">                          
                           <thead>
                             <tr>
-                              <th>Posicion</th>
-                              <th>Tipo Tiempo</th>
-                              <th>Tiempo</th>
+                              <th class="text-center col-sm-1">Posicion</th>
+                              <th class="text-center col-sm-1">Tipo Tiempo</th>
+                              <th class="text-center col-sm-1"">Tiempo</th>                              
+                              <th class="text-center col-sm-4">Detalle</th>
                               <!-- <th>Micro Proceso</th>
                               <th>[]</th> -->
                             </tr>
@@ -60,13 +66,16 @@
                           <tbody id="tb_tiempo"> </tbody>
                         </table>
                         </div>
-                      </div>
-                    </form>
+                      </div><!--FIN DIV CLASS GROUP-->
+
+                    </form><!--FIN DE FORM-->
+
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                       <button id="btn_guardar_tiempo" type="button" class="btn btn-primary">Guardar</button>
                     </div>
                 </div><!-- /.tab-pane -->
+
                 <div class="tab-pane active" id="tab_verbo">
                     <form id="form_ruta_verbo" name="form_areas" action="" method="post" style="overflow: auto;height:500px;">
                       <div class="form-group">
@@ -124,6 +133,7 @@
                     </div>
                 </div><!-- /.tab-pane -->
             </div><!-- /.tab-content -->
+
         </div><!-- nav-tabs-custom -->
     </div>
   </div>
