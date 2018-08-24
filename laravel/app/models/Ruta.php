@@ -459,6 +459,244 @@ class Ruta extends Eloquent
         }
     }
 
+
+
+
+
+
+##
+## ---------------------------------------------------------------------
+##
+
+ public function crearRuta02(){
+        DB::beginTransaction();
+
+        $idAPI = 1272;
+        $areaAPI = 19;
+        //5569
+
+
+        $codigounico="";
+        $codigounico=Input::get('codigo');
+        $id_documento='';        
+        
+        $selectfecha = "SELECT NOW() as fecha;";
+        $fecha_actual = DB::select($selectfecha);
+        $fecha_inicio=$fecha_actual[0]->fecha;        
+
+        if( Input::has('documento_id') ){
+            $id_documento=Input::get('documento_id');
+        }
+        
+        $tablarelacion_id= Input::get('tablarelacion_id');
+
+        $tablaRelacion=DB::table('tablas_relacion as tr')
+                        ->join(
+                            'rutas as r',
+                            'tr.id','=','r.tabla_relacion_id'
+                        )
+                        ->where('tr.id_union', '=', $codigounico)
+                        ->where('r.ruta_flujo_id', '=', Input::get('ruta_flujo_id'))
+                        ->where('tr.estado', '=', '1')
+                        ->where('r.estado', '=', '1')
+                        ->get();
+
+        if(count($tablaRelacion)>0){
+            DB::rollback();
+            return  array(
+                    'rst'=>2,
+                    'msj'=>'El trámite ya fue registrado anteriormente'
+                );
+        }
+        else{
+
+        $tablaRelacion=new TablaRelacion;
+        $tablaRelacion['software_id']=1;
+
+        $tablaRelacion['id_union']=Input::get('codigo');
+        
+        $tablaRelacion['fecha_tramite']= $fecha_inicio; //Input::get('fecha_tramite');
+        $tablaRelacion['tipo_persona']=3;
+        if( Input::has('paterno') AND Input::has('materno') AND Input::has('nombre') ){
+            $tablaRelacion['paterno']=Input::get('paterno');
+            $tablaRelacion['materno']=Input::get('materno');
+            $tablaRelacion['nombre']=Input::get('nombre');
+        }
+        elseif( Input::has('razon_social') AND Input::has('ruc') ){
+            $tablaRelacion['razon_social']=Input::get('razon_social');
+            $tablaRelacion['ruc']=Input::get('ruc');
+        }
+
+            
+        elseif( Input::has('carta_id') ){ // Este caso solo es para asignar carta inicio
+            $tablaRelacion['area_id']=$areaAPI;
+        }
+        elseif( Input::has('razon_social') ){
+            $tablaRelacion['razon_social']=Input::get('razon_social');
+        }
+
+        $tablaRelacion['referente']='';
+        
+        if( Input::has('responsable') AND trim(Input::get('responsable'))!='' ){
+            $tablaRelacion['responsable']=Input::get('responsable');
+        }
+        $tablaRelacion['sumilla']=Input::get('sumilla');
+
+        if( Input::has('doc_digital_id')){
+             $tablaRelacion['doc_digital_id']=Input::get('doc_digital_id');
+        }
+
+        $tablaRelacion['persona_autoriza_id']=Input::get('id_autoriza');
+        $tablaRelacion['persona_responsable_id']=Input::get('id_responsable');
+
+        $tablaRelacion['usuario_created_at']=$idAPI;
+        $tablaRelacion->save();
+
+        $rutaFlujo=RutaFlujo::find(Input::get('ruta_flujo_id'));
+
+        $ruta= new Ruta;
+        $ruta['tabla_relacion_id']=$tablaRelacion->id;
+        $ruta['fecha_inicio']= $fecha_inicio;
+        $ruta['ruta_flujo_id']=$rutaFlujo->id;
+        $ruta['flujo_id']=$rutaFlujo->flujo_id;
+        $ruta['persona_id']=$rutaFlujo->persona_id;
+        if( Input::has('doc_digital_id')){
+            $ruta['doc_digital_id']=Input::get('doc_digital_id');
+        }
+        $ruta['area_id']=$rutaFlujo->area_id;
+        $ruta['usuario_created_at']= $idAPI;
+        $ruta->save();
+
+        $referido=new Referido;
+        $referido['ruta_id']=$ruta->id;
+        $referido['tabla_relacion_id']=$tablaRelacion->id;
+        
+        if($tablarelacion_id!=''){
+            $referido['tabla_relacion_id']=$tablarelacion_id;
+        }else{
+            $detalle=explode("-",$tablaRelacion->id_union);
+            if( $detalle[0]=='DS' or $detalle[0]=='EX' or $detalle[0]=='AN' ){
+                $sql="  SELECT id
+                        FROM tablas_relacion
+                        WHERE id_union='$tablaRelacion->id_union'
+                        ORDER BY id
+                        LIMIT 0,1";
+                $rsql=DB::select($sql);
+                if( count($rsql)>0 ){
+                    $referido['tabla_relacion_id']=$rsql[0]->id;
+                }
+            }
+        }
+
+        if( Input::has('doc_digital_id')){
+               $referido['doc_digital_id']=Input::get('doc_digital_id');
+        }
+      
+        $referido['tipo']=0;
+        $referido['ruta_detalle_verbo_id']=0;
+        $referido['referido']=$tablaRelacion->id_union;
+        $referido['fecha_hora_referido']=$tablaRelacion->created_at;
+        $referido['usuario_referido']=$tablaRelacion->usuario_created_at;
+        $referido['usuario_created_at']=$idAPI;
+        $referido->save();
+        /**********************************************/
+
+        $qrutaDetalle=DB::table('rutas_flujo_detalle')
+            ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+            ->where('estado', '=', '1')
+            ->orderBy('norden','ASC')
+            ->get();
+            $validaactivar=0;
+        
+        $conteo=0;$array['fecha']=''; // inicializando valores para desglose
+
+            foreach($qrutaDetalle as $rd){
+                $cero='';
+                if($rd->norden<10){
+                    $cero='0';
+                }
+                $rutaDetalle = new RutaDetalle;
+                $rutaDetalle['ruta_id']=$ruta->id;
+                $rutaDetalle['area_id']=$rd->area_id;
+                $rutaDetalle['tiempo_id']=$rd->tiempo_id;
+                $rutaDetalle['dtiempo']=$rd->dtiempo;
+                $rutaDetalle['norden']=$cero.$rd->norden;
+                $rutaDetalle['ruta_flujo_id']=$rd->ruta_flujo_id2;
+                $rutaDetalle['estado_ruta']=$rd->estado_ruta;
+                $rutaDetalle['detalle']=$rd->detalle;
+                $rutaDetalle['archivado']=$rd->archivado;
+                if($rd->norden==1 or ($rd->norden>1 and $validaactivar==0 and $rd->estado_ruta==2) ){
+                    $rutaDetalle['fecha_inicio']=$fecha_inicio;
+                    $sql="SELECT CalcularFechaFinal( '".$fecha_inicio."', (".$rd->dtiempo."*1440), ".$rd->area_id." ) fproy";
+                    $fproy= DB::select($sql);
+                    $rutaDetalle['fecha_proyectada']=$fproy[0]->fproy;
+                }
+                else{
+                    $validaactivar=1;
+                }
+                $rutaDetalle['usuario_created_at']= $idAPI;
+                $rutaDetalle->save();
+                
+                if( $rd->norden==1 AND Input::has('carta_id') ){
+                    $rutaDetalleVerbo = new RutaDetalleVerbo;
+                    $rutaDetalleVerbo['ruta_detalle_id']= $rutaDetalle->id;
+                    $rutaDetalleVerbo['nombre']= '-';
+                    $rutaDetalleVerbo['condicion']= '0';
+                    $rol_id=1;
+
+
+                    $rutaDetalleVerbo['rol_id']= $rol_id;
+                    $rutaDetalleVerbo['verbo_id']= '1';
+                    $rutaDetalleVerbo['documento_id']= '57';//Carta de inicio
+                    $rutaDetalleVerbo['orden']= '0';
+                    $rutaDetalleVerbo['finalizo']='1';
+                    $rutaDetalleVerbo['documento']=Input::get('codigo');
+                    $rutaDetalleVerbo['usuario_created_at']= $idAPI;
+                    $rutaDetalleVerbo['usuario_updated_at']= $idAPI;
+                    $rutaDetalleVerbo->save();
+                }
+
+                $qrutaDetalleVerbo=DB::table('rutas_flujo_detalle_verbo')
+                                ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                ->where('estado', '=', '1')
+                                ->orderBy('orden', 'ASC')
+                                ->get();
+                    if(count($qrutaDetalleVerbo)>0){
+                        foreach ($qrutaDetalleVerbo as $rdv) {
+                            $rutaDetalleVerbo = new RutaDetalleVerbo;
+                            $rutaDetalleVerbo['ruta_detalle_id']= $rutaDetalle->id;
+                            $rutaDetalleVerbo['nombre']= $rdv->nombre;
+                            $rutaDetalleVerbo['condicion']= $rdv->condicion;
+                            $rutaDetalleVerbo['rol_id']= $rdv->rol_id;
+                            $rutaDetalleVerbo['verbo_id']= $rdv->verbo_id;
+                            $rutaDetalleVerbo['documento_id']= $rdv->documento_id;
+                            $rutaDetalleVerbo['orden']= $rdv->orden;
+                            $rutaDetalleVerbo['usuario_created_at']= $idAPI;
+                            $rutaDetalleVerbo->save();
+                        }
+                    }
+            }
+            
+            $insertMicro="INSERT INTO rutas_detalle_micro (ruta_flujo_id,ruta_id,norden,usuario_created_at)
+                          SELECT rfdm.ruta_flujo_id2,".$ruta->id.",IF(rfdm.norden<10,CONCAT('0',norden),norden) AS norden,".$idAPI."
+                          FROM rutas_flujo_detalle_micro rfdm
+                          WHERE rfdm.ruta_flujo_id=".$rutaFlujo->id." AND rfdm.estado=1";
+                          
+            DB::insert($insertMicro);
+
+        DB::commit();
+
+        return  array(
+                    'rst'=>1,
+                    'msj'=>'Registro realizado con éxito'
+                );
+        }
+    }
+
+##
+## ----------------------------------------------------------------------------
+##
+
     public function crearRutaGestion(){
         DB::beginTransaction();
         $codigounico="";
