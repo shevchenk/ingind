@@ -134,11 +134,17 @@ class Ruta extends Eloquent
         DB::beginTransaction();
         $codigounico="";
         $codigounico=Input::get('codigo');
-        $id_documento='';
+        $id_documento='';        
+        /*
+        //$fecha_inicio=date('Y-m-d H:i:s');
         $fecha_inicio=date('Y-m-d H:i:s');
         if( $fecha_inicio=='0000-00-00 00:00:00' ){
             $fecha_inicio=date('Y-m-d H:i:s');
         }
+        */
+        $selectfecha = "SELECT NOW() as fecha;";
+        $fecha_actual = DB::select($selectfecha);
+        $fecha_inicio=$fecha_actual[0]->fecha;        
 
         if( Input::has('documento_id') ){
             $id_documento=Input::get('documento_id');
