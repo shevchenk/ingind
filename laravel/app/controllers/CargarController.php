@@ -3213,6 +3213,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['updated_at'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51]))).' '.date("H:i:s");
                                                     $rutaDetalleVerbo->save();
 
+                                                    $aux_ruta_detalle6 = $rutaDetalle6->id;
                                                     $aux_fecha_update_51 = '';
                                                     $aux_fecha_update_51 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51]))).' '.date("H:i:s");
                                                     
@@ -3745,7 +3746,7 @@ class CargarController extends BaseController {
 
                                             $ind_11++;
                                             $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                            $rutaDetalleVerbo['ruta_detalle_id'] = (@$rutaDetalle2)?$rutaDetalle2->id:0;
+                                            $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle2; //;(@$rutaDetalle2)?$rutaDetalle2->id:0;
                                             $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                             $rutaDetalleVerbo['observacion'] = $fields[11];
                                             $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3794,7 +3795,7 @@ class CargarController extends BaseController {
 
                                             $ind_19++;
                                             $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                            $rutaDetalleVerbo['ruta_detalle_id'] = (@$rutaDetalle3)?$rutaDetalle3->id:0;
+                                            $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle3;//(@$rutaDetalle3)?$rutaDetalle3->id:0;
                                             $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                             $rutaDetalleVerbo['observacion'] = $fields[19];
                                             $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3842,7 +3843,7 @@ class CargarController extends BaseController {
 
                                                 $ind_50++;
                                                 $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                $rutaDetalleVerbo['ruta_detalle_id'] = (@$rutaDetalle6)?$rutaDetalle6->id:0;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle6;//(@$rutaDetalle6)?$rutaDetalle6->id:0;
                                                 $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                 $rutaDetalleVerbo['observacion'] = $fields[50];
                                                 $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
