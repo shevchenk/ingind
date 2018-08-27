@@ -427,7 +427,7 @@ class DocumentoDigital extends Base {
         $sSql = '';
         
         if(Input::get('estado') == 1) {
-        $sSql .= "SELECT ddt.correlativo as num_doc, 
+        $sSql .= "SELECT ddt.id, ddt.correlativo as num_doc, 
                                     YEAR(ddt.created_at)as anio,
                                     d.id as tipo,
                                     d.nombre as tipo_documento,
@@ -441,7 +441,7 @@ class DocumentoDigital extends Base {
                         " AND ddt.estado=1 ".
                         " AND DATE_FORMAT(ddt.created_at, '%Y-%m-%d') BETWEEN '".Input::get('inicio')."' AND '".Input::get('fin')."'";
         } else {
-        $sSql .= " SELECT ddt.correlativo as num_doc, 
+        $sSql .= " SELECT ddt.id, ddt.correlativo as num_doc, 
                                     YEAR(ddt.created_at)as anio,
                                     d.id as tipo,
                                     d.nombre as tipo_documento,
