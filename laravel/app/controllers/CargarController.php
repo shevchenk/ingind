@@ -3720,7 +3720,7 @@ class CargarController extends BaseController {
                             {
                                 if(trim($fields[11]) != '-')
                                 {
-                                    /*$rutaFlujo = RutaFlujo::find(5630); //Re-programación
+                                    $rutaFlujo = RutaFlujo::find(5630); //Re-programación
                                     $qrutaDetalle = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -3730,7 +3730,7 @@ class CargarController extends BaseController {
                                     if (count($qrutaDetalle) > 0)
                                     {
                                         foreach ($qrutaDetalle as $rd)
-                                        {*/
+                                        {
                                             $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
                                                     ->where('ruta_flujo_detalle_id', '=', $rd->id)
                                                     ->where('estado', '=', '1')
@@ -3763,8 +3763,8 @@ class CargarController extends BaseController {
                                             $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                             $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                             $rutaDetalleVerbo->save();
-                                        /*}
-                                    }*/
+                                        }
+                                    }
                                 }
                             }
 
@@ -3774,7 +3774,7 @@ class CargarController extends BaseController {
                             {
                                 if(trim($fields[19]) != '-')
                                 {
-                                    /*$rutaFlujo = RutaFlujo::find(5600);
+                                    $rutaFlujo = RutaFlujo::find(5600);
                                     $qrutaDetalle3 = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -3784,7 +3784,7 @@ class CargarController extends BaseController {
                                     if (count($qrutaDetalle3) > 0)
                                     {
                                         foreach ($qrutaDetalle3 as $rd)
-                                        {*/
+                                        {
                                             $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
                                                     ->where('ruta_flujo_detalle_id', '=', $rd->id)
                                                     ->where('estado', '=', '1')
@@ -3807,8 +3807,8 @@ class CargarController extends BaseController {
                                             $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                             $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                             $rutaDetalleVerbo->save();
-                                        /*}
-                                    }*/
+                                        }
+                                    }
                                 }
                             }
 
@@ -3818,7 +3818,7 @@ class CargarController extends BaseController {
                             {
                                 if(trim($fields[50]) != '-')
                                 {
-                                    /*$rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
+                                    $rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
                                     $qrutaDetalle6 = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -3828,7 +3828,7 @@ class CargarController extends BaseController {
                                     if (count($qrutaDetalle6) > 0)
                                     {
                                         foreach ($qrutaDetalle6 as $rd)
-                                        {*/
+                                        {
                                             $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
                                                     ->where('ruta_flujo_detalle_id', '=', $rd->id)
                                                     ->where('estado', '=', '1')
@@ -3860,8 +3860,10 @@ class CargarController extends BaseController {
                                                 $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                 $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_51; //date('Y-m-d H:i:s');
                                                 $rutaDetalleVerbo->save();
-                                        /*}
-                                    }*/
+
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
