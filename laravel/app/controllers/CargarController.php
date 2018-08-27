@@ -3215,27 +3215,7 @@ class CargarController extends BaseController {
 
                                                     $aux_fecha_update_51 = '';
                                                     $aux_fecha_update_51 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51]))).' '.date("H:i:s");
-                                                    /*
-                                                    $aux_ruta_detalle6 = $rutaDetalle6->id;
-                                                    $aux_observacion_50 = $fields[50];
-                                                    $aux_fecha_update_51 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51]))).' '.date("H:i:s");
-                                                    */
-                                                    /*
-                                                    $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
-                                                    $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
-                                                    $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51])));
-                                                    $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
-                                                    $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
-                                                    $rutaDetalleVerbo['verbo_id'] = 29;
-                                                    $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
-                                                    $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
-                                                    $rutaDetalleVerbo['finalizo'] = 1;
-                                                    $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
-                                                    $rutaDetalleVerbo->save();
-                                                    */                                                    
+                                                    
 
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
@@ -3252,7 +3232,7 @@ class CargarController extends BaseController {
                                     }
 
 
-                                    if(trim($fields[50]) != '-' || trim($fields[51]) != '-' || trim($fields[52]) != '-' || trim($fields[53]) != '-'
+                                    if(trim($fields[52]) != '-' || trim($fields[53]) != '-'
                                         || trim($fields[54]) != '-' || trim($fields[55]) != '-' || trim($fields[56]) != '-' || trim($fields[57]) != '-'
                                          || trim($fields[58]) != '-' || trim($fields[59]) != '-' || trim($fields[60]) != '-' || trim($fields[61]) != '-')
                                     {
@@ -3279,7 +3259,7 @@ class CargarController extends BaseController {
                                                 $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
                                                 $fproy= DB::select($sql);
                                                 $rutaDetalle66['fecha_proyectada'] = $fproy[0]->fproy;
-
+                                                
                                                 $rutaDetalle66['dtiempo'] = $rd->dtiempo;
                                                 $rutaDetalle66['detalle'] = $rd->detalle;
                                                 $rutaDetalle66['norden'] =$cero.$NORDEN;
@@ -3313,7 +3293,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo->save();
 
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = $fields[53];
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3328,7 +3308,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo->save();
 
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = $fields[54];
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3343,7 +3323,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo->save();
 
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = $fields[55];
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3359,7 +3339,7 @@ class CargarController extends BaseController {
 
                                                     /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[56])));
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3381,7 +3361,7 @@ class CargarController extends BaseController {
                                                                     WHERE UPPER(titulo) LIKE '%".$fields[57]."%';";
                                                     $doc_digital = DB::select($selectdd);                                                
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = $fields[57];
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3402,7 +3382,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo->save();
                                                     /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[58])));
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3417,7 +3397,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo->save();
                                                     */
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = $fields[59];
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3432,7 +3412,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo->save();
 
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[60])));
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3447,7 +3427,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo->save();
 
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[61])));
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3463,14 +3443,15 @@ class CargarController extends BaseController {
 
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
-                                                $referido['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $referido['ruta_detalle_id'] = $rutaDetalle66->id;
                                                 $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
                                                 $referido['tipo'] = 1;
                                                 $referido['referido'] = '';
-                                                $referido['fecha_hora_referido'] = $rutaDetalle6->dtiempo_final;
+                                                $referido['fecha_hora_referido'] = $rutaDetalle66->dtiempo_final;
                                                 $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
                                                 $referido->save();
+
                                             }
                                         }
                                     }
@@ -3730,62 +3711,6 @@ class CargarController extends BaseController {
                                         $aux_fecha_update_21 = '';
                                     }
 
-                                // ***************************************************************************
-                                // ********************** RECORRIDO ADICIONAL BLOQUE 6 ***********************
-                                /*
-                                if($aux_observacion_50 != '' && $aux_fecha_update_51 != '')
-                                {
-                                    if($aux_observacion_50 != $fields[20] && $aux_fecha_update_51 != $fields[21])
-                                    {
-                                        $rutaFlujo = RutaFlujo::find(5231);
-                                        $qrutaDetalle = DB::table('rutas_flujo_detalle')
-                                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
-                                                    ->where('estado', '=', '1')
-                                                    ->orderBy('norden', 'ASC')
-                                                    ->get();
-
-                                        if (count($qrutaDetalle) > 0)
-                                        {
-                                            foreach ($qrutaDetalle as $rd)
-                                            {
-                                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
-                                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
-                                                        ->where('estado', '=', '1')
-                                                        //->where('nombre', '=', '-')
-                                                        ->orderBy('orden', 'ASC')
-                                                        ->get();
-
-                                                $selectdd="SELECT *
-                                                            FROM doc_digital_temporal
-                                                                WHERE UPPER(titulo) LIKE '%".$aux_observacion_50."%';";
-                                                $doc_digital = DB::select($selectdd);
-                                                
-                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle6;
-                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
-                                                $rutaDetalleVerbo['observacion'] = $aux_observacion_50;
-                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
-                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
-                                                if(count($doc_digital) > 0) {
-                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
-                                                    $rutaDetalleVerbo['verbo_id'] = 1;
-                                                } else {
-                                                    $rutaDetalleVerbo['verbo_id'] = 29;
-                                                }
-                                                $rutaDetalleVerbo['documento_id'] = 82;
-                                                $rutaDetalleVerbo['orden'] = ($ind_50 + 1);
-                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
-                                                $rutaDetalleVerbo['finalizo'] = 1;
-                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_51;
-                                                $rutaDetalleVerbo->save();                                    
-                                            }
-                                        }
-                                    }
-                                }
-                                */
-
-
                         }
                         else
                         {
@@ -3795,7 +3720,7 @@ class CargarController extends BaseController {
                             {
                                 if(trim($fields[11]) != '-')
                                 {
-                                    $rutaFlujo = RutaFlujo::find(5630); //Re-programación
+                                    /*$rutaFlujo = RutaFlujo::find(5630); //Re-programación
                                     $qrutaDetalle = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -3805,7 +3730,7 @@ class CargarController extends BaseController {
                                     if (count($qrutaDetalle) > 0)
                                     {
                                         foreach ($qrutaDetalle as $rd)
-                                        {
+                                        {*/
                                             $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
                                                     ->where('ruta_flujo_detalle_id', '=', $rd->id)
                                                     ->where('estado', '=', '1')
@@ -3838,8 +3763,8 @@ class CargarController extends BaseController {
                                             $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                             $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                             $rutaDetalleVerbo->save();
-                                        }
-                                    }                                    
+                                        /*}
+                                    }*/
                                 }
                             }
 
@@ -3849,7 +3774,7 @@ class CargarController extends BaseController {
                             {
                                 if(trim($fields[19]) != '-')
                                 {
-                                    $rutaFlujo = RutaFlujo::find(5600);
+                                    /*$rutaFlujo = RutaFlujo::find(5600);
                                     $qrutaDetalle3 = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -3859,7 +3784,7 @@ class CargarController extends BaseController {
                                     if (count($qrutaDetalle3) > 0)
                                     {
                                         foreach ($qrutaDetalle3 as $rd)
-                                        {
+                                        {*/
                                             $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
                                                     ->where('ruta_flujo_detalle_id', '=', $rd->id)
                                                     ->where('estado', '=', '1')
@@ -3869,7 +3794,7 @@ class CargarController extends BaseController {
 
                                             $ind_19++;
                                             $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                            $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;;
+                                            $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;
                                             $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                             $rutaDetalleVerbo['observacion'] = $fields[19];
                                             $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3882,8 +3807,8 @@ class CargarController extends BaseController {
                                             $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                             $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                             $rutaDetalleVerbo->save();
-                                        }
-                                    }
+                                        /*}
+                                    }*/
                                 }
                             }
 
@@ -3893,7 +3818,7 @@ class CargarController extends BaseController {
                             {
                                 if(trim($fields[50]) != '-')
                                 {
-                                    $rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
+                                    /*$rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
                                     $qrutaDetalle6 = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -3903,7 +3828,7 @@ class CargarController extends BaseController {
                                     if (count($qrutaDetalle6) > 0)
                                     {
                                         foreach ($qrutaDetalle6 as $rd)
-                                        {
+                                        {*/
                                             $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
                                                     ->where('ruta_flujo_detalle_id', '=', $rd->id)
                                                     ->where('estado', '=', '1')
@@ -3935,8 +3860,8 @@ class CargarController extends BaseController {
                                                 $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                 $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_51; //date('Y-m-d H:i:s');
                                                 $rutaDetalleVerbo->save();
-                                        }
-                                    }
+                                        /*}
+                                    }*/
                                 }
                             }
                         }
