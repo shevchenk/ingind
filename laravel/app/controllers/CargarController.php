@@ -2085,9 +2085,23 @@ class CargarController extends BaseController {
             }
             */
 
-
             if(count($xlsx->rows()))
             {
+                $aux_ruta_detalle2 = '';
+                $aux_observacion_12 = '';
+                $aux_fecha_update_13 = '';
+                $ind_11 = 0;
+
+                $aux_ruta_detalle3 = '';
+                $aux_observacion_20 = '';
+                $aux_fecha_update_21 = '';
+                $ind_19 = 0;
+
+                $aux_ruta_detalle6 = '';
+                $aux_observacion_50 = '';
+                $aux_fecha_update_51 = '';
+                $ind_50 = 0;
+
                 foreach($xlsx->rows() as $c => $fields)
                 {
                     if($c == 3) {
@@ -2235,6 +2249,7 @@ class CargarController extends BaseController {
                                                 $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                 $rutaDetalleVerbo['ruta_detalle_id'] = $ruta_detalle_id;
                                                 $rutaDetalleVerbo['nombre'] = $rdv->nombre;
+                                                    $rutaDetalleVerbo['observacion'] = $requerimiento;
                                                 $rutaDetalleVerbo['condicion'] = $rdv->condicion;
                                                 $rutaDetalleVerbo['rol_id'] = $rdv->rol_id;
                                                 $rutaDetalleVerbo['verbo_id'] = $rdv->verbo_id;
@@ -2318,14 +2333,15 @@ class CargarController extends BaseController {
                                                     } else {
                                                         $rutaDetalleVerbo['verbo_id'] = 29;
                                                     }
+                                                    $rutaDetalleVerbo['orden'] = 1;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    //$rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo['updated_at'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[8]))).' '.date("H:i:s");
                                                     $rutaDetalleVerbo->save();
-
+                                                    /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -2334,13 +2350,13 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 2;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
-
+                                                    */
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
                                                 $referido['ruta_detalle_id'] = $rutaDetalle->id;
@@ -2426,13 +2442,13 @@ class CargarController extends BaseController {
                                                         $rutaDetalleVerbo['verbo_id'] = 29;
                                                     }
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 1;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1; //Preguntar si se finaliza cuando esta en pendiente
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo['updated_at'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[10]))).' '.date("H:i:s"); //date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
-
+                                                    /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -2447,8 +2463,9 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
+                                                    */
 
-
+                                                    $ind_11 = 2;
                                                     $selectdd="SELECT *
                                                                 FROM doc_digital_temporal
                                                                     WHERE UPPER(titulo) LIKE '%".$fields[11]."%';";
@@ -2467,13 +2484,17 @@ class CargarController extends BaseController {
                                                         $rutaDetalleVerbo['verbo_id'] = 29;
                                                     }
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = $ind_11;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
 
+                                                    $aux_ruta_detalle2 = $rutaDetalle2->id;
+                                                    $aux_observacion_12 = $fields[12];
+                                                    $aux_fecha_update_13 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[13]))).' '.date("H:i:s");
+                                                    /*
                                                     $selectdd="SELECT *
                                                                 FROM doc_digital_temporal
                                                                     WHERE UPPER(titulo) LIKE '%".$fields[12]."%';";
@@ -2492,13 +2513,15 @@ class CargarController extends BaseController {
                                                         $rutaDetalleVerbo['verbo_id'] = 29;
                                                     }
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 3;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo['updated_at'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[13]))).' '.date("H:i:s"); // date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
+                                                    */
 
+                                                    /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -2513,6 +2536,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
+                                                    */
                                                 /*  }
                                                 }*/
 
@@ -2597,13 +2621,14 @@ class CargarController extends BaseController {
                                                         $rutaDetalleVerbo['verbo_id'] = 29;
                                                     }
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 1;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
 
+                                                    $ind_19 = 2;
                                                     $selectdd="SELECT *
                                                                 FROM doc_digital_temporal
                                                                     WHERE UPPER(titulo) LIKE '%".$fields[19]."%';";
@@ -2622,13 +2647,18 @@ class CargarController extends BaseController {
                                                         $rutaDetalleVerbo['verbo_id'] = 29;
                                                     }
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = $ind_19;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
-
+                                                    //--
+                                                    $aux_ruta_detalle3 = $rutaDetalle3->id;
+                                                    $aux_observacion_20 = $fields[20];
+                                                    $aux_fecha_update_21 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[21]))).' '.date("H:i:s");
+                                                    //--
+                                                    /*
                                                     $selectdd="SELECT *
                                                                 FROM doc_digital_temporal
                                                                     WHERE UPPER(titulo) LIKE '%".$fields[20]."%';";
@@ -2668,6 +2698,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
+                                                    */
                                                 /*  }
                                                 }*/
 
@@ -2741,7 +2772,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 1;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2756,7 +2787,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 2;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2771,7 +2802,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 3;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2786,7 +2817,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 4;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2801,7 +2832,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 5;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2817,7 +2848,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 6;//$qrutaDetalleVerbo[0]->orden;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2832,7 +2863,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] =7;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2847,7 +2878,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 8;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2862,7 +2893,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 9;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2877,7 +2908,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 10;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2955,7 +2986,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 1;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2970,7 +3001,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 2;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -2985,7 +3016,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 3;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3000,7 +3031,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 4;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3015,7 +3046,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 5;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3031,7 +3062,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 6;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3046,7 +3077,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 7;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3061,7 +3092,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 8;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3076,7 +3107,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 9;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3091,7 +3122,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 10;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3114,9 +3145,7 @@ class CargarController extends BaseController {
 
                                     // ***************************************************************************
                                     // *********************** RECORRIDO DE SEXTO BLOQUE (6) *********************
-                                    if(trim($fields[50]) != '-' || trim($fields[51]) != '-' || trim($fields[52]) != '-' || trim($fields[53]) != '-'
-                                        || trim($fields[54]) != '-' || trim($fields[55]) != '-' || trim($fields[56]) != '-' || trim($fields[57]) != '-'
-                                         || trim($fields[58]) != '-' || trim($fields[59]) != '-' || trim($fields[60]) != '-' || trim($fields[61]) != '-')
+                                    if(trim($fields[50]) != '-' || trim($fields[51]) != '-')
                                     {
                                         $rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
                                         $qrutaDetalle6 = DB::table('rutas_flujo_detalle')
@@ -3159,9 +3188,10 @@ class CargarController extends BaseController {
                                                         ->orderBy('orden', 'ASC')
                                                         ->get();
 
-                                                    $selectdd="SELECT *
+                                                    $ind_50 = 1;
+                                                    /*$selectdd="SELECT *
                                                                 FROM doc_digital_temporal
-                                                                    WHERE UPPER(titulo) LIKE '%".$fields[50]."%';";
+                                                                    WHERE UPPER(titulo) LIKE '%".$fields[50]."%';";*/
                                                     $doc_digital = DB::select($selectdd);                                                
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
@@ -3169,20 +3199,28 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['observacion'] = $fields[50];
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
-                                                    if(count($doc_digital) > 0) {
-                                                        $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    //if(count($doc_digital) > 0) {
+                                                        //$rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
                                                         $rutaDetalleVerbo['verbo_id'] = 1;
-                                                    } else {
-                                                        $rutaDetalleVerbo['verbo_id'] = 29;
-                                                    }
+                                                    //} else {
+                                                    //    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                    //}
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = $ind_50;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo['updated_at'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51]))).' '.date("H:i:s");
                                                     $rutaDetalleVerbo->save();
-                                                    
+
+                                                    $aux_fecha_update_51 = '';
+                                                    $aux_fecha_update_51 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51]))).' '.date("H:i:s");
+                                                    /*
+                                                    $aux_ruta_detalle6 = $rutaDetalle6->id;
+                                                    $aux_observacion_50 = $fields[50];
+                                                    $aux_fecha_update_51 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[51]))).' '.date("H:i:s");
+                                                    */
+                                                    /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -3197,16 +3235,77 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
+                                                    */                                                    
 
+                                                $referido = new Referido;
+                                                $referido['ruta_id'] = $ruta->id;
+                                                $referido['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                                $referido['tipo'] = 1;
+                                                $referido['referido'] = '';
+                                                $referido['fecha_hora_referido'] = $rutaDetalle6->dtiempo_final;
+                                                $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                                $referido['usuario_created_at'] =Auth::user()->id;
+                                                $referido->save();
+                                            }
+                                        }
+                                    }
+
+
+                                    if(trim($fields[50]) != '-' || trim($fields[51]) != '-' || trim($fields[52]) != '-' || trim($fields[53]) != '-'
+                                        || trim($fields[54]) != '-' || trim($fields[55]) != '-' || trim($fields[56]) != '-' || trim($fields[57]) != '-'
+                                         || trim($fields[58]) != '-' || trim($fields[59]) != '-' || trim($fields[60]) != '-' || trim($fields[61]) != '-')
+                                    {
+                                        $rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
+                                        $qrutaDetalle66 = DB::table('rutas_flujo_detalle')
+                                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('norden', 'ASC')
+                                                    ->get();
+
+                                        if (count($qrutaDetalle66) > 0)
+                                        {
+                                            foreach ($qrutaDetalle66 as $rd)
+                                            {
+                                                $NORDEN++;
+                                                $cero='';
+                                                if($NORDEN<10) $cero='0';
+
+                                                $rutaDetalle66 = new RutaDetalle;
+                                                $rutaDetalle66['ruta_id'] = $ruta->id;
+                                                $rutaDetalle66['area_id'] = $rd->area_id;
+                                                $rutaDetalle66['tiempo_id'] = $rd->tiempo_id;
+                                                // Calcula fecha Final
+                                                $sql="SELECT CalcularFechaFinal( '".$fecha_req."', (3*1440), ".$rd->area_id." ) fproy";
+                                                $fproy= DB::select($sql);
+                                                $rutaDetalle66['fecha_proyectada'] = $fproy[0]->fproy;
+
+                                                $rutaDetalle66['dtiempo'] = $rd->dtiempo;
+                                                $rutaDetalle66['detalle'] = $rd->detalle;
+                                                $rutaDetalle66['norden'] =$cero.$NORDEN;
+                                                $rutaDetalle66['estado_ruta'] = $rd->estado_ruta;
+                                                $rutaDetalle66['usuario_created_at'] = Auth::user()->id;
+                                                //if ($rutaDetalle66->norden == 1) {
+                                                    $rutaDetalle66['fecha_inicio'] = $fecha_req;
+                                                //}
+                                                $rutaDetalle66['dtiempo_final'] = date('Y-m-d H:i:s');
+                                                $rutaDetalle66->save();
+
+                                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                        ->where('estado', '=', '1')
+                                                        ->orderBy('orden', 'ASC')
+                                                        ->get();                                                    
+                                                    // PROCESO DE REPROGRAMACIÓN
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
+                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle66->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                     $rutaDetalleVerbo['observacion'] = $fields[52];
                                                     $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 1;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3221,7 +3320,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 2;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3236,7 +3335,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 3;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3251,13 +3350,14 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 4;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo['updated_at'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[56]))).' '.date("H:i:s");
                                                     $rutaDetalleVerbo->save();
 
+                                                    /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -3272,6 +3372,9 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
+                                                    */
+
+
 
                                                     $selectdd="SELECT *
                                                                 FROM doc_digital_temporal
@@ -3290,13 +3393,14 @@ class CargarController extends BaseController {
                                                         $rutaDetalleVerbo['verbo_id'] = 29;
                                                     }
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 5;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                    $rutaDetalleVerbo['updated_at'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[58]))).' '.date("H:i:s");
                                                     $rutaDetalleVerbo->save();
-
+                                                    /*
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -3305,13 +3409,13 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 6;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                                     $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                                     $rutaDetalleVerbo->save();
-
+                                                    */
                                                     $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                     $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
                                                     $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -3320,7 +3424,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 6;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3335,7 +3439,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 7;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3350,7 +3454,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 8;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     $rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3370,6 +3474,7 @@ class CargarController extends BaseController {
                                             }
                                         }
                                     }
+
 
                                     // ***************************************************************************
                                     // ********************* RECORRIDO DE SEPTIMO BLOQUE (7) *********************
@@ -3422,7 +3527,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 1;                                                
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 1; //$qrutaDetalleVerbo[0]->orden;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     //$rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3437,7 +3542,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 2;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     //$rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3452,7 +3557,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;                                                
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 3;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     //$rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3467,7 +3572,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;                                                
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 4;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     //$rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3482,7 +3587,7 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                     $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                    $rutaDetalleVerbo['orden'] = 5;
                                                     $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                     //$rutaDetalleVerbo['finalizo'] = 1;
                                                     $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3507,6 +3612,180 @@ class CargarController extends BaseController {
                                 }
                             }
                             
+
+                                // ***************************************************************************
+                                // ********************** RECORRIDO ADICIONAL BLOQUE 2 ***********************
+                                if($aux_observacion_12 != '' && $aux_fecha_update_13 != '')
+                                {
+                                    if($aux_observacion_12 != $fields[12] && $aux_fecha_update_13 != $fields[13])
+                                    {
+                                        $rutaFlujo = RutaFlujo::find(5630); //Re-programación
+                                        $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('norden', 'ASC')
+                                                    ->get();
+
+                                        if (count($qrutaDetalle) > 0)
+                                        {
+                                            foreach ($qrutaDetalle as $rd)
+                                            {
+                                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
+                                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                        ->where('estado', '=', '1')
+                                                        //->where('nombre', '=', '-')
+                                                        ->orderBy('orden', 'ASC')
+                                                        ->get();
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$aux_observacion_12."%';";
+                                                $doc_digital = DB::select($selectdd);
+                                                
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle2;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $aux_observacion_12;
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = ($ind_11 + 1); //3;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_13;
+                                                $rutaDetalleVerbo->save();                                    
+                                            }
+                                        }
+                                    }
+                                }
+                                if($aux_observacion_12 != '' && $aux_fecha_update_13 != '')
+                                    if($aux_observacion_12 != $fields[12]) {
+                                        $aux_observacion_12 = '';
+                                        $aux_fecha_update_13 = '';
+                                    }
+
+
+                                // ***************************************************************************
+                                // ********************** RECORRIDO ADICIONAL BLOQUE 6 ***********************
+                                if($aux_observacion_20 != '' && $aux_fecha_update_21 != '')
+                                {
+                                    if($aux_observacion_20 != $fields[20] && $aux_fecha_update_21 != $fields[21])
+                                    {
+                                        $rutaFlujo = RutaFlujo::find(5600);
+                                        $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('norden', 'ASC')
+                                                    ->get();
+
+                                        if (count($qrutaDetalle) > 0)
+                                        {
+                                            foreach ($qrutaDetalle as $rd)
+                                            {
+                                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
+                                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                        ->where('estado', '=', '1')
+                                                        //->where('nombre', '=', '-')
+                                                        ->orderBy('orden', 'ASC')
+                                                        ->get();
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$aux_observacion_20."%';";
+                                                $doc_digital = DB::select($selectdd);
+                                                
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle3;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $aux_observacion_20;
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = ($ind_19 + 1); //3;
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_21;
+                                                $rutaDetalleVerbo->save();                                    
+                                            }
+                                        }
+                                    }
+                                }
+                                if($aux_observacion_20 != '' && $aux_fecha_update_21 != '')
+                                    if($aux_observacion_20 != $fields[20]) {
+                                        $aux_observacion_20 = '';
+                                        $aux_fecha_update_21 = '';
+                                    }
+
+                                // ***************************************************************************
+                                // ********************** RECORRIDO ADICIONAL BLOQUE 6 ***********************
+                                /*
+                                if($aux_observacion_50 != '' && $aux_fecha_update_51 != '')
+                                {
+                                    if($aux_observacion_50 != $fields[20] && $aux_fecha_update_51 != $fields[21])
+                                    {
+                                        $rutaFlujo = RutaFlujo::find(5231);
+                                        $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                    ->where('estado', '=', '1')
+                                                    ->orderBy('norden', 'ASC')
+                                                    ->get();
+
+                                        if (count($qrutaDetalle) > 0)
+                                        {
+                                            foreach ($qrutaDetalle as $rd)
+                                            {
+                                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
+                                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                        ->where('estado', '=', '1')
+                                                        //->where('nombre', '=', '-')
+                                                        ->orderBy('orden', 'ASC')
+                                                        ->get();
+
+                                                $selectdd="SELECT *
+                                                            FROM doc_digital_temporal
+                                                                WHERE UPPER(titulo) LIKE '%".$aux_observacion_50."%';";
+                                                $doc_digital = DB::select($selectdd);
+                                                
+                                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle6;
+                                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                                $rutaDetalleVerbo['observacion'] = $aux_observacion_50;
+                                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                                if(count($doc_digital) > 0) {
+                                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                                } else {
+                                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                                }
+                                                $rutaDetalleVerbo['documento_id'] = 82;
+                                                $rutaDetalleVerbo['orden'] = ($ind_50 + 1);
+                                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                                $rutaDetalleVerbo['finalizo'] = 1;
+                                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                                $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_51;
+                                                $rutaDetalleVerbo->save();                                    
+                                            }
+                                        }
+                                    }
+                                }
+                                */
+
+
                         }
                         else
                         {
@@ -3539,6 +3818,7 @@ class CargarController extends BaseController {
                                                             WHERE UPPER(titulo) LIKE '%".$fields[11]."%';";
                                             $doc_digital = DB::select($selectdd);
 
+                                            $ind_11++;
                                             $rutaDetalleVerbo = new RutaDetalleVerbo;
                                             $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle2->id;
                                             $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -3552,17 +3832,16 @@ class CargarController extends BaseController {
                                                 $rutaDetalleVerbo['verbo_id'] = 29;
                                             }
                                             $rutaDetalleVerbo['documento_id'] = 82;
-                                            $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                            $rutaDetalleVerbo['orden'] = $ind_11;
                                             $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                             $rutaDetalleVerbo['finalizo'] = 1;
                                             $rutaDetalleVerbo['usuario_updated_at'] = 1272;
                                             $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
                                             $rutaDetalleVerbo->save();
                                         }
-                                    }
+                                    }                                    
                                 }
                             }
-
 
                             // ***************************************************************************
                             // ********************** RECORRIDO DE TERCER BLOQUE (3) *********************
@@ -3570,7 +3849,7 @@ class CargarController extends BaseController {
                             {
                                 if(trim($fields[19]) != '-')
                                 {
-                                    $rutaFlujo = RutaFlujo::find(5600); //Re-programación
+                                    $rutaFlujo = RutaFlujo::find(5600);
                                     $qrutaDetalle3 = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -3588,6 +3867,7 @@ class CargarController extends BaseController {
                                                     ->orderBy('orden', 'ASC')
                                                     ->get();
 
+                                            $ind_19++;
                                             $rutaDetalleVerbo = new RutaDetalleVerbo;
                                             $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;;
                                             $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -3596,7 +3876,7 @@ class CargarController extends BaseController {
                                             $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
                                             $rutaDetalleVerbo['verbo_id'] = 1;
                                             $rutaDetalleVerbo['documento_id'] = 82;
-                                            $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                            $rutaDetalleVerbo['orden'] = $ind_19;
                                             $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                             $rutaDetalleVerbo['finalizo'] = 1;
                                             $rutaDetalleVerbo['usuario_updated_at'] = 1272;
@@ -3607,12 +3887,11 @@ class CargarController extends BaseController {
                                 }
                             }
 
-
                             // ***************************************************************************
                             // ********************** RECORRIDO DE CUARTO BLOQUE (6) *********************
                             if($fields[50])
                             {
-                                if(trim($fields[19]) != '-')
+                                if(trim($fields[50]) != '-')
                                 {
                                     $rutaFlujo = RutaFlujo::find(5231); // RECLAMACION
                                     $qrutaDetalle6 = DB::table('rutas_flujo_detalle')
@@ -3634,7 +3913,9 @@ class CargarController extends BaseController {
                                                 $selectdd="SELECT *
                                                             FROM doc_digital_temporal
                                                                 WHERE UPPER(titulo) LIKE '%".$fields[50]."%';";
-                                                $doc_digital = DB::select($selectdd);                                                
+                                                $doc_digital = DB::select($selectdd);
+
+                                                $ind_50++;
                                                 $rutaDetalleVerbo = new RutaDetalleVerbo;
                                                 $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle6->id;
                                                 $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
@@ -3648,21 +3929,125 @@ class CargarController extends BaseController {
                                                     $rutaDetalleVerbo['verbo_id'] = 29;
                                                 }
                                                 $rutaDetalleVerbo['documento_id'] = 82;
-                                                $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
+                                                $rutaDetalleVerbo['orden'] = $ind_50; //$qrutaDetalleVerbo[0]->orden;
                                                 $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
                                                 $rutaDetalleVerbo['finalizo'] = 1;
                                                 $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
+                                                $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_51; //date('Y-m-d H:i:s');
                                                 $rutaDetalleVerbo->save();
                                         }
                                     }
                                 }
                             }
-
-                        }                        
+                        }
+                                                
                         DB::commit();
+
                     }
                 }
+
+                    // ***************************************************************************
+                    // ********************** RECORRIDO ADICIONAL BLOQUE 2 ***********************
+                    if($aux_observacion_12 != '' && $aux_fecha_update_13 != '')
+                    {
+                        $rutaFlujo = RutaFlujo::find(5630); //Re-programación
+                        $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                    ->where('estado', '=', '1')
+                                    ->orderBy('norden', 'ASC')
+                                    ->get();
+
+                        if (count($qrutaDetalle) > 0)
+                        {
+                            foreach ($qrutaDetalle as $rd)
+                            {
+                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
+                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                        ->where('estado', '=', '1')
+                                        //->where('nombre', '=', '-')
+                                        ->orderBy('orden', 'ASC')
+                                        ->get();
+
+                                $selectdd="SELECT *
+                                            FROM doc_digital_temporal
+                                                WHERE UPPER(titulo) LIKE '%".$aux_observacion_12."%';";
+                                $doc_digital = DB::select($selectdd);
+                                
+                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle2;
+                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                $rutaDetalleVerbo['observacion'] = $aux_observacion_12;
+                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                if(count($doc_digital) > 0) {
+                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                } else {
+                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                }
+                                $rutaDetalleVerbo['documento_id'] = 82;
+                                $rutaDetalleVerbo['orden'] = ($ind_11 + 1); //3;
+                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                $rutaDetalleVerbo['finalizo'] = 1;
+                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_13;
+                                $rutaDetalleVerbo->save();                                    
+                            }
+                        }
+                    }
+                    // --
+
+                    // ***************************************************************************
+                    // ********************** RECORRIDO ADICIONAL BLOQUE 2 ***********************
+                    if($aux_observacion_20 != '' && $aux_observacion_21 != '')
+                    {
+                        $rutaFlujo = RutaFlujo::find(5600); //Re-programación
+                        $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                    ->where('estado', '=', '1')
+                                    ->orderBy('norden', 'ASC')
+                                    ->get();
+
+                        if (count($qrutaDetalle) > 0)
+                        {
+                            foreach ($qrutaDetalle as $rd)
+                            {
+                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo') // preguntar si va un for
+                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                        ->where('estado', '=', '1')
+                                        //->where('nombre', '=', '-')
+                                        ->orderBy('orden', 'ASC')
+                                        ->get();
+
+                                $selectdd="SELECT *
+                                            FROM doc_digital_temporal
+                                                WHERE UPPER(titulo) LIKE '%".$aux_observacion_20."%';";
+                                $doc_digital = DB::select($selectdd);
+                                
+                                $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle2;
+                                $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
+                                $rutaDetalleVerbo['observacion'] = $aux_observacion_20;
+                                $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
+                                $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
+                                if(count($doc_digital) > 0) {
+                                    $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
+                                    $rutaDetalleVerbo['verbo_id'] = 1;
+                                } else {
+                                    $rutaDetalleVerbo['verbo_id'] = 29;
+                                }
+                                $rutaDetalleVerbo['documento_id'] = 82;
+                                $rutaDetalleVerbo['orden'] = ($ind_19 + 1); //3;
+                                $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+                                $rutaDetalleVerbo['finalizo'] = 1;
+                                $rutaDetalleVerbo['usuario_updated_at'] = 1272;
+                                $rutaDetalleVerbo['updated_at'] = $aux_fecha_update_21;
+                                $rutaDetalleVerbo->save();                                    
+                            }
+                        }
+                    }
+                    // --
+
             }
             //exit;
 
