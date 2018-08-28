@@ -110,7 +110,7 @@ body {
                 endif; ?>
 
           <?php if($area_id == 10): ?>
-            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">Inspector: {{ $numero }}</div>
+            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">Cod. Inspector: {{ $numero }}</div>
             <div class="areal" style="width: 100%; font-size: 9pt;">R: <?php echo $resolucion; ?></div>
             <div class="areal" style="width: 100%; font-size: 9pt;">&nbsp;</div>
           <?php else: ?>
@@ -165,7 +165,7 @@ body {
                           <?php   endif;
                                 endif; ?>
                           <?php if($val['area_id'] == 10): ?>
-                            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">Inspector: {{ $val['cod_inspector'] }}</div>
+                            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">Cod. Inspector: {{ $val['cod_inspector'] }}</div>
                             <div class="areal" style="width: 100%; font-size: 9pt;">R: <?php echo $val['resolucion']; ?></div>
                             <div class="areal" style="width: 100%; font-size: 9pt;">&nbsp;</div>
                           <?php else: ?>
@@ -210,7 +210,7 @@ body {
                           <?php   endif;
                                 endif; ?>
                           <?php if($val['area_id'] == 10): ?>
-                            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">Inspector: {{ $val['cod_inspector'] }}</div>
+                            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">Cod. Inspector: {{ $val['cod_inspector'] }}</div>
                             <div class="areal" style="width: 100%; font-size: 9pt;">R: <?php echo $val['resolucion']; ?></div>
                             <div class="areal" style="width: 100%; font-size: 9pt;">&nbsp;</div>
                           <?php else: ?>
@@ -283,7 +283,7 @@ body {
                 endif; ?>
 
           <?php if($area_id == 10): ?>
-            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">C&oacute;digo de Inspector: {{ $numero }}</div>
+            <div class="areal" style="width: 100%; font-size: 9pt; margin-bottom: 3px;">Cod. Inspector: {{ $numero }}</div>
             <div class="areal" style="width: 100%; font-size: 9pt;">R: <?php echo $resolucion; ?></div>
             <div class="areal" style="width: 100%; font-size: 9pt;">&nbsp;</div>
           <?php else: ?>
