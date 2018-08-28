@@ -133,8 +133,10 @@
         $.post(url,dat).done(function(data){
             console.log(data);
 
-            var tr ="<tr>";
+            var tr ="";
+
             for (var i = 0; i < data.datos.length; i++) {
+                tr ="<tr>";
                 tr = tr + "<td> " + data.datos[i].documento_inicial + " </td>";
                 tr = tr + "<td> " + data.datos[i].documento_actual + " </td>";
                 tr = tr + "<td> " + data.datos[i].flujo_1 + " </td>";
@@ -144,8 +146,8 @@
                 tr = tr + "<td> " + data.datos[i].fip1 + " </td>";
                 tr = tr + "<td> " + data.datos[i].fip2 + " </td>";
                 tr = tr + "<td> " + data.datos[i].ff + " </td>";
-            }
             tr = tr + "</tr>";
+            }
             $("#contentTable").html(tr);
 
         });
