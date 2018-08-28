@@ -155,5 +155,75 @@ public static function getReporteTramites($areas,$fechaIni,$fechaFin)
 		return DB::select($x);
    	}
 
+
+    public static function getReporteProcesoDetalle($docName = "",$f_i="",$f_e=""){
+
+        $qryExtra="";
+        if($f_i!="" && $f_e!=""){
+            $qryExtra="AND r.created_at BETWEEN $f_i AND $f_e";
+        }
+
+
+        $sql="SELECT
+                    r.*,
+                    f1.nombre as flujo_1,
+                    f2.nombre as flujo_2,
+                    IF(
+                        rd2.fecha_inicio IS NOT NULL AND rd2.dtiempo_final IS NULL,
+                        rd2.norden,
+                        MAX(rd2.norden)
+                    ) paso_actual,
+
+                    MAX(rd2.norden) paso_final,
+                    r1.fecha_inicio fip1,
+
+                    IF(
+                        rd2.fecha_inicio IS NOT NULL AND rd2.dtiempo_final IS NULL,
+                        rd2.fecha_inicio,
+                        MAX(rd2.fecha_inicio)
+                    ) fip2,
+
+                    MAX(rd2.dtiempo_final) ff
+                FROM
+                    (
+                    SELECT
+                        GROUP_CONCAT(DISTINCT(r.ruta_id) ORDER BY r2.id) ruta_inicial,
+                        GROUP_CONCAT(DISTINCT(r2.ruta_id) ORDER BY r2.id) ruta_final,
+                        SUBSTRING_INDEX(GROUP_CONCAT(r2.referido ORDER BY r2.id),',',1) documento_inicial,
+                        SUBSTRING_INDEX(GROUP_CONCAT(r2.referido ORDER BY r2.id),',',-1) documento_actual,
+                        SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT(r2.ruta_id) ORDER BY r2.id),',',1) as p1,
+                        SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT(r2.ruta_id) ORDER BY r2.id),',',-1) as p2
+                    FROM
+                        referidos r
+                    INNER JOIN rutas ru ON
+                        ru.id = r.ruta_id AND ru.estado = 1
+                    INNER JOIN referidos r2 ON
+                        r.tabla_relacion_id = r2.tabla_relacion_id
+                    WHERE
+                        r.referido LIKE '%{$docName}%'
+                        $qryExtra
+                    GROUP BY
+                        r.tabla_relacion_id
+                ) AS r
+                INNER JOIN rutas r1 ON
+                    r1.id = r.p1
+                INNER JOIN flujos f1 ON
+                    f1.id = r1.flujo_id
+                INNER JOIN rutas r2 ON
+                    r2.id = r.p2
+                INNER JOIN rutas_detalle rd2 ON
+                    rd2.ruta_id = r2.id AND rd2.estado = 1
+                INNER JOIN flujos f2 ON
+                    f2.id = r2.flujo_id
+                GROUP BY
+                    r2.id 
+
+                LIMIT 10;";
+
+
+        return DB::select($sql);
+
+    }
+
 }
 
