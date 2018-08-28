@@ -2596,10 +2596,10 @@ class CargarController extends BaseController {
                                                 $rutaDetalle3->save();
 
                                                 $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
-                                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
-                                                        ->where('estado', '=', '1')
-                                                        ->orderBy('orden', 'ASC')
-                                                        ->get();
+                                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                                    ->where('estado', '=', '1')
+                                                                    ->orderBy('orden', 'ASC')
+                                                                    ->get();
                                                                                             
                                                 /*if (count($qrutaDetalleVerbo) > 0) {
                                                     foreach ($qrutaDetalleVerbo as $rdv) {*/
@@ -3723,10 +3723,10 @@ class CargarController extends BaseController {
                                 {
                                     $rutaFlujo = RutaFlujo::find(5630); //Re-programación
                                     $qrutaDetalle = DB::table('rutas_flujo_detalle')
-                                                ->where('ruta_flujo_id', '=', $rutaFlujo->id)
-                                                ->where('estado', '=', '1')
-                                                ->orderBy('norden', 'ASC')
-                                                ->get();
+                                                        ->where('ruta_flujo_id', '=', $rutaFlujo->id)
+                                                        ->where('estado', '=', '1')
+                                                        ->orderBy('norden', 'ASC')
+                                                        ->get();
 
                                     if (count($qrutaDetalle) > 0)
                                     {
@@ -3787,15 +3787,14 @@ class CargarController extends BaseController {
                                         foreach ($qrutaDetalle3 as $rd)
                                         {
                                             $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
-                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
-                                                    ->where('estado', '=', '1')
-                                                    //->where('orden', '=', '4')
-                                                    ->orderBy('orden', 'ASC')
-                                                    ->get();
+                                                                    ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                                    ->where('estado', '=', '1')
+                                                                    ->orderBy('orden', 'ASC')
+                                                                    ->get();
 
                                             $ind_19++;
                                             $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                            $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle3;//(@$rutaDetalle3)?$rutaDetalle3->id:0;
+                                            $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id; //$aux_ruta_detalle3;//(@$rutaDetalle3)?$rutaDetalle3->id:0;
                                             $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                             $rutaDetalleVerbo['observacion'] = $fields[19];
                                             $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
