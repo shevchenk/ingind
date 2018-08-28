@@ -136,7 +136,7 @@
             var tr ="";
 
             for (var i = 0; i < data.datos.length; i++) {
-                tr ="<tr>";
+                tr = tr + "<tr>";
                 tr = tr + "<td> " + data.datos[i].documento_inicial + " </td>";
                 tr = tr + "<td> " + data.datos[i].documento_actual + " </td>";
                 tr = tr + "<td> " + data.datos[i].flujo_1 + " </td>";
