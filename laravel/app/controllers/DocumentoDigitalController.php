@@ -957,15 +957,15 @@ class DocumentoDigitalController extends \BaseController {
         imagettftext($im, 9, 0, 102, 115+10, $black, $font2, $area);
                 
         if(($rol_id == 8 || $rol_id == 9) && $area_id != 10) {
-            imagettftext($im, 9, 0, 102, 145+14+$dobleLinea, $black, $font,"Resolución: ");
-            imagettftext($im, 9, 0, 182 , 145+14+$dobleLinea, $black, $font2, $resolucion);
+            imagettftext($im, 9, 0, 102, 145+14+$dobleLinea, $black, $font,"R: ");
+            imagettftext($im, 9, 0, 180 , 145+14+$dobleLinea, $black, $font2, $resolucion);
         }
 
         if($area_id == 10) {
             imagettftext($im, 9, 0, 102, 145+14+$dobleLinea, $black, $font,"Inspector: ");
-            imagettftext($im, 9, 0, 182 , 145+14+$dobleLinea, $black, $font2, $codInspector);
-            imagettftext($im, 9, 0, 102, 160+14+$dobleLinea, $black, $font,"Resolución: ");
-            imagettftext($im, 9, 0, 182, 160+14+$dobleLinea, $black, $font2, $resolucion);
+            imagettftext($im, 9, 0, 176, 145+14+$dobleLinea, $black, $font2, $codInspector);
+            imagettftext($im, 9, 0, 102, 160+14+$dobleLinea, $black, $font,"R: ");
+            imagettftext($im, 9, 0, 120, 160+14+$dobleLinea, $black, $font2, $resolucion);
         }     
 
         $stamp = getImageFromUrl($rutaFoto);
