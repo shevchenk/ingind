@@ -248,31 +248,34 @@ class DocumentoDigital extends Base {
         return $oData;
     }
 
-    public static function Correlativo(){
+    public static function Correlativo(){ 
         if(Input::get('tipo_corre')==2){
-    	$año= date("Y");
-        $r2=array(array('correlativo'=>'000001','ano'=>$año));
-    	/*$sql = "SELECT LPAD(id+1,6,'0') as correlativo,'$año' ano FROM doc_digital ORDER BY id DESC LIMIT 1";*/
-        $sql = "SELECT IFNULL(LPAD(MAX(dd.correlativo)+1,6,'0'),LPAD(1,6,'0')) as correlativo 
-                FROM doc_digital_temporal dd 
-                INNER JOIN plantilla_doc pd on dd.plantilla_doc_id=pd.id 
-                AND pd.tipo_documento_id=".Input::get('tipo_doc')." 
-                AND pd.area_id= ".Input::get('area_id').
-                " WHERE dd.estado=1 
-                AND YEAR(dd.created_at)=YEAR(CURDATE())";
-    	$r= DB::select($sql);
-        return (isset($r[0])) ? $r[0] : $r2[0];}
-        
-        else if(Input::get('tipo_corre')==1){
-    	$año= date("Y");
-        $r2=array(array('correlativo'=>'000001','ano'=>$año));
-    	/*$sql = "SELECT LPAD(id+1,6,'0') as correlativo,'$año' ano FROM doc_digital ORDER BY id DESC LIMIT 1";*/
-        $sql = "SELECT IFNULL(LPAD(MAX(dd.correlativo)+1,6,'0'),LPAD(1,6,'0')) as correlativo from doc_digital_temporal dd 
-                INNER JOIN plantilla_doc pd on dd.plantilla_doc_id=pd.id and pd.area_id=".Input::get('area_id')." and pd.tipo_documento_id=".Input::get('tipo_doc')." and dd.persona_id= ".Auth::user()->id.
-                " WHERE dd.estado=1 
-                AND YEAR(dd.created_at)=YEAR(CURDATE())";
-    	$r= DB::select($sql);
-        return (isset($r[0])) ? $r[0] : $r2[0];}
+        	$año= date("Y");
+            $r2=array(array('correlativo'=>'000001','ano'=>$año));
+        	/*$sql = "SELECT LPAD(id+1,6,'0') as correlativo,'$año' ano FROM doc_digital ORDER BY id DESC LIMIT 1";*/
+            $sql = "SELECT IFNULL(LPAD(MAX(dd.correlativo)+1,6,'0'),LPAD(1,6,'0')) as correlativo 
+                    FROM doc_digital_temporal dd 
+                    INNER JOIN plantilla_doc pd on dd.plantilla_doc_id=pd.id 
+                    AND pd.tipo_documento_id=".Input::get('tipo_doc')." 
+                    AND pd.area_id= ".Input::get('area_id').
+                    " WHERE dd.estado=1 
+                    AND YEAR(dd.created_at)=YEAR(CURDATE())";
+
+                    die($sql);
+        	$r= DB::select($sql);
+            return (isset($r[0])) ? $r[0] : $r2[0];
+        }
+        elseif(Input::get('tipo_corre')==1){
+        	$año= date("Y");
+            $r2=array(array('correlativo'=>'000001','ano'=>$año));
+        	/*$sql = "SELECT LPAD(id+1,6,'0') as correlativo,'$año' ano FROM doc_digital ORDER BY id DESC LIMIT 1";*/
+            $sql = "SELECT IFNULL(LPAD(MAX(dd.correlativo)+1,6,'0'),LPAD(1,6,'0')) as correlativo from doc_digital_temporal dd 
+                    INNER JOIN plantilla_doc pd on dd.plantilla_doc_id=pd.id and pd.area_id=".Input::get('area_id')." and pd.tipo_documento_id=".Input::get('tipo_doc')." and dd.persona_id= ".Auth::user()->id.
+                    " WHERE dd.estado=1 
+                    AND YEAR(dd.created_at)=YEAR(CURDATE())";
+        	$r= DB::select($sql);
+            return (isset($r[0])) ? $r[0] : $r2[0];
+        }
         
         else if(Input::get('tipo_corre')==0){
     	$año= date("Y");
