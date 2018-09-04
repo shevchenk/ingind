@@ -54,10 +54,15 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
+			#'host'      => '127.0.0.1',
+			#'database'  => 'procesos',
+			#'username'  => 'root',
+			#'password'  => 'asdasdasd',
 			'host'      => '10.0.100.11',
 			'database'  => 'procesos',
 			'username'  => 'root',
-			'password'  => 'P@ssw0rd',
+			'password'  => '@Md1GM.gm**',
+			
 			'charset'   => 'utf8',
 			'collation' => 'utf8_general_ci',
 			'prefix'    => '',
