@@ -222,4 +222,5 @@ Route::controller('maps', 'MapsController');
 
 Route::controller('areauser', 'AreaUserController');
 Route::controller('reporteprocesos', 'ReporteProcesosController');
+Route::controller('formatolicencia', 'FormatoLicenciaController');
 Route::controller('ejemplo', 'EjemploController');
