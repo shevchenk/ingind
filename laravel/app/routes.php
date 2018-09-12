@@ -220,5 +220,9 @@ Route::controller('fichaproceso', 'FichaProcesoController');
 Route::controller('auditoriacuestionarioinicio', 'AuditoriaCuestionarioInicioController');
 Route::controller('maps', 'MapsController');
 
+Route::controller('recovery', 'RecoveryController');
+
 Route::controller('areauser', 'AreaUserController');
 Route::controller('reporteprocesos', 'ReporteProcesosController');
+
+Route::controller('aproceso', 'AprocesoController');
