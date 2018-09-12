@@ -226,3 +226,5 @@ Route::controller('areauser', 'AreaUserController');
 Route::controller('reporteprocesos', 'ReporteProcesosController');
 
 Route::controller('aproceso', 'AprocesoController');
+Route::controller('formatolicencia', 'FormatoLicenciaController');
+Route::controller('ejemplo', 'EjemploController');
