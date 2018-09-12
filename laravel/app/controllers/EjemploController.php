@@ -4,6 +4,8 @@ class EjemploController extends BaseController
 {
     public function getEje1()
     {
+        error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+        error_reporting($error_level);
         $wordTest = new \PhpOffice\PhpWord\PhpWord();
  
         $newSection = $wordTest->addSection();
@@ -14,10 +16,18 @@ class EjemploController extends BaseController
      
         $newSection->addText($desc1, array('name' => 'Tahoma', 'size' => 15, 'color' => 'red'));
         $newSection->addText($desc2);
-     
-        //$objectWriter = \PhpOffice\PhpWord\IOFactory::createWriter($wordTest, 'Word2007');
         $wordTest->save('results/TestWordFile.docx','Word2007');
-        $wordTest->save('results/TestWordFile.pdf','PDF',true);
+        $wordTest->save('results/TestWordFile.pdf','PDF');
+
+        return Redirect::to('/results/TestWordFile.pdf');
+        //  PDF settings
+/*        $pdf = App::make('dompdf');
+        $pdf->loadHTML('results/TestWordFile.html');
+        $pdf->setPaper('a4')->setOrientation('portrait');
+
+        return $pdf->stream();*/
+        
+        //$wordTest->save('results/TestWordFile.pdf','PDF',true);
         
         try {
         } catch (Exception $e) {
