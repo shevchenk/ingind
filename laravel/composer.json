@@ -9,8 +9,9 @@
 		"way/generators": "~2.0",
 		"itsgoingd/clockwork": "1.*",
         "simplesoftwareio/simple-qrcode": "~1",
-		"google/recaptcha": "~1.1"
-		"barryvdh/laravel-dompdf": "0.4.*"
+		"google/recaptcha": "~1.1",
+		"barryvdh/laravel-dompdf": "0.4.*",
+		"phpoffice/phpword": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
