@@ -464,6 +464,22 @@ class Ruta extends Eloquent
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##
 ## ---------------------------------------------------------------------
 ##
@@ -473,7 +489,7 @@ class Ruta extends Eloquent
 
         $idAPI = 1272;
         $areaAPI = 19;
-        //5569
+        $rutaFlujoIDGET=Input::get('ruta_flujo_id') == 5569 ? 5806 : =Input::get('ruta_flujo_id');
 
 
         $codigounico="";
@@ -496,7 +512,7 @@ class Ruta extends Eloquent
                             'tr.id','=','r.tabla_relacion_id'
                         )
                         ->where('tr.id_union', '=', $codigounico)
-                        ->where('r.ruta_flujo_id', '=', Input::get('ruta_flujo_id'))
+                        ->where('r.ruta_flujo_id', '=', $rutaFlujoIDGET)
                         ->where('tr.estado', '=', '1')
                         ->where('r.estado', '=', '1')
                         ->get();
@@ -552,7 +568,7 @@ class Ruta extends Eloquent
         $tablaRelacion['usuario_created_at']=$idAPI;
         $tablaRelacion->save();
 
-        $rutaFlujo=RutaFlujo::find(Input::get('ruta_flujo_id'));
+        $rutaFlujo=RutaFlujo::find($rutaFlujoIDGET);
 
         $ruta= new Ruta;
         $ruta['tabla_relacion_id']=$tablaRelacion->id;
@@ -693,9 +709,24 @@ class Ruta extends Eloquent
         }
     }
 
+
+
 ##
 ## ----------------------------------------------------------------------------
 ##
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function crearRutaGestion(){
         DB::beginTransaction();
