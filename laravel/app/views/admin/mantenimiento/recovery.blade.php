@@ -220,10 +220,12 @@ function showImage(url){
 			var trd="";
 			console.log(data);
 
-			for (var i = 0; i < data.length; i++) {
+			if(data.length>0)for (var i = 0; i < data.length; i++) {
 
 				trd=trd+'<tr><td>'+(i+1)+'</td> <td>'+tipodoc[data[i].tipo_doc]+'</td> <td>'+data[i].numero+'</td><td>'+data[i].fecha_doc+'</td><td><span class="btn btn-primary btn-sm" onclick="showImage(\''+data[i].archivo+'\');"><i class="fa fa-image"></i></span></td></tr>';
 
+			}else{
+				trd='<tr><td colspan="4">No hay documentos registrados.</td></tr>';
 			}
 			console.log(trd);
 
