@@ -116,6 +116,44 @@ tr.shown td.details-control {
                         <div class="col-sm-12">
                             <div class="box-body table-responsive">
                             <!-- THE MESSAGES -->
+
+                            <div class="divform" align="center">
+	<button class="btn btn-sm btn-primary" onclick="addNew();"><i class="fa fa-plus"></i> Nuevo</button>
+</div>
+<div class="divform" style="display:none;">
+	<form action="recovery/guardar" method="POST" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-md-4">Tipo de documento</div>
+			<div class="col-md-4">
+				<select name="tipo_documento" class="form-control"><option value="1">PROVEIDO</option><option value="3">MEMORANDO</option><option value="4">OFICIO</option><option value="5">INFORME</option><option value="7">CARTA</option><option value="9">REQUERIMIENTO</option><option value="10">COMPROBANTE DE PAGO</option><option value="11">RESOLUCIÓN DE EJECUCIÓN COACTIVA</option><option value="12">RESOLUCIÓN DETERMINACIÓN</option><option value="13">LICENCIA</option><option value="14">CERTIFICADO DE DEFENSA CIVIL</option><option value="15">DIRECTIVA</option><option value="16">DICTAMEN</option><option value="17">ACTA</option><option value="18">CERTIFICADO</option><option value="19">AUTORIZACIÓN</option><option value="20">DECLARACIÓN JURADA</option><option value="21">RESOLUCIÓN SUB GERENCIA</option><option value="22">RESOLUCIÓN DE GERENCIA</option><option value="23">RESOLUCIÓN GERENCIA MUNICIPAL</option><option value="24">RESOLUCIÓN DE ALCALDÍA</option><option value="25">NOTIFICACIÓN PREVENTIVA</option><option value="26">ORDEN DE COMPRA</option><option value="27">ORDEN DE SERVICIO</option><option value="29">CONSTANCIA</option><option value="30">MEMORANDO MÚLTIPLE</option><option value="31">MEMORANDO CIRCULAR</option><option value="32">INFORME MÚLTIPLE</option><option value="33">INFORME CIRCULAR</option><option value="34">CARTA A REGIDOR</option><option value="35">REPORTE DIARIO</option><option value="36">REPORTE CONSOLIDADOS</option><option value="37">ACUERDO DE CONCEJO</option><option value="38">NOTA DE CRÉDITO PRESUPUESTAL </option><option value="39">CONTRATO</option><option value="40">PROYECTO DE CONTRATO</option><option value="41">NIA NOTA DE ING A ALMACÉN</option><option value="42">FICHA DE INSCRIPCIÓN</option><option value="43">TIKET DE PAGO</option><option value="44">COMPROBANTE</option><option value="45">CHEQUE</option><option value="46">ORDEN DE PAGO</option><option value="47">CARTA NOTARIAL</option><option value="48">CONTESTACIONES</option><option value="49">ALEGATOS</option><option value="50">ESCRITO</option><option value="51">INFORME TÉCNICO</option><option value="52">DEMANDA</option><option value="53">EXCEPCIÓN</option><option value="54">DENUNCIA</option><option value="55">MEDIO IMPUGNATORIO</option><option value="56">DEFENSA PREVIA</option><option value="57">CARTA DE INICIO</option><option value="58">INFORME DE META</option><option value="59">INFOR DE CARTA INIC</option><option value="60">ACTA DE CONSTATACION</option><option value="61">RESOLUCION DE SANCIÓN</option><option value="62">ACTA DE LEVANT DE CLAUSURA</option><option value="63">ACTA DE CLAUSURA</option><option value="64">ACTA DE RETENCIÓN </option><option value="65">ACTA DE INTERNAMIENTO</option><option value="66">ACTA DE DEVOLUCION</option><option value="67">ACTA DE DECOMISO</option><option value="68">ACTA DE LIBERACIÓN</option><option value="69">ACTA DE DETERIORO</option><option value="70">RESOLUCIÓN DETERMINISTA DE IMPUESTO PREDIAL</option><option value="71">RESOLUCIÓN DE MULTA TRIBUTARIA</option><option value="72">FICHA DE VERIFICACION TECNICA</option><option value="73">ACTA DE INSPECCION PREDIAL</option><option value="74">ACTA DE INSPECCION NO REALIZADA</option><option value="75">CERTIFICADO PRESUPUESTAL</option><option value="76">ROL DE SERVICIO</option><option value="77">ORDENANZA</option><option value="78">DECRETO DE ALCALDÍA</option><option value="79">EXPEDIENDE DE CONTRATACION</option><option value="80">INFORME DIAGNOSTICO</option><option value="81">LIQUIDACIÓN</option><option value="82">DOCUMENTO</option><option value="83">ORDEN DE TRABAJO</option><option value="84">ACTIVIDAD</option><option value="85">INFORME DE PRECALIFICACIÓN</option><option value="86">DESCARGO</option><option value="87">RESOLUCIÓN DE SGP</option><option value="88">TIEMPO</option><option value="89">RECURSO DE RECONCILIACIÓN</option><option value="90">ACEPTACION</option><option value="91">APELACIÓN</option><option value="94">NOTIFICACIÓN ADMINISTRATIVA</option><option value="95">INFORME PERSONAL</option><option value="96">INVITACIÓN A COTIZAR</option><option value="97">OFICIO PNCSCDU</option><option value="98">OFICIO PNCSCDU</option><option value="99">AUTORIZACIÓN CDSE</option><option value="100">MEMORANDO AIP</option><option value="101">CARTA AIP</option><option value="102">RESOLUCIÓN DE ALCALDÍA DIVORCIO</option><option value="103">CONSTANCIA DE POSESIÓN DE LOTE</option><option value="104">CERTIFICADO DE NUMERACIÓN</option><option value="105">CERTIFICADO DE JURISDICCIÓN</option><option value="106">CERTIFICADO DE PARÁMETROS URBANÍSTICOS Y EDIFICATORIOS</option><option value="107">RESOLUCIÓN REGISTRAL</option><option value="108">MEMORANDO INTERNO</option><option value="109">OFICIO CIRCULAR</option><option value="110">PAPELETA DE AUTORIZACIÓN DE VACACIONES</option><option value="112">CITACION CIRCULAR</option><option value="113">ACTA DE CONCILIACION</option><option value="114">RESOLUCIÓN DE GERENCIA GR</option><option value="115">INFORME OI</option><option value="116">CONFORMIDAD DE OBRA</option><option value="117">AMPLIACIÓN DE AUTORIZACIÓN</option><option value="118">CONSTANCIA DE LIBRE DISPONIBILIDAD</option><option value="120">ACTA DE VERIFICACIÓN</option><option value="122">INFORME SP</option><option value="123">INFORME TÉCNICO SANITARIO</option><option value="124">CONSTANCIA NEGATIVA CATASTRAL</option><option value="125">CERTIFICADO NEGATIVO DE DEUDAS TRIBUTARIAS</option><option value="126">CARTA CIRCULAR</option><option value="127">DOCUMENTO SIN NUMERACION</option><option value="128">INFORME LEGAL</option><option value="129">CONSTANCIA DE NUMERACION</option><option value="130">RESOLUCIÓN SUB GERENCIA</option><option value="131">CERTIFICADO DE NOMENCLATURA</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">Número de documento</div>
+			<div class="col-md-4"><input class="form-control" type="text" name="numero"></div>
+		</div>  
+
+
+		<div class="row">
+			<div class="col-md-4">Fecha del documento</div>
+			<div class="col-md-4"><input class="form-control" type="text" name="fecha"></div>
+		</div> 
+
+		<div class="row">
+			<div class="col-md-4">Archivo:</div>
+			<div class="col-md-4"><input type="file" name="documento"></div>
+		</div>  
+
+
+		<div class="row">
+			<div class="col-md-4"><input type="submit" value="Guardar"></div>
+		</div> 
+	           
+	</form>
+</div> 
+
+
                             <form name="form_filtros" id="form_filtros" method="POST" action="">
                                 <table id="t_reporte_ajax" class="table table-mailbox">
                                     <thead>
@@ -153,41 +191,7 @@ tr.shown td.details-control {
                         </div>
                     </div>
 
-<div class="divform" align="center">
-	<button class="btn btn-sm btn-primary" onclick="addNew();"><i class="fa fa-plus"></i> Nuevo</button>
-</div>
-<div class="divform" style="display:none;">
-	<form action="recovery/guardar" method="POST" enctype="multipart/form-data">
-		<div class="row">
-			<div class="col-md-4">Tipo de documento</div>
-			<div class="col-md-4">
-				<select name="tipo_documento" class="form-control"><option value="1">PROVEIDO</option><option value="3">MEMORANDO</option><option value="4">OFICIO</option><option value="5">INFORME</option><option value="7">CARTA</option><option value="9">REQUERIMIENTO</option><option value="10">COMPROBANTE DE PAGO</option><option value="11">RESOLUCIÓN DE EJECUCIÓN COACTIVA</option><option value="12">RESOLUCIÓN DETERMINACIÓN</option><option value="13">LICENCIA</option><option value="14">CERTIFICADO DE DEFENSA CIVIL</option><option value="15">DIRECTIVA</option><option value="16">DICTAMEN</option><option value="17">ACTA</option><option value="18">CERTIFICADO</option><option value="19">AUTORIZACIÓN</option><option value="20">DECLARACIÓN JURADA</option><option value="21">RESOLUCIÓN SUB GERENCIA</option><option value="22">RESOLUCIÓN DE GERENCIA</option><option value="23">RESOLUCIÓN GERENCIA MUNICIPAL</option><option value="24">RESOLUCIÓN DE ALCALDÍA</option><option value="25">NOTIFICACIÓN PREVENTIVA</option><option value="26">ORDEN DE COMPRA</option><option value="27">ORDEN DE SERVICIO</option><option value="29">CONSTANCIA</option><option value="30">MEMORANDO MÚLTIPLE</option><option value="31">MEMORANDO CIRCULAR</option><option value="32">INFORME MÚLTIPLE</option><option value="33">INFORME CIRCULAR</option><option value="34">CARTA A REGIDOR</option><option value="35">REPORTE DIARIO</option><option value="36">REPORTE CONSOLIDADOS</option><option value="37">ACUERDO DE CONCEJO</option><option value="38">NOTA DE CRÉDITO PRESUPUESTAL </option><option value="39">CONTRATO</option><option value="40">PROYECTO DE CONTRATO</option><option value="41">NIA NOTA DE ING A ALMACÉN</option><option value="42">FICHA DE INSCRIPCIÓN</option><option value="43">TIKET DE PAGO</option><option value="44">COMPROBANTE</option><option value="45">CHEQUE</option><option value="46">ORDEN DE PAGO</option><option value="47">CARTA NOTARIAL</option><option value="48">CONTESTACIONES</option><option value="49">ALEGATOS</option><option value="50">ESCRITO</option><option value="51">INFORME TÉCNICO</option><option value="52">DEMANDA</option><option value="53">EXCEPCIÓN</option><option value="54">DENUNCIA</option><option value="55">MEDIO IMPUGNATORIO</option><option value="56">DEFENSA PREVIA</option><option value="57">CARTA DE INICIO</option><option value="58">INFORME DE META</option><option value="59">INFOR DE CARTA INIC</option><option value="60">ACTA DE CONSTATACION</option><option value="61">RESOLUCION DE SANCIÓN</option><option value="62">ACTA DE LEVANT DE CLAUSURA</option><option value="63">ACTA DE CLAUSURA</option><option value="64">ACTA DE RETENCIÓN </option><option value="65">ACTA DE INTERNAMIENTO</option><option value="66">ACTA DE DEVOLUCION</option><option value="67">ACTA DE DECOMISO</option><option value="68">ACTA DE LIBERACIÓN</option><option value="69">ACTA DE DETERIORO</option><option value="70">RESOLUCIÓN DETERMINISTA DE IMPUESTO PREDIAL</option><option value="71">RESOLUCIÓN DE MULTA TRIBUTARIA</option><option value="72">FICHA DE VERIFICACION TECNICA</option><option value="73">ACTA DE INSPECCION PREDIAL</option><option value="74">ACTA DE INSPECCION NO REALIZADA</option><option value="75">CERTIFICADO PRESUPUESTAL</option><option value="76">ROL DE SERVICIO</option><option value="77">ORDENANZA</option><option value="78">DECRETO DE ALCALDÍA</option><option value="79">EXPEDIENDE DE CONTRATACION</option><option value="80">INFORME DIAGNOSTICO</option><option value="81">LIQUIDACIÓN</option><option value="82">DOCUMENTO</option><option value="83">ORDEN DE TRABAJO</option><option value="84">ACTIVIDAD</option><option value="85">INFORME DE PRECALIFICACIÓN</option><option value="86">DESCARGO</option><option value="87">RESOLUCIÓN DE SGP</option><option value="88">TIEMPO</option><option value="89">RECURSO DE RECONCILIACIÓN</option><option value="90">ACEPTACION</option><option value="91">APELACIÓN</option><option value="94">NOTIFICACIÓN ADMINISTRATIVA</option><option value="95">INFORME PERSONAL</option><option value="96">INVITACIÓN A COTIZAR</option><option value="97">OFICIO PNCSCDU</option><option value="98">OFICIO PNCSCDU</option><option value="99">AUTORIZACIÓN CDSE</option><option value="100">MEMORANDO AIP</option><option value="101">CARTA AIP</option><option value="102">RESOLUCIÓN DE ALCALDÍA DIVORCIO</option><option value="103">CONSTANCIA DE POSESIÓN DE LOTE</option><option value="104">CERTIFICADO DE NUMERACIÓN</option><option value="105">CERTIFICADO DE JURISDICCIÓN</option><option value="106">CERTIFICADO DE PARÁMETROS URBANÍSTICOS Y EDIFICATORIOS</option><option value="107">RESOLUCIÓN REGISTRAL</option><option value="108">MEMORANDO INTERNO</option><option value="109">OFICIO CIRCULAR</option><option value="110">PAPELETA DE AUTORIZACIÓN DE VACACIONES</option><option value="112">CITACION CIRCULAR</option><option value="113">ACTA DE CONCILIACION</option><option value="114">RESOLUCIÓN DE GERENCIA GR</option><option value="115">INFORME OI</option><option value="116">CONFORMIDAD DE OBRA</option><option value="117">AMPLIACIÓN DE AUTORIZACIÓN</option><option value="118">CONSTANCIA DE LIBRE DISPONIBILIDAD</option><option value="120">ACTA DE VERIFICACIÓN</option><option value="122">INFORME SP</option><option value="123">INFORME TÉCNICO SANITARIO</option><option value="124">CONSTANCIA NEGATIVA CATASTRAL</option><option value="125">CERTIFICADO NEGATIVO DE DEUDAS TRIBUTARIAS</option><option value="126">CARTA CIRCULAR</option><option value="127">DOCUMENTO SIN NUMERACION</option><option value="128">INFORME LEGAL</option><option value="129">CONSTANCIA DE NUMERACION</option><option value="130">RESOLUCIÓN SUB GERENCIA</option><option value="131">CERTIFICADO DE NOMENCLATURA</option>
-				</select>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-4">Número de documento</div>
-			<div class="col-md-4"><input class="form-control" type="text" name="numero"></div>
-		</div>  
-
-
-		<div class="row">
-			<div class="col-md-4">Fecha del documento</div>
-			<div class="col-md-4"><input class="form-control" type="text" name="fecha"></div>
-		</div> 
-
-		<div class="row">
-			<div class="col-md-4">Archivo:</div>
-			<div class="col-md-4"><input type="file" name="documento"></div>
-		</div>  
-
-
-		<div class="row">
-			<div class="col-md-4"><input type="submit" value="Guardar"></div>
-		</div> 
-	           
-	</form>
-</div>              
+             
 		</div><!-- /.col (RIGHT) -->
             </div>
             <!-- Finaliza contenido -->
