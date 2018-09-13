@@ -95,24 +95,26 @@ HTMLreporte2=function(datos){
                     //'<h3>'+data.paterno+' '+data.materno+'</h3>'+
             html+='<h5><span class="label label-default">&nbsp;DNI&nbsp;</span> '+data.dni+'</h5>';
 
-            if(window.AreaId == 10 && (window.RolIdG == 8 || window.RolIdG == 9)) {
-                if(data.area_id == 10) {
+            if(window.RolIdG == 8 || window.RolIdG == 9) { //if(window.AreaId == 10 && (window.RolIdG == 8 || window.RolIdG == 9))
+                //if(data.area_id == 10) {
+                    var resolucion = (data.resolucion)?data.resolucion:'';
+                    var cod_inspector = (data.cod_inspector)?data.cod_inspector:'';
                     html += '<form id="formr'+data.norden+'" name="formr'+data.norden+'" class="form-inline">'+
                               '<div class="form-group" style="padding: 8px 10px;">'+
                                 '<label for="" style="width: 110px;">N° Resoluci&oacute;n</label>'+
                                 //'<input type="text" class="form-control" onkeypress="return justNumbers(event);" id="txt_nro_resolucion'+data.norden+'" name="txt_nro_resolucion" value="'+data.resolucion+'" placeholder="0000000">'+
-                                '<input type="text" class="form-control" id="txt_nro_resolucion'+data.norden+'" name="txt_nro_resolucion" value="'+data.resolucion+'" placeholder="0000000">'+
+                                '<input type="text" class="form-control" id="txt_nro_resolucion'+data.norden+'" name="txt_nro_resolucion" value="'+resolucion+'" placeholder="0000000">'+
                               '</div>'+
                               '<div class="form-group" style="padding: 0px 10px;">'+
                                 '<label for="" style="width: 110px;">Cod. Inspector</label>'+
-                                '<input type="text" class="form-control" id="txt_codigo_inspector'+data.norden+'" name="txt_codigo_inspector" value="'+data.cod_inspector+'" placeholder="0000000">'+
+                                '<input type="text" class="form-control" id="txt_codigo_inspector'+data.norden+'" name="txt_codigo_inspector" value="'+cod_inspector+'" placeholder="0000000">'+
                               '</div>'+
                               '<button type="button" name="btnactualizaU" id="btnactualizaU" class="btn btn-default btn-sm" onclick="guardarResoUser('+data.norden+')">Actualizar</button>'+
                             '</form>'+
                             '<div id="men'+data.norden+'" style="display: none;" class="alert alert-danger" role="alert"></div>';
-                } else {
+                /*} else {
                     html+='<h5><span class="label label-default">&nbsp;E-mail&nbsp;</span> '+data.email+'</h5>';
-                }                    
+                }*/                    
             } else {
                 html+='<h5><span class="label label-default">&nbsp;E-mail&nbsp;</span> '+data.email+'</h5>';
             }
