@@ -489,7 +489,7 @@ class Ruta extends Eloquent
 
         $idAPI = 1272;
         $areaAPI = 19;
-        $rutaFlujoIDGET=Input::get('ruta_flujo_id') == 5569 ? 5806 : =Input::get('ruta_flujo_id');
+        $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
 
 
         $codigounico="";
