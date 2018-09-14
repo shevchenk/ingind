@@ -911,6 +911,11 @@ class DocumentoDigitalController extends \BaseController {
         // Gerencia Municipal
         // Gerencia de Modernización de la Gestión Municipal
         // Sub. Gerencia de Personal
+        if($area == 'Gerencia de Gestion Ambiental')
+            $num_a = 7;
+        else
+            $num_a = 19;
+
         if(strlen($area) <= 25)
             $pos = strpos($area, ' ', 14);
         else
@@ -926,7 +931,7 @@ class DocumentoDigitalController extends \BaseController {
             }
             else
             {
-                $pos2 = strpos($nv_area,' ', 19); // $pos = 7, no 0
+                $pos2 = strpos($nv_area,' ', $num_a); // $pos = 7, no 0
             
                 if ($pos2 !== false) {
                     $text .= "\r\n".substr($area,$pos+1, 20);
