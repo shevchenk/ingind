@@ -216,7 +216,7 @@ function showImage(url){
 	}
 
 	$(document).ready(function() { 
-       $("#fechaPicker").datepicker();
+       $("#fechaPicker").datepicker({ dateFormat: 'yy-mm-dd' });
 
 		$.post('recovery/load',{},function(data){
 			var trd="";
