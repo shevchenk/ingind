@@ -137,7 +137,7 @@ tr.shown td.details-control {
 
 		<div class="row">
 			<div class="col-md-4">Fecha del documento</div>
-			<div class="col-md-4"><input class="form-control" type="text" name="fecha"></div>
+			<div class="col-md-4"><input class="form-control datepicker" id="fechaPicker" type="text" name="fecha"></div>
 		</div> 
 
 		<div class="row">
@@ -216,6 +216,8 @@ function showImage(url){
 	}
 
 	$(document).ready(function() { 
+       $("#fechaPicker").datepicker();
+
 		$.post('recovery/load',{},function(data){
 			var trd="";
 			console.log(data);
