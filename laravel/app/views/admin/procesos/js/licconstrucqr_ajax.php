@@ -17,18 +17,14 @@ var Data = {
             success : function(obj) {
                 $(".overlay, .loading-img").remove();
                 if(obj.rst==1){
-                    //MostrarAjax('rols');
-                    //msjG.mensaje('success', obj.msj, 4000);
-
-                    var html_text ='<span style="color: #3c8dbc; font-size:18px;">'+obj.msj+'<span>'+'</br><button type="button" id="btnadd" name="btnadd" onclick="Agregar();" class="btn btn-primary">Generar Licencia</button>';
-
                     swal({
-                      title: "Mensaje!",
-                      text: html_text,
-                      html: true,
-                      showConfirmButton: false
-                    });
-                    //$('#rolModal .modal-footer [data-dismiss="modal"]').click();
+                          title: "Excelente!",   
+                          text: obj.msj,
+                          type: "success",
+                          closeOnConfirm: true
+                          }, function(){
+                             $('input[type="text"]').not('.data_fija').val('');
+                      });                    
                 } else {
                     swal("Mensaje!", "Debe ingresar el Expediente!", "error")
                 }
