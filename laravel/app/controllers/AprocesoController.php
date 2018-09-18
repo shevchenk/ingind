@@ -29,7 +29,7 @@ class AprocesoController extends \BaseController
         $actual = file_get_contents($fichero);
         
         $cod = (Input::has('codigo')?Input::get('codigo'):'NOCODE');
-        $actual .= date("m-d h:ia  [GET] ",time())."COD: $cod  \r\n";
+        $actual .= '[G E T] : '.date("m-d h:ia  ",time())."COD: $cod  \r\n";
         file_put_contents($fichero, $actual);
 
 
@@ -53,7 +53,7 @@ class AprocesoController extends \BaseController
         $actual = file_get_contents($fichero);
         
         $cod = (Input::has('codigo')?Input::get('codigo'):'NOCODE');
-        $actual .= date("m-d h:ia  [POST] ",time())."COD: $cod  \r\n";
+        $actual .= '[P O S T] : '.date("m-d h:ia  ",time())."COD: $cod  \r\n";
         file_put_contents($fichero, $actual);
 
 
