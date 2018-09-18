@@ -21,7 +21,8 @@ class EjemploController extends BaseController
 
         return Redirect::to('/results/TestWordFile.pdf');
         //  PDF settings
-/*        $pdf = App::make('dompdf');
+        /*
+        $pdf = App::make('dompdf');
         $pdf->loadHTML('results/TestWordFile.html');
         $pdf->setPaper('a4')->setOrientation('portrait');
 
@@ -100,7 +101,9 @@ class EjemploController extends BaseController
 
         $section = $phpWord->addSection();
         $section->addText('this document is password protected');
-        $phpWord->save($source);
-        return Redirect::to($source);
+        //$phpWord->save($source);
+        //return Redirect::to($source);        
+        $phpWord->save('results/EjemploClonado.pdf','PDF');
+        return Redirect::to('/results/EjemploClonado.pdf');
     }
 }

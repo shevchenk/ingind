@@ -2,30 +2,28 @@
 $(document).ready(function() {
 
     $(".fechas").datetimepicker({
-            format: "yyyy-mm-dd",
-            language: 'es',
-            showMeridian: false,
-            time: false,
-            minView: 3,
-            startView: 2,
-            autoclose: true,
-            todayBtn: false
-        });
+        format: "yyyy-mm-dd",
+        language: 'es',
+        showMeridian: false,
+        time: false,
+        minView: 3,
+        startView: 2,
+        autoclose: true,
+        todayBtn: false
+    });
 
     $('#btnempty').click(function() {
         $('input[type="text"]').not('.data_fija').val('');
     });
-
+    
 });
 
 
 Agregar = function(){
     if(validaCampos()){
-
         sweetalertG.confirm("Confirmación!", "Desea guardar la resolución?", function(){
             Data.AgregarEditarRol();
-        });        
-        //alert('llego');
+        });
     }
 };
 validaCampos = function(){
@@ -83,4 +81,5 @@ validaCampos = function(){
     }
     return r;
 };
+
 </script>
