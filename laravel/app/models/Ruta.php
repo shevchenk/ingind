@@ -663,18 +663,17 @@ class Ruta extends Eloquent
                 else{
                     $validaactivar=1;
                 }
+                if(Input::has('automatico')){                
+                    if($iterator == 1){
+                        $rutaDetalle['fecha_inicio']=$actualdate;
+                    }
 
-/*
-                if($iterator == 1){
-                    $rutaDetalle['fecha_inicio']=$actualdate;
+                    if($iterator == 0){
+                        $rutaDetalle['dtiempo_final']= $actualdate;
+                    }
+                    $iterator++;
                 }
-
-                if($iterator == 0){
-                    $rutaDetalle['dtiempo_final']=$actualdate;
-                }
-*/
                 
-                $iterator++;
 
 
                 $rutaDetalle['usuario_created_at']= $idAPI;
