@@ -672,7 +672,7 @@ class Ruta extends Eloquent
                     $rutaDetalle['dtiempo_final']= $actualdate;
                 }
 
-
+                $iterator++;
 
 
                 $rutaDetalle['usuario_created_at']= $idAPI;
