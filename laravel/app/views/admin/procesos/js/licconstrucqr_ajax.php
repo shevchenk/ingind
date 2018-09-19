@@ -17,6 +17,7 @@ var Data = {
             success : function(obj) {
                 $(".overlay, .loading-img").remove();
                 if(obj.rst==1){
+                    window.location='http://proceso.munindependencia.pe/results/licencia_construc.docx'
                     swal({
                           title: "Excelente!",   
                           text: obj.msj,
@@ -24,6 +25,7 @@ var Data = {
                           closeOnConfirm: true
                           }, function(){
                              $('input[type="text"]').not('.data_fija').val('');
+                             //window.location='formatolicencia/mostrarliccontruc'                             
                       });                    
                 } else {
                     swal("Mensaje!", "Debe ingresar el Expediente!", "error")

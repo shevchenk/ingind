@@ -138,8 +138,22 @@ class FormatoLicenciaController extends \BaseController
             $formatolic->persona_id_created_at = Auth::user()->id;
             $formatolic->save();
 
-            /* GENERACIÓN DEL WORD PLANILLA */
-            $data = array('expediente' => $formatolic->expediente,
+            /* GENERACIÓN DEL WORD PLANTILLA */
+            if(date("m") == '01') $mes_ac = 'Enero';
+            else if(date("m") == '02') $mes_ac = 'Febrero';
+            else if(date("m") == '03') $mes_ac = 'Marzo';
+            else if(date("m") == '04') $mes_ac = 'Abril';
+            else if(date("m") == '05') $mes_ac = 'Mayo';
+            else if(date("m") == '06') $mes_ac = 'Junio';
+            else if(date("m") == '07') $mes_ac = 'Julio';
+            else if(date("m") == '08') $mes_ac = 'Agosto';
+            else if(date("m") == '09') $mes_ac = 'Septiembre';
+            else if(date("m") == '10') $mes_ac = 'Octubre';
+            else if(date("m") == '11') $mes_ac = 'Noviembre';
+            else if(date("m") == '12') $mes_ac = 'Diciembre';
+
+            $data = array( 'id_lic'=>$formatolic->id,
+                            'expediente' => $formatolic->expediente,
                             'fecha_emi' => $formatolic->fecha_emision,
                             'fecha_vence' => $formatolic->fecha_vence,
                             'correlativo' => $formatolic->correlativo,
@@ -148,7 +162,7 @@ class FormatoLicenciaController extends \BaseController
                             'uso' => $formatolic->uso,
                             'zonifica' => $formatolic->zonifica,
                             'altura' => $formatolic->altura,
-
+                            'persona' => 'CARDENAS MONTOYA, MARIA DOLORES',
                             'propietario' => $formatolic->propietario,
                             'departamento' => $formatolic->departamento,
                             'provincia' => $formatolic->provincia,
@@ -158,7 +172,9 @@ class FormatoLicenciaController extends \BaseController
                             'dir_lote' => $formatolic->dir_lote,
                             'dir_calle' => $formatolic->dir_calle,
                             'area_terre' => $formatolic->area_terreno,
-                            'valor_obra' => $formatolic->valor_obra,
+                            'valor_obra' => $formatolic->valor_obra,                            
+                            'piso' => Input::get('piso'),
+                            'area_techada' => Input::get('area_techada'),
                             'piso_1' => $formatolic->piso_1,
                             'area_1' => $formatolic->area_1,
                             'piso_2' => $formatolic->piso_2,
@@ -172,7 +188,7 @@ class FormatoLicenciaController extends \BaseController
                             'derecho_licencia' => $formatolic->derecho_licencia,
                             'recibo' => $formatolic->recibo,
                             'fecha_recibo' => $formatolic->fecha_recibo,
-                            'fecha_actual_texto' => date("d") . " del " . date("m") . " de " . date("Y")
+                            'fecha_actual_texto' => date("d") . " del " . $mes_ac . " de " . date("Y")
                     );
 
             $this->getEje2($data);
@@ -190,10 +206,7 @@ class FormatoLicenciaController extends \BaseController
             // Variables on different parts of document
             //$templateProcessor->setValue('weekday', date('l'));            // On section/content
             //$templateProcessor->setValue('time', date('H:i'));             // On footer
-            //$templateProcessor->setValue('serverName', realpath(__DIR__)); // On header
-
-            //$png = "<img class='img-thumbnail' src='data:image/png;base64' width='140' height='140'>";
-            //$templateProcessor->setValue('cod_qr', $png);
+            //$templateProcessor->setValue('serverName', realpath(__DIR__)); // On header            
             
             $templateProcessor->setValue('expediente', $data['expediente']);
             $templateProcessor->setValue('fecha_emi', $data['fecha_emi']);
@@ -204,64 +217,62 @@ class FormatoLicenciaController extends \BaseController
             $templateProcessor->setValue('uso', $data['uso']);
             $templateProcessor->setValue('zonifica', $data['zonifica']);
             $templateProcessor->setValue('altura', $data['altura']);
-            //Persona
+            $templateProcessor->setValue('persona', $data['persona']);
             $templateProcessor->setValue('propietario', $data['propietario']);
             $templateProcessor->setValue('dir_urbaniza', $data['dir_urbaniza']);
             $templateProcessor->setValue('dir_mz', $data['dir_mz']);
             $templateProcessor->setValue('dir_lote', $data['dir_lote']);
             $templateProcessor->setValue('dir_calle', $data['dir_calle']);
             $templateProcessor->setValue('area_terre', number_format($data['area_terre'], 2));
-            $templateProcessor->setValue('valor_obra', number_format($data['valor_obra'], 2));
-            // Simple table
+            $templateProcessor->setValue('valor_obra', number_format($data['valor_obra'], 2));            
+                        
+            $con_p = 0;
+            if($data['piso_1'] && $data['area_1']) $con_p = $con_p+1;
+            if($data['piso_2'] && $data['area_2']) $con_p = $con_p+1;
+            if($data['piso_3'] && $data['area_3']) $con_p = $con_p+1;
+            if($data['piso_4'] && $data['area_4']) $con_p = $con_p+1;
+
+            // Realiza tabla Dinamica
+            $templateProcessor->setValue('piso', $data['piso']);
+            $templateProcessor->setValue('area_techada', $data['area_techada']);
+
+            //$templateProcessor->cloneRow('rowValue', $con_p);
             /*
-            $templateProcessor->cloneRow('rowValue', 10);
-
-            $templateProcessor->setValue('rowValue#1', 'Sun');
-            $templateProcessor->setValue('rowValue#2', 'Mercury');
-            $templateProcessor->setValue('rowValue#3', 'Venus');
-            $templateProcessor->setValue('rowValue#4', 'Earth');
-            $templateProcessor->setValue('rowValue#5', 'Mars');
-            $templateProcessor->setValue('rowValue#6', 'Jupiter');
-            $templateProcessor->setValue('rowValue#7', 'Saturn');
-            $templateProcessor->setValue('rowValue#8', 'Uranus');
-            $templateProcessor->setValue('rowValue#9', 'Neptun');
-            $templateProcessor->setValue('rowValue#10', 'Pluto');
-
-            $templateProcessor->setValue('rowNumber#1', '1');
-            $templateProcessor->setValue('rowNumber#2', '2');
-            $templateProcessor->setValue('rowNumber#3', '3');
-            $templateProcessor->setValue('rowNumber#4', '4');
-            $templateProcessor->setValue('rowNumber#5', '5');
-            $templateProcessor->setValue('rowNumber#6', '6');
-            $templateProcessor->setValue('rowNumber#7', '7');
-            $templateProcessor->setValue('rowNumber#8', '8');
-            $templateProcessor->setValue('rowNumber#9', '9');
-            $templateProcessor->setValue('rowNumber#10', '10');
-
-            // Table with a spanned cell
-            $templateProcessor->cloneRow('userId', 3);
-
             $templateProcessor->setValue('userId#1', '1');
-            $templateProcessor->setValue('userFirstName#1', 'James');
             $templateProcessor->setValue('userName#1', 'Taylor');
+            $templateProcessor->setValue('userFirstName#1', 'James');            
             $templateProcessor->setValue('userPhone#1', '+1 428 889 773');
-
-            $templateProcessor->setValue('userId#2', '2');
-            $templateProcessor->setValue('userFirstName#2', 'Robert');
-            $templateProcessor->setValue('userName#2', 'Bell');
-            $templateProcessor->setValue('userPhone#2', '+1 428 889 774');
-
-            $templateProcessor->setValue('userId#3', '3');
-            $templateProcessor->setValue('userFirstName#3', 'Michael');
-            $templateProcessor->setValue('userName#3', 'Ray');
-            $templateProcessor->setValue('userPhone#3', '+1 428 889 775');
             */
+            // --
 
             $templateProcessor->setValue('derecho_licencia', number_format($data['derecho_licencia'],2));
             $templateProcessor->setValue('recibo', $data['recibo']);
             $templateProcessor->setValue('fecha_recibo', $data['fecha_recibo']);
             $templateProcessor->setValue('fecha_actual_texto', $data['fecha_actual_texto']);
 
+            // --
+            //$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('templates/resources/formato_licencia_contruc.docx');
+            $png = QrCode::format('png')
+                    ->margin(0)
+                    ->size(100)
+                    //->color(40,40,40)
+                    ->generate("http://proceso.munindependencia.pe/formatolicencia/vistaqrliccontruccion/".$data['id_lic']);
+        
+            file_put_contents("templates/resources/temp.png", $png);
+            $rutaQR = "templates/resources/temp.png";
+            $templateProcessor->setImg('cod_qr',array('src' => "templates/resources/prueba.jpg", 'swh'=>'100'));
+            $templateProcessor->saveAs('results/licencia_construc.docx');
+
+            //$templateProcessor->setImg('cod_qr',array('src' => $rutaQR,'swh'=>'100', 'size'=>array(0=>$width, 1=>$height));
+            // --
+
+            //return Redirect::to('/results/licencia_construc.pdf');
+            //header("Content-Disposition: attachment; filename='http://localhost/ingind/public/results/licencia_construc.docx'");
+                        
+            //$templateProcessor->saveAs('php://output');
+            
+
+            /*
             $source='results/licencia_construc.docx';
             $templateProcessor->saveAs($source);
 
@@ -276,7 +287,25 @@ class FormatoLicenciaController extends \BaseController
             //return Redirect::to($source);
             $phpWord->save('results/licencia_construc.pdf','PDF');
             return Redirect::to('/results/licencia_construc.pdf');
+            */
     }
+
+    
+    public function getMostrar()
+    {
+        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor('templates/resources/formato_licencia_contruc.docx');
+            $png = QrCode::format('png')
+                    ->margin(0)
+                    ->size(100)
+                    //->color(40,40,40)
+                    ->generate("http://proceso.munindependencia.pe/formatolicencia/vistaqrliccontruccion/".$data['id_lic']);
+        
+            file_put_contents("templates/resources/temp.png", $png);
+            $rutaQR = "templates/resources/temp.png";
+            $templateProcessor->setImg('cod_qr',array('src' => "templates/resources/prueba.jpg", 'swh'=>'100'));
+            $templateProcessor->saveAs('results/licencia_construc.docx');
+    }
+    
 
     public function obtenerCodQRLicConstr($id_lic_constr) {
       $size = 100; // TAMAÑO EN PX
