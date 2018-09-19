@@ -480,11 +480,16 @@ class Ruta extends Eloquent
 
 
 
+
+
+
+
+
 ##
 ## ---------------------------------------------------------------------
 ##
 
- public function crearRuta02(){
+ public function crearRuta02(){ 
         DB::beginTransaction();
 
         $idAPI = 1272;
@@ -626,11 +631,14 @@ class Ruta extends Eloquent
         
         $conteo=0;$array['fecha']=''; // inicializando valores para desglose
 
+            $actualdate = date("Y-m-d H:i:s");
+            $iterator = 0;
             foreach($qrutaDetalle as $rd){
                 $cero='';
-                if($rd->norden<10){
+                if($rd->norden<10){ 
                     $cero='0';
                 }
+
                 $rutaDetalle = new RutaDetalle;
                 $rutaDetalle['ruta_id']=$ruta->id;
                 $rutaDetalle['area_id']=$rd->area_id;
@@ -641,15 +649,33 @@ class Ruta extends Eloquent
                 $rutaDetalle['estado_ruta']=$rd->estado_ruta;
                 $rutaDetalle['detalle']=$rd->detalle;
                 $rutaDetalle['archivado']=$rd->archivado;
+
+
                 if($rd->norden==1 or ($rd->norden>1 and $validaactivar==0 and $rd->estado_ruta==2) ){
+
                     $rutaDetalle['fecha_inicio']=$fecha_inicio;
+
                     $sql="SELECT CalcularFechaFinal( '".$fecha_inicio."', (".$rd->dtiempo."*1440), ".$rd->area_id." ) fproy";
                     $fproy= DB::select($sql);
                     $rutaDetalle['fecha_proyectada']=$fproy[0]->fproy;
                 }
+
                 else{
                     $validaactivar=1;
                 }
+                if(Input::has('automatico') || true){                
+                    if($iterator == 1){
+                        $rutaDetalle['fecha_inicio']=$actualdate;
+                    }
+
+                    if($iterator == 0){
+                        $rutaDetalle['dtiempo_final']= $actualdate;
+                    }
+                    $iterator++;
+                } 
+                
+
+
                 $rutaDetalle['usuario_created_at']= $idAPI;
                 $rutaDetalle->save();
                 
@@ -714,6 +740,10 @@ class Ruta extends Eloquent
 ##
 ## ----------------------------------------------------------------------------
 ##
+
+
+
+
 
 
 
@@ -1413,7 +1443,7 @@ class Ruta extends Eloquent
         return (isset($r[0])) ? $r[0] : $r2[0];
     }
     
-        public static function OrdenTrabajoDia()
+    public static function OrdenTrabajoDia()
     {     
         $sSql = '';
         $sSql.= "SELECT rd.id norden,rd.actividad,rd.fecha_inicio,rd.dtiempo_final,ABS(rd.ot_tiempo_transcurrido) ot_tiempo_transcurrido ,SEC_TO_TIME(ABS(rd.ot_tiempo_transcurrido) * 60) formato 

@@ -23,36 +23,17 @@ class AprocesoController extends \BaseController
     }
 
 
-    public function getCrear()
-    {
-    
-        if(Input::has('codigo')){
+    public function getCrear(){
+        
+        $fichero = public_path()."/file/log.dat";
+        $actual = file_get_contents($fichero);
+        
+        $cod = (Input::has('codigo')?Input::get('codigo'):'NOCODE');
+        $actual .= '[G E T] : '.date("m-d h:ia  ",time())."COD: $cod  \r\n";
+        file_put_contents($fichero, $actual);
 
-            $r           = new Ruta;
-            $res         = Array();
-            $res         = $r->crearRuta02();
 
-            return Response::json(
-                array(
-                    'rst'   => $res['rst'],
-                    'msj'   => $res['msj']
-                )
-            );
-        }else{
 
-            return Response::json(
-                array(
-                    'rst'   => 0,
-                    'msj'   => "Sin datos."
-                )
-            );
-        }
-
-    }
-
-    public function postCrear()
-    {
-    
         if(Input::has('codigo')){
 
             $r           = new Ruta;
@@ -61,7 +42,29 @@ class AprocesoController extends \BaseController
 
             return Response::json( array('rst'   => $res['rst'],'msj'   => $res['msj']));
         }else{
+            return Response::json(array('rst'  => 0,'msj'   => "Sin datos."));
+        }
 
+
+    }
+
+    public function postCrear(){
+        $fichero = public_path()."/file/log.dat";
+        $actual = file_get_contents($fichero);
+        
+        $cod = (Input::has('codigo')?Input::get('codigo'):'NOCODE');
+        $actual .= '[P O S T] : '.date("m-d h:ia  ",time())."COD: $cod  \r\n";
+        file_put_contents($fichero, $actual);
+
+
+        if(Input::has('codigo')){
+
+            $r           = new Ruta;
+            $res         = Array();
+            $res         = $r->crearRuta02();
+
+            return Response::json( array('rst'   => $res['rst'],'msj'   => $res['msj']));
+        }else{
             return Response::json(array('rst'  => 0,'msj'   => "Sin datos."));
         }
 
