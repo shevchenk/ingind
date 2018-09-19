@@ -664,14 +664,16 @@ class Ruta extends Eloquent
                     $validaactivar=1;
                 }
 
+/*
                 if($iterator == 1){
                     $rutaDetalle['fecha_inicio']=$actualdate;
                 }
 
                 if($iterator == 0){
-                    $rutaDetalle['dtiempo_final']= $actualdate;
+                    $rutaDetalle['dtiempo_final']=$actualdate;
                 }
-
+*/
+                
                 $iterator++;
 
 
