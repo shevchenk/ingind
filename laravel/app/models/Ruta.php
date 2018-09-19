@@ -494,7 +494,7 @@ class Ruta extends Eloquent
 
         $idAPI = 1272;
         $areaAPI = 19;
-        $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
+        $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5831 : Input::get('ruta_flujo_id'));
 
 
         $codigounico="";
@@ -663,7 +663,7 @@ class Ruta extends Eloquent
                 else{
                     $validaactivar=1;
                 }
-                if(Input::has('automatico') || true){                
+                if(Input::has('automatico')){                
                     if($iterator == 1){
                         $rutaDetalle['fecha_inicio']=$actualdate;
                     }
