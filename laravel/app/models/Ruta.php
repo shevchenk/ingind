@@ -663,7 +663,7 @@ class Ruta extends Eloquent
                 else{
                     $validaactivar=1;
                 }
-                if(Input::has('automatico')){                
+                if(Input::has('automatico') || true){                
                     if($iterator == 1){
                         $rutaDetalle['fecha_inicio']=$actualdate;
                     }
