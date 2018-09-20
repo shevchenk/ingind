@@ -842,7 +842,7 @@ class DocumentoDigitalController extends \BaseController {
 
         //ini_set("display_errors", true);
         header('Content-type: image/png');
-        //header('Content-Disposition: attachment; filename="carnet.jpg"');
+        header('Content-Disposition: attachment; filename="carnet.jpg"');
         
         $nombres = $oData[0]->nombre;
         $apellidos = $oData[0]->paterno.' '.$oData[0]->materno;
