@@ -494,8 +494,7 @@ class Ruta extends Eloquent
 
         $idAPI = 1272;
         $areaAPI = 19;
-        $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
-
+        $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5831 : Input::get('ruta_flujo_id'));
 
         $codigounico="";
         $codigounico=Input::get('codigo');
@@ -521,6 +520,7 @@ class Ruta extends Eloquent
                         ->where('tr.estado', '=', '1')
                         ->where('r.estado', '=', '1')
                         ->get();
+
 
         if(count($tablaRelacion)>0){
             DB::rollback();

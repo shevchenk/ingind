@@ -25,13 +25,19 @@ class AprocesoController extends \BaseController
 
     public function getCrear(){
         
+ 
         $fichero = public_path()."/file/log.dat";
         $actual = file_get_contents($fichero);
         
         $cod = (Input::has('codigo')?Input::get('codigo'):'NOCODE');
         $actual .= '[G E T] : '.date("m-d h:ia  ",time())."COD: $cod  \r\n";
         file_put_contents($fichero, $actual);
+        
+        $res = json_decode(file_get_contents("http://10.0.1.20/mdi/?getInfoNum&getCall=".$cod));
 
+        if($res->result==1){
+            Input::replace(['codigo' => $res->data[0]->ANI.' - '.$res->data[0]->Destination]);
+        }
 
 
         if(Input::has('codigo')){
@@ -56,6 +62,12 @@ class AprocesoController extends \BaseController
         $actual .= '[P O S T] : '.date("m-d h:ia  ",time())."COD: $cod  \r\n";
         file_put_contents($fichero, $actual);
 
+
+        $res = json_decode(file_get_contents("http://10.0.1.20/mdi/?getInfoNum&getCall="+$cod));
+
+        if($res->result==1){
+            Input::replace(['codigo' => $res->data[0]->ANI.' - '.$res->data[0]->Destination]);
+        }
 
         if(Input::has('codigo')){
 
