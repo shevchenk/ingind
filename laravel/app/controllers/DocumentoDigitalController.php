@@ -955,9 +955,7 @@ class DocumentoDigitalController extends \BaseController {
         else
         {
             $area = $text;
-        }
-
-        
+        }        
 
         $font = 'fonts/carnet/Hack-Bold.ttf';
         $font2 = 'fonts/carnet/Hack-Regular.ttf';
