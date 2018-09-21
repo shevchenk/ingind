@@ -32,17 +32,11 @@ class AprocesoController extends \BaseController
         $actual .= '[GET] : '.date("m-d h:ia  ",time())."DATA:\r\n $cod  \r\n\r\n";
         file_put_contents($fichero, $actual);
         
-        
-        
-
-
-
-
 
         $res = json_decode(file_get_contents("http://10.0.1.20/mdi/?getInfoNum&getCall=".$cod));
 
         if($res->result==1){
-            //Input::replace(['codigo' => $res->data[0]->ANI.' - '.$res->data[0]->Destination]);
+            Input::replace(['codigo' => $res->data[0]->ANI.' - '.$res->data[0]->Destination]);
         }
 
 
@@ -72,7 +66,7 @@ class AprocesoController extends \BaseController
         $res = json_decode(file_get_contents("http://10.0.1.20/mdi/?getInfoNum&getCall=".$cod));
 
         if($res->result==1){
-            //Input::replace(['codigo' => $res->data[0]->ANI.' - '.$res->data[0]->Destination]);
+            Input::replace(['codigo' => $res->data[0]->ANI.' - '.$res->data[0]->Destination]);
         }
 
 

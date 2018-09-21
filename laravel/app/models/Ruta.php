@@ -496,7 +496,7 @@ class Ruta extends Eloquent
         $areaAPI = 19;
         $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
 
-        $IDSISC_NUMEROID=Input::get('id_llamada').':'.Input::get('codigo');
+        $IDSISC_NUMEROID=Input::get('id_incidencia').':'.Input::get('codigo');
         $id_documento='';
         
         $selectfecha = "SELECT NOW() as fecha;";
@@ -514,7 +514,7 @@ class Ruta extends Eloquent
                             'rutas as r',
                             'tr.id','=','r.tabla_relacion_id'
                         )
-                        ->where('tr.id_union', 'like', Input::get('id_llamada').":%")
+                        ->where('tr.id_union', 'like', Input::get('id_incidencia').":%")
                         ->where('r.ruta_flujo_id', '=', $rutaFlujoIDGET)
                         ->where('tr.estado', '=', '1')
                         ->where('r.estado', '=', '1')
