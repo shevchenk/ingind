@@ -261,7 +261,7 @@ class FormatoLicenciaController extends \BaseController
         else if(date("m") == '10') $mes_ac = 'Octubre';
         else if(date("m") == '11') $mes_ac = 'Noviembre';
         else if(date("m") == '12') $mes_ac = 'Diciembre';
-        
+
         $params = [
             'reporte'=>2,
             'correlativo' => $oData[0]->correlativo,
@@ -305,7 +305,7 @@ class FormatoLicenciaController extends \BaseController
             'anio' => date("Y"),
             'tamano'=>$tamano,
             'vistaprevia'=>$vistaprevia,
-            'imagen'=>$png
+            'imagen'=>''
         ];
 
         $view = \View::make('admin.mantenimiento.templates.plantilla_lconstr', $params);
