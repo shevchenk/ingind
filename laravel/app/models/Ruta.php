@@ -497,7 +497,7 @@ class Ruta extends Eloquent
         $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
 
         $IDSISC_NUMEROID="";
-        $IDSISC_NUMEROID=Input::get('id_llamada').':'Input::get('codigo');
+        $IDSISC_NUMEROID=Input::get('id_llamada').':'.Input::get('codigo');
         $id_documento='';
         
         $selectfecha = "SELECT NOW() as fecha;";
