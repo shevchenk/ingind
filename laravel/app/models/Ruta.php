@@ -496,9 +496,9 @@ class Ruta extends Eloquent
         $areaAPI = 19;
         $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
 
-        $codigounico="";
-        $codigounico=Input::get('codigo');
-        $id_documento='';        
+        $IDSISC_NUMEROID="";
+        $IDSISC_NUMEROID=Input::get('id_llamada').':'Input::get('codigo');
+        $id_documento='';
         
         $selectfecha = "SELECT NOW() as fecha;";
         $fecha_actual = DB::select($selectfecha);
@@ -515,7 +515,7 @@ class Ruta extends Eloquent
                             'rutas as r',
                             'tr.id','=','r.tabla_relacion_id'
                         )
-                        ->where('tr.id_union', '=', $codigounico)
+                        ->where('tr.id_union', 'like', Input::get('id_llamada').":%")
                         ->where('r.ruta_flujo_id', '=', $rutaFlujoIDGET)
                         ->where('tr.estado', '=', '1')
                         ->where('r.estado', '=', '1')
@@ -528,13 +528,12 @@ class Ruta extends Eloquent
                     'rst'=>2,
                     'msj'=>'El trámite ya fue registrado anteriormente'
                 );
-        }
-        else{
+        }else{
 
         $tablaRelacion=new TablaRelacion;
         $tablaRelacion['software_id']=1;
 
-        $tablaRelacion['id_union']=Input::get('codigo');
+        $tablaRelacion['id_union']=$IDSISC_NUMEROID;
         
         $tablaRelacion['fecha_tramite']= $fecha_inicio; //Input::get('fecha_tramite');
         $tablaRelacion['tipo_persona']=3;
@@ -692,7 +691,7 @@ class Ruta extends Eloquent
                     $rutaDetalleVerbo['documento_id']= '57';//Carta de inicio
                     $rutaDetalleVerbo['orden']= '0';
                     $rutaDetalleVerbo['finalizo']='1';
-                    $rutaDetalleVerbo['documento']=Input::get('codigo');
+                    $rutaDetalleVerbo['documento']=$IDSISC_NUMEROID;
                     $rutaDetalleVerbo['usuario_created_at']= $idAPI;
                     $rutaDetalleVerbo['usuario_updated_at']= $idAPI;
                     $rutaDetalleVerbo->save();
