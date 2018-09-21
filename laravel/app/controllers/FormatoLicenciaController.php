@@ -249,6 +249,19 @@ class FormatoLicenciaController extends \BaseController
 
         $oData=FormatoLicenciaContruccion::verDataFormatoLicencia($id);
 
+        if(date("m") == '01') $mes_ac = 'Enero';
+        else if(date("m") == '02') $mes_ac = 'Febrero';
+        else if(date("m") == '03') $mes_ac = 'Marzo';
+        else if(date("m") == '04') $mes_ac = 'Abril';
+        else if(date("m") == '05') $mes_ac = 'Mayo';
+        else if(date("m") == '06') $mes_ac = 'Junio';
+        else if(date("m") == '07') $mes_ac = 'Julio';
+        else if(date("m") == '08') $mes_ac = 'Agosto';
+        else if(date("m") == '09') $mes_ac = 'Septiembre';
+        else if(date("m") == '10') $mes_ac = 'Octubre';
+        else if(date("m") == '11') $mes_ac = 'Noviembre';
+        else if(date("m") == '12') $mes_ac = 'Diciembre';
+        
         $params = [
             'reporte'=>2,
             'correlativo' => $oData[0]->correlativo,
