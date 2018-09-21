@@ -5,7 +5,7 @@ class DocumentoRecuperado extends Base{
 
     public static function getRecuperadosArea($area_id){
         $ppath=url('/').'/';
-        $sql = "SELECT id, tipo_doc, concat('$ppath',archivo) as archivo,fecha_doc,numero FROM doc_recuperado WHERE estado=1 AND area=".$area_id;
+        $sql = "SELECT id, tipo_doc, concat('$ppath',archivo) as archivo,fecha_doc,numero FROM doc_recuperado WHERE estado=1 AND area=".$area_id.' ORDER BY fecha_doc DESC';
         $r= DB::select($sql);
         return $r;
 
@@ -13,7 +13,7 @@ class DocumentoRecuperado extends Base{
 
     public static function getRecuperados(){
         $ppath=url('/').'/';
-        $sql = "SELECT id, tipo_doc, concat('$ppath',archivo) as archivo,fecha_doc,numero FROM doc_recuperado WHERE estado=1";
+        $sql = "SELECT id, tipo_doc, concat('$ppath',archivo) as archivo,fecha_doc,numero FROM doc_recuperado WHERE estado=1".' ORDER BY fecha_doc DESC';
         $r= DB::select($sql);
         return $r;
         
