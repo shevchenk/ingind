@@ -911,8 +911,8 @@ class DocumentoDigitalController extends \BaseController {
         // Gerencia Municipal
         // Gerencia de Modernización de la Gestión Municipal
         // Sub. Gerencia de Personal
-        if($area == 'Gerencia de Gestion Ambiental')
-            $num_a = 7;
+        if($area_id == 21) //Gerencia de Gestion Ambiental
+           $num_a = 7;        
         else
             $num_a = 19;
 
@@ -945,7 +945,17 @@ class DocumentoDigitalController extends \BaseController {
             $dobleLinea=0;
         }
 
-        $area = $text;
+        if($area_id == 10) //Gerencia de Fiscalización y Control Municipal
+        {
+            $area_1 = substr($area, 0, 11)."\r\n";
+            $area_1 .= substr($area, 12, 16)."\r\n";
+            $area_1 .= substr($area, 29, 17);
+            $area = $area_1;
+        }
+        else
+        {
+            $area = $text;
+        }        
 
         $font = 'fonts/carnet/Hack-Bold.ttf';
         $font2 = 'fonts/carnet/Hack-Regular.ttf';
