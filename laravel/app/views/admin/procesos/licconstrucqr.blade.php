@@ -54,21 +54,21 @@
                     
                     <div class="col-md-12">
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">EXPEDIENTE</label>
-                          <div class="col-xs-4">
+                          <label for="" class="col-md-2 col-form-label">EXPEDIENTE</label>
+                          <div class="col-md-4">
                             <input class="form-control" name="txt_expediente" id="txt_expediente" type="text" value="" placeholder="4698-2016">
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">FECHA EMISION</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-2 col-form-label">FECHA EMISION</label>
+                          <div class="col-md-2">
                             <div class="input-group">
                               <input class="form-control data_fija fechas" placeholder="yyyy-mm-dd" id="txt_fecha_emision" name="txt_fecha_emision" type="text" style="cursor:pointer;" value="<?=date('Y-m-d')?>" readonly>
                               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></span>
                             </div>
                           </div>
-                          <label for="" class="col-xs-2 col-form-label">FEC. VENCIMIENTO</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-2 col-form-label">FEC. VENCIMIENTO</label>
+                          <div class="col-md-2">
                             <div class="input-group">
                               <input class="form-control fechas" placeholder="yyyy-mm-dd" id="txt_fecha_vence" name="txt_fecha_vence" type="text" style="cursor:pointer;" readonly>
                               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></span>
@@ -77,84 +77,84 @@
                         </div>
 
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">LIC. EDIFICACIÓN</label>
-                          <div class="col-xs-6">
+                          <label for="" class="col-md-2 col-form-label">LIC. EDIFICACIÓN</label>
+                          <div class="col-md-6">
                             <input class="form-control" name="txt_licencia_edifica" id="txt_licencia_edifica" type="text" value="" placeholder="Licencia de Edifición">
                           </div>
-                          <label for="" class="col-xs-2 col-form-label">MODALIDAD</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-2 col-form-label">MODALIDAD</label>
+                          <div class="col-md-2">
                             <input class="form-control" name="txt_modalidad" id="txt_modalidad" type="text" value="" placeholder="B">
                           </div>
                         </div>   
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">USO</label>
-                          <div class="col-xs-3">
+                          <label for="" class="col-md-2 col-form-label">USO</label>
+                          <div class="col-md-3">
                             <input class="form-control" name="txt_uso" id="txt_uso" type="text" value="" placeholder="Uso">
                           </div>
-                          <label for="" class="col-xs-1 col-form-label">ZONIFICA</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-1 col-form-label">ZONIFICA</label>
+                          <div class="col-md-2">
                             <input class="form-control" name="txt_zonifica" id="txt_zonifica" type="text" value="" placeholder="Zonificación">
                           </div>
-                          <label for="" class="col-xs-2 col-form-label">ALTURA</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-2 col-form-label">ALTURA</label>
+                          <div class="col-md-2">
                             <input class="form-control" name="txt_altura" id="txt_altura" type="text" value="" placeholder="Altura">
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">ADMINISTRADO</label>
-                          <div class="col-xs-6">
+                          <label for="" class="col-md-2 col-form-label">ADMINISTRADO</label>
+                          <div class="col-md-6">
                             <input class="form-control" name="" id="" type="text" value="" placeholder="">
                           </div>
                           
-                          <label for="" class="col-xs-2 col-form-label">PROPIETARIO</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-2 col-form-label">PROPIETARIO</label>
+                          <div class="col-md-2">
                             <input class="form-control" name="txt_propietario" id="txt_propietario" type="text" value="" placeholder="B">
                           </div>
                         </div>
                         
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">UBICACION</label>
-                           <div class="col-xs-3 text-center">
+                          <label for="" class="col-md-2 col-form-label">UBICACION</label>
+                           <div class="col-md-3 text-center">
                             <input class="form-control data_fija" name="txt_departamento" id="txt_departamento" type="text" value="LIMA" readonly><strong>Departamento</strong>
                           </div>
-                          <div class="col-xs-3 text-center">
+                          <div class="col-md-3 text-center">
                             <input class="form-control data_fija" name="txt_provincia" id="txt_provincia" type="text" value="LIMA" readonly><strong>Provincia</strong>
                           </div>
-                          <div class="col-xs-4 text-center">
+                          <div class="col-md-4 text-center">
                             <input class="form-control data_fija" name="txt_distrito" id="txt_distrito" type="text" value="INDEPENDENCIA" readonly><strong>Distrito</strong>
                           </div>
                         </div>
 
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">DIRECCION</label>
-                           <div class="col-xs-4 text-center">
+                          <label for="" class="col-md-2 col-form-label">DIRECCION</label>
+                           <div class="col-md-4 text-center">
                             <input class="form-control" name="txt_dir_urbaniza" id="txt_dir_urbaniza" type="text" value=""><strong>Urbanizaci&oacute;n/AA.HH/Otro</strong>
                           </div>
-                          <div class="col-xs-1 text-center">
+                          <div class="col-md-1 text-center">
                             <input class="form-control" name="txt_dir_mz" id="txt_dir_lote" type="text" value=""><strong>Mz.</strong>
                           </div>
-                          <div class="col-xs-1 text-center">
+                          <div class="col-md-1 text-center">
                             <input class="form-control" name="txt_dir_lote" id="txt_dir_lote" type="text" value=""><strong>Lote</strong>
                           </div>
-                          <div class="col-xs-4 text-center">
+                          <div class="col-md-4 text-center">
                             <input class="form-control" name="txt_dir_calle" id="txt_dir_calle" type="text" value=""><strong>Av./Jr./Calle/Pasaje</strong>
                           </div>
                         </div>
 
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">AREA TERRENO</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-2 col-form-label">AREA TERRENO</label>
+                          <div class="col-md-2">
                             <input class="form-control" name="txt_area_terreno" id="txt_area_terreno" type="text" value="" placeholder="Area de Terreno">
                           </div>
-                          <label for="" class="col-xs-1 col-form-label">VALOR</label>
-                          <div class="col-xs-3">
+                          <label for="" class="col-md-1 col-form-label">VALOR</label>
+                          <div class="col-md-3">
                             <input class="form-control" name="txt_valor_obra" id="txt_valor_obra" type="text" value="" placeholder="Valor de Obra">
                           </div>
                         </div>
                         
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">&nbsp;</label>
-                          <div class="col-xs-6">
+                          <label for="" class="col-md-2 col-form-label">&nbsp;</label>
+                          <div class="col-md-6">
                             <table class="table table-striped" style="border: 5px solid #f5f5f5;">
                                 <thead>
                                   <tr>
@@ -185,15 +185,15 @@
                         </div>
 
                         <div class="form-group row">
-                          <label for="" class="col-xs-2 col-form-label">DERECHO LICENCIA</label>
-                          <div class="col-xs-2">
+                          <label for="" class="col-md-2 col-form-label">DERECHO LICENCIA</label>
+                          <div class="col-md-2">
                             <input class="form-control" name="txt_derecho_licencia" id="txt_derecho_licencia" type="text" value="" placeholder="Derecho Licencia">
                           </div>
-                          <label for="" class="col-xs-1 col-form-label">Rec. N°</label>
-                          <div class="col-xs-3">
+                          <label for="" class="col-md-1 col-form-label">Rec. N°</label>
+                          <div class="col-md-3">
                             <input class="form-control" name="txt_recibo" id="txt_recibo" type="text" value="" placeholder="000000001">                            
                           </div>
-                          <div class="col-xs-2">                            
+                          <div class="col-md-2">                            
                             <div class="input-group">
                               <input class="form-control fechas" placeholder="yyyy-mm-dd" id="txt_fecha_recibo" name="txt_fecha_recibo" type="text" style="cursor:pointer;" readonly>
                               <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></span>
@@ -202,7 +202,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <div class="col-xs-12 text-center">
+                            <div class="col-md-12 text-center">
                             <button type="button" id="btnadd" name="btnadd" onclick="Agregar();" class="btn btn-primary">Guardar</button>
                             <button type="button" id="btnempty" name="btnempty" class="btn btn-info">Limpiar</button>
                             <a href="" id="hrefcancel" class="btn btn-default active">Cancelar</a>

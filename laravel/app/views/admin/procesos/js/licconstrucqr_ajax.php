@@ -17,15 +17,16 @@ var Data = {
             success : function(obj) {
                 $(".overlay, .loading-img").remove();
                 if(obj.rst==1){
-                    window.location='http://proceso.munindependencia.pe/results/licencia_construc.docx'
+                    //window.location='formatolicencia/verdoclicenciaconstruc/1';
+                    window.open('formatolicencia/verdoclicenciaconstruc/'+obj.id+'/4/0','_blank');
+
                     swal({
                           title: "Excelente!",   
                           text: obj.msj,
                           type: "success",
                           closeOnConfirm: true
                           }, function(){
-                             $('input[type="text"]').not('.data_fija').val('');
-                             //window.location='formatolicencia/mostrarliccontruc'                             
+                             $('input[type="text"]').not('.data_fija').val('');                         
                       });                    
                 } else {
                     swal("Mensaje!", "Debe ingresar el Expediente!", "error")
