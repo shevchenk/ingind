@@ -103,7 +103,7 @@
                         <div class="form-group row">
                           <label for="" class="col-md-2 col-form-label">ADMINISTRADO</label>
                           <div class="col-md-6">
-                            <input class="form-control" name="" id="" type="text" value="" placeholder="">
+                            <input class="form-control" name="txt_administrado" id="txt_administrado" type="text" value="" placeholder="">
                           </div>
                           
                           <label for="" class="col-md-2 col-form-label">PROPIETARIO</label>

@@ -64,6 +64,9 @@ class FormatoLicenciaController extends \BaseController
             if(Input::get('altura'))
                 $formatolic->altura = Input::get('altura');
 
+            if(Input::get('administrado'))
+                $formatolic->persona = Input::get('administrado');
+
             if(Input::get('propietario'))
                 $formatolic->propietario = Input::get('propietario');
 
@@ -192,7 +195,8 @@ class FormatoLicenciaController extends \BaseController
             'uso' => $oData[0]->uso,
             'zonifica' => $oData[0]->zonifica,
             'altura' => $oData[0]->altura,
-            'persona' => 'CARDENAS MONTOYA, MARIA DOLORES',
+            //'persona' => 'CARDENAS MONTOYA, MARIA DOLORES',
+            'persona' => $oData[0]->persona,
             'propietario' => $oData[0]->propietario,
             'departamento' => $oData[0]->departamento,
             'provincia' => $oData[0]->provincia,
