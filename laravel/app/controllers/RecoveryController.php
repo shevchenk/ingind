@@ -9,31 +9,91 @@ class recoveryController extends \BaseController
 
             if (Input::hasFile('documento')) {
                 $path = 'img/documentos/recovery/';
-                $file            = Input::file('documento');
-                $extension = Input::file('documento')->getClientOriginalExtension();
+                $allFiles = Input::file();
+                $uploadSuccess=true;
+                $allRes = array();
+
                 $destinationPath = public_path().'/'.$path;
-                $filename        = str_random(3) . '_' . time();
-                $uploadSuccess   = $file->move($destinationPath, $filename.'.'.$extension);
-                
-                if($uploadSuccess){
+                foreach ($allFiles as $key => $file) {
+                    $extension = $file->getClientOriginalExtension();
+                    $filename        = str_random(3) . '_' . time();
+                    $up   = $file->move($destinationPath, $filename.'.'.$extension);
+                    $allRes[]=$path.$filename.'.'.$extension;
+                    if(!$up){$uploadSuccess=false;}
+                }
+
+
+                if($uploadSuccess && count($allRes)>0){
 
                     $nDoc = new DocumentoRecuperado;
                     $nDoc->numero = Input::get('numero');
                     $nDoc->tipo_doc = Input::get('tipo_documento');
                     $nDoc->fecha_doc = Input::get('fecha');
                     $nDoc->area = Auth::user()->area_id;
-                    $nDoc->archivo = $path.$filename.'.'.$extension;
+                    $nDoc->archivo = json_encode($allRes);
                     $nDoc->created_at = date('Y-m-d H:m:s');
                     $nDoc->usuario_created_at = Auth::user()->id;
                     $nDoc->estado = 1;
                     $nDoc->save();
 
                     // SUBIDO Y GUARDADO 
-
+                    //die("SAVED");
                 }else{
-                    // NO SUBIDO 
+                    // NO SUBIDO
+                    //die("NOUPLOAD"); 
                 }
             }else{
+                    //die("NOFILE"); 
+                // NO FILE
+            }
+            return Redirect::to('admin.mantenimiento.recovery');
+    }
+
+
+    public function postActualizar(){
+
+
+            if (Input::hasFile('documento')) {
+
+                $nDoc = DocumentoRecuperado::find(Input::get('edit'));
+
+                
+                $path = 'img/documentos/recovery/';
+                $allFiles = Input::file();
+                $uploadSuccess=true;
+                $allRes = array();
+
+                $destinationPath = public_path().'/'.$path;
+                foreach ($allFiles as $key => $file) {
+                    $extension = $file->getClientOriginalExtension();
+                    $filename        = str_random(3) . '_' . time();
+                    $up   = $file->move($destinationPath, $filename.'.'.$extension);
+                    $allRes[]=$path.$filename.'.'.$extension;
+                    if(!$up){$uploadSuccess=false;}
+                }
+
+
+                if($uploadSuccess && count($allRes)>0){
+
+                    
+                    $nDoc->numero = Input::get('numero');
+                    $nDoc->tipo_doc = Input::get('tipo_documento');
+                    $nDoc->fecha_doc = Input::get('fecha');
+                    $nDoc->area = Auth::user()->area_id;
+                    $nDoc->archivo = json_encode($allRes);
+                    $nDoc->created_at = date('Y-m-d H:m:s');
+                    $nDoc->usuario_created_at = Auth::user()->id;
+                    $nDoc->estado = 1;
+                    $nDoc->save();
+
+                    // SUBIDO Y GUARDADO 
+                    //die("SAVED");
+                }else{
+                    // NO SUBIDO
+                    //die("NOUPLOAD"); 
+                }
+            }else{
+                    //die("NOFILE"); 
                 // NO FILE
             }
             return Redirect::to('admin.mantenimiento.recovery');

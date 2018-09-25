@@ -142,7 +142,7 @@ tr.shown td.details-control {
 
 		<div class="row">
 			<div class="col-md-4">Archivo:</div>
-			<div class="col-md-4"><input type="file" name="documento"></div>
+			<div class="col-md-4"><input type="file" name="documento" multiple="multiple"></div>
 		</div>  
 
 
