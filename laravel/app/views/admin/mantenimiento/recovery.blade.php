@@ -142,7 +142,7 @@ tr.shown td.details-control {
 
 		<div class="row">
 			<div class="col-md-4">Archivo:</div>
-			<div class="col-md-4"><input type="file" name="documento"></div>
+			<div class="col-md-4"><input type="file" name="documento[]" multiple="multiple"></div>
 		</div>  
 
 
@@ -220,11 +220,22 @@ function showImage(url){
 
 		$.post('recovery/load',{},function(data){
 			var trd="";
-			console.log(data);
-
+			
 			if(data.length>0)for (var i = 0; i < data.length; i++) {
+                console.log(data[i].archivo);
+                if(IsJsonString(data[i].archivo)){
+                    var jsx = JSON.parse(data[i].archivo);
+                    var imgs = "";
+                    for (var j = 0; j < jsx.length; j++) {
+                        imgs +='<span class="btn btn-primary btn-sm" onclick="showImage(\''+data[i].dir+jsx[j]+'\');"><i class="fa fa-image"></i></span>'; 
+                    }
+                }else{
+                    var imgs = '<span class="btn btn-primary btn-sm" onclick="showImage(\''+data[i].dir+data[i].archivo+'\');"><i class="fa fa-image"></i></span>';
+                    
+                }
+                
 
-				trd=trd+'<tr><td>'+(i+1)+'</td> <td>'+tipodoc[data[i].tipo_doc]+'</td> <td>'+data[i].numero+'</td><td>'+data[i].fecha_doc+'</td><td><span class="btn btn-primary btn-sm" onclick="showImage(\''+data[i].archivo+'\');"><i class="fa fa-image"></i></span></td></tr>';
+				trd=trd+'<tr><td>'+(i+1)+'</td> <td>'+tipodoc[data[i].tipo_doc]+'</td> <td>'+data[i].numero+'</td><td>'+data[i].fecha_doc+'</td><td>'+imgs+'</td></tr>';
 
 			}else{
 				trd='<tr><td colspan="4">No hay documentos registrados.</td></tr>';
@@ -236,6 +247,15 @@ function showImage(url){
 		});
 	});
 
-	
+	function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+
 </script>
 @stop
