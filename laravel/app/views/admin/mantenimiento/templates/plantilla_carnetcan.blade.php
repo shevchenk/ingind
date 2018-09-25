@@ -9,7 +9,7 @@
     {  
       -webkit-transform: rotate(-25deg);  
       -moz-transform: rotate(-25deg);  
-      -ms-transform: rotate(-25deg);  
+      -ms-transform: rotate(-25deg); 
       -o-transform: rotate(-25deg);  
       transform: rotate(-25deg);  
        
