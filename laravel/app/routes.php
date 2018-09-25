@@ -227,4 +227,5 @@ Route::controller('reporteprocesos', 'ReporteProcesosController');
 
 Route::controller('aproceso', 'AprocesoController');
 Route::controller('formatolicencia', 'FormatoLicenciaController');
+Route::controller('carnetcanes', 'CarnetCanesQRController');
 Route::controller('ejemplo', 'EjemploController');
