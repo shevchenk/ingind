@@ -59,32 +59,26 @@ class recoveryController extends \BaseController
 
                 $nDoc = DocumentoRecuperado::find(Input::get('edit'));
 
-
                 $path = 'img/documentos/recovery/';
                 $allFiles = Input::file();
                 $uploadSuccess=true;
-                $allRes = array();
+
+                $allRes = json_decode($nDoc->archivo);
 
                 $destinationPath = public_path().'/'.$path;
-                foreach ($allFiles as $key => $file) {
+                foreach ($allFiles['documento'] as $key => $file) {
                     $extension = $file->getClientOriginalExtension();
-                    $filename        = str_random(3) . '_' . time();
+                    $filename        = str_random(5) . '_' . time();
                     $up   = $file->move($destinationPath, $filename.'.'.$extension);
                     $allRes[]=$path.$filename.'.'.$extension;
                     if(!$up){$uploadSuccess=false;}
                 }
 
-
                 if($uploadSuccess && count($allRes)>0){
-
                     
-                    $nDoc->numero = Input::get('numero');
-                    $nDoc->tipo_doc = Input::get('tipo_documento');
-                    $nDoc->fecha_doc = Input::get('fecha');
-                    $nDoc->area = Auth::user()->area_id;
                     $nDoc->archivo = json_encode($allRes);
-                    $nDoc->created_at = date('Y-m-d H:m:s');
-                    $nDoc->usuario_created_at = Auth::user()->id;
+                    $nDoc->updated_at = date('Y-m-d H:m:s');
+                    $nDoc->usuario_updated_at = Auth::user()->id;
                     $nDoc->estado = 1;
                     $nDoc->save();
 
