@@ -14,11 +14,13 @@ class recoveryController extends \BaseController
                 $allRes = array();
 
                 $destinationPath = public_path().'/'.$path;
-                foreach ($allFiles as $key => $file) {
+                $i = 0 ;
+                var_dump($allFiles);
+                foreach ($allFiles['documento'] as $key => $file) {
                     $extension = $file->getClientOriginalExtension();
-                    $filename        = str_random(3) . '_' . time();
+                    $filename        = str_random(5) . '_' . time();
                     $up   = $file->move($destinationPath, $filename.'.'.$extension);
-                    $allRes[]=$path.$filename.'.'.$extension;
+                    $allRes[$i++]=$path.$filename.'.'.$extension;
                     if(!$up){$uploadSuccess=false;}
                 }
 
@@ -37,13 +39,13 @@ class recoveryController extends \BaseController
                     $nDoc->save();
 
                     // SUBIDO Y GUARDADO 
-                    //die("SAVED");
+                    //var_dump($allRes);die("SAVED");
                 }else{
                     // NO SUBIDO
-                    //die("NOUPLOAD"); 
+                    //var_dump($allRes);die("NOUPLOAD"); 
                 }
             }else{
-                    //die("NOFILE"); 
+                  // die("NOFILE"); 
                 // NO FILE
             }
             return Redirect::to('admin.mantenimiento.recovery');
@@ -57,7 +59,7 @@ class recoveryController extends \BaseController
 
                 $nDoc = DocumentoRecuperado::find(Input::get('edit'));
 
-                
+
                 $path = 'img/documentos/recovery/';
                 $allFiles = Input::file();
                 $uploadSuccess=true;
