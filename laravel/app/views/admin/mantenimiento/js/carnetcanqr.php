@@ -132,10 +132,7 @@ HTMLCargarCargo=function(datos){
             "<td >"+data.fecha_nace+"</td>"+
             "<td >"+data.sexo+"</td>"+
             "<td id='estado_"+data.id+"' data-estado='"+data.estado+"'>"+estadohtml+"</td>";
-
-        //html+='<td><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargoModal" data-id="'+data.id+'" data-titulo="Editar"><i class="fa fa-edit fa-lg"></i> </a></td>';
-
-
+        
         html+='<td>';
         html+='<p><a class="btn btn-primary btn-xs" href="#" onclick="abrirCargaImagen('+data.id+',\''+data.serie+'\');"><i class="fa fa-print"></i>&nbsp;IMAGEN</a></p>';
 
@@ -144,13 +141,6 @@ HTMLCargarCargo=function(datos){
         html+='<p>'+
                 '<a class="btn btn-danger active btn-xs" href="#" onclick="openImagen('+data.id+',\''+data.serie+'\',4,0); return false;" data-titulo="Previsualizar"><i class="fa fa-print"></i>&nbsp;Print</a></p>';
         html+="</td>";
-
-        /*
-        html+='<td>'+
-                '<p><a class="btn btn-default btn-xs" href="#" onclick="openPlantilla('+data.id+',\''+data.serie+'\',4,0); return false;" data-titulo="Previsualizar"><i class="fa fa-print"></i>&nbsp;Ver</a>&nbsp;'+
-                '<a class="btn btn-danger btn-xs" href="#" onclick="openImagen('+data.id+',\''+data.serie+'\',4,0); return false;" data-titulo="Previsualizar"><i class="fa fa-print"></i>&nbsp;Print</a></p>';
-        html+="</td>";
-        */
 
         html+="</tr>";
     });
@@ -171,7 +161,6 @@ abrirCargaImagen=function(id, serie){
 
 
 sendImage=function(){
-
     var file = document.getElementById("cargo_comprobante").files[0];
     var mnorden = document.getElementById("file_dni").value;
 
@@ -187,14 +176,9 @@ sendImage=function(){
                 $("#fileModal").modal("hide");
                 $("#file_dni").val(0);
                 $("#imgU"+result.norden).attr('src',result.ruta+'?'+Math.random(100) );
-                //$("#cargoID"+result.norden).hide("slow");
-                //$("#cargoID"+result.norden).html("<span class='btn btn-info btn-md' title=\"Ver nota de cargo\" onClick='verImagen(\""+result.ruta+"\")' > <i class=\"fa fa-image\"></i> </span>");
-                //$("#cargoID"+result.norden).show("slow");
-
             }
         });
     };
-
 }
 </script>
 

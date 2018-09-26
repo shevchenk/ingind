@@ -2,7 +2,6 @@
 
 class CarnetCanesQRController extends \BaseController
 {
-
     /**
      * cargar modulos, mantenimiento
      * POST /cargo/cargar
@@ -17,73 +16,7 @@ class CarnetCanesQRController extends \BaseController
             return Response::json(array('rst'=>1,'datos'=>$cargos));
         }
     }
-    /**
-     * Store a newly created resource in storage.
-     * POST /cargo/listar
-     *
-     * @return Response
-     */
-    /*
-    public function postListar()
-    {
-        //si la peticion es ajax
-        if ( Request::ajax() ) {
-            
-            if (Input::get('usuario_id')) {
-                $usuarioId = Input::get('usuario_id');
-                $cargos = DB::table('submodulo_usuario as su')
-                        ->rightJoin(
-                            'submodulos as s', function($join) use ($usuarioId)
-                            {
-                            $join->on('su.submodulo_id', '=', 's.id')
-                            ->on('su.usuario_id', '=', DB::raw($usuarioId));
-                            }
-                        )
-                        ->rightJoin(
-                            'modulos as m', 
-                            's.modulo_id', '=', 'm.id'
-                        )
-                        ->select(
-                            'm.nombre',
-                            DB::raw('MAX(su.estado) as estado')
-                        )
-                        ->where('m.estado', '=', 1)
-                        ->groupBy('m.nombre')
-                        ->orderBy('m.nombre')
-                        ->get();
-            } else {
-                $cargos = DB::table('cargos')
-                            ->select('id', 'nombre')
-                            ->where('estado', '=', '1')
-                            ->orderBy('nombre')
-                            ->get();
-            }
-        
-            return Response::json(array('rst'=>1,'datos'=>$cargos));
-        }
-    }
-    */
-    /**
-     * Store a newly created resource in storage.
-     * POST /cargo/cargaropciones
-     *
-     * @return Response
-     */
-    /*
-    public function postCargaropciones()
-    {
-        $cargoId = Input::get('cargo_id');
-        $cargo = new Cargo;
-        $opciones = $cargo->getOpciones($cargoId);
-        return Response::json(array('rst'=>1,'datos'=>$opciones));
-    }
-    */
-    /**
-     * Store a newly created resource in storage.
-     * POST /cargo/crear
-     *
-     * @return Response
-     */
+    
     public function postCrear()
     {
         //si la peticion es ajax
@@ -133,13 +66,7 @@ class CarnetCanesQRController extends \BaseController
             );
         }
     }
-
-    /**
-     * Update the specified resource in storage.
-     * POST /cargo/editar
-     *
-     * @return Response
-     */
+    
     public function postEditar()
     {
         if ( Request::ajax() ) {
@@ -189,7 +116,6 @@ class CarnetCanesQRController extends \BaseController
      */
     public function postCambiarestado()
     {
-
         if ( Request::ajax() ) {
             $estado = Input::get('estado');
             $cargoId = Input::get('id');
@@ -203,8 +129,7 @@ class CarnetCanesQRController extends \BaseController
                 'rst'=>1,
                 'msj'=>'Registro actualizado correctamente',
                 )
-            );    
-
+            );
         }
     }
 
@@ -401,8 +326,6 @@ class CarnetCanesQRController extends \BaseController
     }
 
 
-
-
     public function postActualizarimagen()
     {
         //si la peticion es ajax
@@ -431,7 +354,8 @@ class CarnetCanesQRController extends \BaseController
         }
     }
 
-    public function fileToFile($file, $url){
+    public function fileToFile($file, $url)
+    {
         if ( !is_dir('file') ) {
             mkdir('file',0777);
         }
@@ -453,7 +377,8 @@ class CarnetCanesQRController extends \BaseController
         return $url;
     } 
 
-    function resizeImage($src,$destination,$maxSize=-1,$fillSaquare = FALSE, $quality = 100){
+    function resizeImage($src,$destination,$maxSize=-1,$fillSaquare = FALSE, $quality = 100)
+    {
         /*
             ########### 
             MODO DE USO
@@ -475,8 +400,6 @@ class CarnetCanesQRController extends \BaseController
                 $quality [OPCIONAL default:100]
                     - Calidad de la imagen de 1 a 100%
 
-
-
             ########### 
             RESPUESTAS
             ########### 
@@ -485,7 +408,6 @@ class CarnetCanesQRController extends \BaseController
                 -1 = Archivo invalido
                  0 = Error al guardar / destino inaccesible / permiso denegado
                  1 = Guardado
-
         */
 
         if("http://" != substr($src, 0,6) && "http://" != substr($src, 0,7)){
@@ -518,9 +440,6 @@ class CarnetCanesQRController extends \BaseController
 
         $width = imagesx( $tImage );
         $height = imagesy( $tImage );
-
-
-
 
         if($width > $height){
             $squareSize = $width;
@@ -583,7 +502,6 @@ class CarnetCanesQRController extends \BaseController
 
         imagedestroy($new);
         return $status;
-
     }
 
 }

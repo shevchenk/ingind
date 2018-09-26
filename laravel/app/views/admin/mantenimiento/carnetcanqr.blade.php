@@ -29,19 +29,6 @@
     }    
 </style>
     <!-- Content Header (Page header) -->
-        <!-- 
-        <section class="content-header">
-            <h1>
-                Mantenimiento de Categorias
-                <small> </small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Admin</a></li>
-                <li><a href="#">Mantenimientos</a></li>
-                <li class="active">Mantenimiento de Categorias</li>
-            </ol>
-        </section>
-        -->        
         <section class="content-header">
             <h1>
                 <small style="font-weight: bold;">Carnet de Canes</small>
@@ -101,41 +88,6 @@
             </div>
         </div>
         </section><!-- /.content -->
-
-
-        <!-- 
-        <section class="content">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="box">
-                        <div class="box-header">
-                            <h3 class="box-title">Filtros</h3>
-                        </div>
-                        <form id="form_categorias" name="form_categorias" method="POST" action="">
-                        <div class="box-body table-responsive">
-                            <table id="t_categorias" class="table table-bordered table-hover">
-                                <thead>
-                                <tr><th colspan="2" style="text-align:center;background-color:#A7C0DC;"><h2>Categorias</h2></th></tr>
-                                <tr></tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                                <tfoot>
-                                <tr></tr>
-                                </tfoot>
-                            </table>
-                            <a class="btn btn-primary"
-                            data-toggle="modal" data-target="#categoriaModal" data-titulo="Nuevo"><i class="fa fa-plus fa-lg"></i>&nbsp;Nuevo</a>
-                            <a style="display:none" id="BtnEditar" data-toggle="modal" data-target="#categoriaModal" data-titulo="Editar"></a>
-                        </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-        -->
-
-
 
 @stop
 

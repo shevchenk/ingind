@@ -86,7 +86,6 @@
               </div>
             </div>
           -->
-
             <div class="form-group row">
               <label class="control-label">Estado:
               </label>
@@ -95,9 +94,7 @@
                   <option value='1' selected>Activo</option>
               </select>
             </div>
-
           </div>
-
         </form>
       </div>
       <div class="modal-footer">
