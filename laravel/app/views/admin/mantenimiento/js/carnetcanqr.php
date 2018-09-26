@@ -135,9 +135,14 @@ HTMLCargarCargo=function(datos){
 
         //html+='<td><a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargoModal" data-id="'+data.id+'" data-titulo="Editar"><i class="fa fa-edit fa-lg"></i> </a></td>';
 
-        html+='<td>'+
-                '<p>'+
-                '<a class="btn btn-primary active btn-xs" href="#" onclick="openImagen('+data.id+',\''+data.serie+'\',4,0); return false;" data-titulo="Previsualizar"><i class="fa fa-print"></i>&nbsp;Print</a></p>';
+
+        html+='<td>';
+        html+='<p><a class="btn btn-primary btn-xs" href="#" onclick="abrirCargaImagen('+data.id+',\''+data.serie+'\');"><i class="fa fa-print"></i>&nbsp;IMAGEN</a></p>';
+
+        html+='<p><img id="imgU'+data.id+'" src="img/carnet_cane/'+data.foto+'" style="width: 100px; height:140;" href="javascript:void(0);"></p>';
+
+        html+='<p>'+
+                '<a class="btn btn-danger active btn-xs" href="#" onclick="openImagen('+data.id+',\''+data.serie+'\',4,0); return false;" data-titulo="Previsualizar"><i class="fa fa-print"></i>&nbsp;Print</a></p>';
         html+="</td>";
 
         /*
@@ -157,13 +162,39 @@ openImagen=function(id,serie,tamano,tipo){
     window.open("carnetcanes/crearcarnetqr/"+id+"/"+serie+"/"+tamano+"/"+tipo,
                 "PrevisualizarCarnet",
                 "toolbar=no,menubar=no,resizable,scrollbars,status,width=700,height=400");
-    //popup = window.open();
-    //popup.document.write("<img src='documentodig/crearcarnetqr/"+area_id+"/"+dni+"/"+tamano+"/"+tipo>"'>");
-    
-    //popup.document.write("<img src='http://proceso.munindependencia.pe/documentodig/crearcarnetqr/"+area_id+"/"+dni+"/"+tamano+"/"+tipo+"'>")    
-    /*popup.document.write("<img src='http://localhost/ingind/public/documentodig/crearcarnetqr/"+area_id+"/"+dni+"/"+tamano+"/"+tipo+"'>")    
-    popup.focus(); //required for IE
-    popup.print();*/
 };
+
+abrirCargaImagen=function(id, serie){
+    $("#fileModal").modal("show");
+    $("#file_dni").val(id);
+};
+
+
+sendImage=function(){
+
+    var file = document.getElementById("cargo_comprobante").files[0];
+    var mnorden = document.getElementById("file_dni").value;
+
+    var reader = new FileReader();
+        
+    reader.readAsDataURL(file);
+
+    reader.onload = function () {
+        $.post("carnetcanes/actualizarimagen",{norden:mnorden, image:reader.result},function(result){
+            console.log(result); 
+            if(result.result == 1){
+
+                $("#fileModal").modal("hide");
+                $("#file_dni").val(0);
+                $("#imgU"+result.norden).attr('src',result.ruta+'?'+Math.random(100) );
+                //$("#cargoID"+result.norden).hide("slow");
+                //$("#cargoID"+result.norden).html("<span class='btn btn-info btn-md' title=\"Ver nota de cargo\" onClick='verImagen(\""+result.ruta+"\")' > <i class=\"fa fa-image\"></i> </span>");
+                //$("#cargoID"+result.norden).show("slow");
+
+            }
+        });
+    };
+
+}
 </script>
 

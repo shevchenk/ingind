@@ -67,7 +67,7 @@
               </div>
             </div>
 
-            <div class="form-group row">              
+            <div class="form-group row">
               <div class="col-md-4">
                 <label class="col-form-label">Sexo</label>
                 <input type="text" class="form-control" placeholder="Ingrese Sexo" name="txt_sexo" id="txt_sexo">
@@ -78,6 +78,14 @@
                 <input type="text" class="form-control" placeholder="Ingrese Raza" name="txt_raza" id="txt_raza">
               </div>
             </div>
+          <!--
+            <div class="form-group row">
+              <div class="col-md-8">
+                  <label>Seleccionar Foto</label>
+                  <input type="file" class="form-control" id="carga" name="carga" >
+              </div>
+            </div>
+          -->
 
             <div class="form-group row">
               <label class="control-label">Estado:
@@ -95,6 +103,30 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="fileModalLabel">Subir imagen del cargo.</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form enctype="multipart/form-data" action="" method="POST" id="xFrm">
+          <input type="file" id="cargo_comprobante" name="cargo_comprobante">
+          <input type="hidden" id="file_dni" name="file_dni">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" onClick="sendImage();" class="btn btn-primary">Guardar cambios</button>
       </div>
     </div>
   </div>

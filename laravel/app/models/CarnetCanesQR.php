@@ -2,8 +2,8 @@
 class CarnetCanesQR extends Base
 {
     public $table = "carnet_canes";
-    public static $where =['id', 'serie', 'paterno', 'materno', 'nombre', 'fecha_entrega', 'fecha_nace', 'sexo', 'raza', 'estado'];
-    public static $selec =['id', 'serie', 'paterno', 'materno', 'nombre', 'fecha_entrega', 'fecha_nace', 'sexo', 'raza', 'estado'];
+    public static $where =['id', 'serie', 'paterno', 'materno', 'nombre', 'fecha_entrega', 'fecha_nace', 'sexo', 'raza', 'foto', 'estado'];
+    public static $selec =['id', 'serie', 'paterno', 'materno', 'nombre', 'fecha_entrega', 'fecha_nace', 'sexo', 'raza', 'foto', 'estado'];
 
     public static function verData($id)
     {
