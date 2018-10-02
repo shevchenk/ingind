@@ -58,7 +58,7 @@ class ReporteTramiteController extends BaseController
         $contents = ftp_nlist($conn_id, ".");
         $new=array();
         foreach ($contents as $key => $value) {
-          $new[$key]=array('server'=>"10.0.100.11",'nombre'=>utf8_decode($value);)
+          $new[$key]=array('server'=>"10.0.100.11",'nombre'=>utf8_decode($value));
         }
 
         $ftp_server = "10.0.1.61";
@@ -66,7 +66,7 @@ class ReporteTramiteController extends BaseController
         $login_result = ftp_login($conn_id, 'anonymous', '');
         $contents = ftp_nlist($conn_id, ".");
         foreach ($contents as $key => $value) {
-          $new[$key]=array('server'=>"10.0.1.61",'nombre'=>utf8_decode($value);)
+          $new[$key]=array('server'=>"10.0.1.61",'nombre'=>utf8_decode($value));
         }
 
         foreach ($rst as $ind => $ndc) {
@@ -82,7 +82,7 @@ class ReporteTramiteController extends BaseController
                         $c2 = strpos($daFile, "".$num);
                         if($c1 !== false && $c2 !== false){
                                 //echo "FOUND: $ndc->referido -> ".$new[$iFile];
-                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile['nombre'].'"> </i></a></b>';
+                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile['server'].'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile['nombre'].'"> </i></a></b>';
                         }
                 }
         }
