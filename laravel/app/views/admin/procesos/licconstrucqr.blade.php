@@ -102,8 +102,12 @@
                         </div>
                         <div class="form-group row">
                           <label for="" class="col-md-2 col-form-label">ADMINISTRADO</label>
-                          <div class="col-md-6">
-                            <input class="form-control" name="txt_administrado" id="txt_administrado" type="text" value="" placeholder="">
+                          <div class="col-md-6">                            
+                            <div class="input-group">
+                            <input name="txt_person_id" id="txt_person_id" type="hidden">
+                            <input class="form-control" name="txt_administrado" id="txt_administrado" type="text" value="" placeholder="Seleccione una Persona ->" readonly>
+                            <span id="modal-user" class="input-group-addon" style="background-color: #3c8dbc;color: #fff;cursor: pointer;" data-toggle="modal" data-target="#myModalUser"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+                            </div>
                           </div>
                           
                           <label for="" class="col-md-2 col-form-label">PROPIETARIO</label>
@@ -215,4 +219,150 @@
         </div>
     </div>
     </section><!-- /.content -->
+
+
+    <!-- Main content -->
+      <section class="content">
+      <div class="row">
+          <div id="signupbox" class="formato col-md-12">
+              <div class="form-horizontal" style="padding: 20px;">
+                <!--
+                  <div class="">
+                      <h2 class="text-center"><span class="fa fa-edit fa-1x"></span> CARNET DE CANES</h2>
+                      <h5>Listado de DATOS</h5>
+                      <hr/>
+                  </div>
+                -->
+                  <div class="box-body table-responsive">
+                      <table id="t_cargos" class="table table-bordered table-striped">
+                          <thead>
+                              <tr>
+                                  <th>Expendiente</th>
+                                  <th>fecha Emisión</th>
+                                  <th>Fecha Vence</th>
+                                  <th>Licencia Edifica</th>
+                                  <th>Modal</th>
+                                  <th>Distrito</th>
+                                  <th> [ ] </th>
+                              </tr>
+                          </thead>
+                          <tbody id="tb_cargos">
+                          </tbody>
+                          <tfoot>
+                              <tr>
+                                  <th>Expendiente</th>
+                                  <th>fecha Emisión</th>
+                                  <th>Fecha Vence</th>
+                                  <th>Licencia Edifica</th>
+                                  <th>Modal</th>
+                                  <th>Distrito</th>
+                                  <th> [ ] </th>
+                              </tr>
+                          </tfoot>
+                      </table>
+                    <!--  
+                      <a class='btn btn-primary btn-sm' id="btn_nuevo"
+                      data-toggle="modal" data-target="#cargoModal" data-titulo="Nuevo"><i class="fa fa-plus fa-lg"></i>&nbsp;Nuevo</a>
+                    -->
+                  </div><!-- /.box-body -->                        
+              </div>
+          </div>
+      </div>
+      </section><!-- /.content -->
+
+
+      <!-- MODAL PARA REGISTRAR PERSONAS -->
+      <div id="myModalUser" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #3c8dbc;color: #fff;">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h5 class="modal-title text-center">GENERACIÓN DE USUARIOS</h5>
+            </div>
+            <div class="modal-body" style="overflow: hidden;">
+              
+                <div class="col-md-12" style="overflow: hidden; padding-left: 0px;">
+                    <form action="#" method="post" name="form_bus" id="form_bus">
+                    <div class="form-group row">                    
+                      <div class="col-md-3">
+                        <select class="form-control" name="cbo_tipobus" id="cbo_tipobus">
+                          <!-- <option value='0'>- Seleccione -</option> -->
+                          <option value='1'>DNI</option>
+                          <option value='2'>Nombre</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <input class="form-control" name="txt_dni" id="txt_dni" type="text" value="" placeholder="Digite DNI">
+                        <input class="form-control" name="txt_nombres" id="txt_nombres" type="text" placeholder="Escriba Nombre y/o Apellidos" style="display: none;">
+                      </div>
+                      <div class="col-md-3" style="padding-left: 0px; padding-right: 0px;">
+                        <button type="button" id="btnbuscar_user" name="btnbuscar_user" class="btn btn-info">Buscar</button>
+                        <button type="button" id="btnnuevo_user" name="btnnuevo_user" class="btn btn-default active">Nuevo</button>
+                      </div>
+                    </div>
+                    </form>
+                </div>
+
+                <div class="col-md-12" id="div-result-bus" style="overflow: hidden; display: none; padding-right: 0px; padding-left: 0px;">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>DNI</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>[]</th>
+                      </tr>
+                    </thead>
+                    <!--
+                    <tbody>
+                      <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                      </tr>
+                    </tbody>
+                    -->
+                    <tbody id="tb_busqueda"></tbody>
+                  </table>
+                </div>
+
+                <div class="col-md-12" id="div-insert-bus" style="overflow: hidden; display: none; padding-right: 0px; padding-left: 0px;">
+                  <form action="#" method="post" name="form_data" id="form_data">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th width="22%">DNI</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>[]</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><input class="form-control" name="txt_dni" id="txt_dni" type="text" value=""></td>
+                        <td><input class="form-control" name="txt_nombre" id="txt_nombre" type="text" value=""></td>
+                        <td>
+                            <input class="form-control" name="txt_paterno" id="txt_paterno" type="text" placeholder="Paterno">
+                            <input class="form-control" name="txt_materno" id="txt_materno" type="text" placeholder="Materno" style="margin-top: 7px;">
+                        </td>
+                        <td><button type="button" onclick="guardarPerson();" id="btnsave_data" name="btnsave_data" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></button></td>
+                      </tr>
+                    </tbody>
+                    
+                  </table>
+                  </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+              <!--<button type="button" id="btnbuscar_user" name="btnbuscar_user" class="btn btn-info">Grabar</button> -->
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- -->
+
 @stop

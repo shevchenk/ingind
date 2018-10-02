@@ -11,6 +11,15 @@ class FormatoLicenciaController extends \BaseController
         $this->beforeFilter('auth');
         $this->_errorController = $ErrorController;
     }
+
+    public function postCargar()
+    {
+        //si la peticion es ajax
+        if ( Request::ajax() ) {
+            $cargos = FormatoLicenciaContruccion::get(Input::all());
+            return Response::json(array('rst'=>1,'datos'=>$cargos));
+        }
+    }
        
     public function postCrearliccontruc()
     {
@@ -63,6 +72,9 @@ class FormatoLicenciaController extends \BaseController
 
             if(Input::get('altura'))
                 $formatolic->altura = Input::get('altura');
+
+            if(Input::get('person_id'))
+                $formatolic->persona_id = Input::get('person_id');
 
             if(Input::get('administrado'))
                 $formatolic->persona = Input::get('administrado');
@@ -145,12 +157,11 @@ class FormatoLicenciaController extends \BaseController
             $formatolic->estado = 1;
             $formatolic->created_at = date('Y-m-d h:m:s');
             $formatolic->persona_id_created_at = Auth::user()->id;
-            $formatolic->save();           
+            $formatolic->save();
 
             return Response::json(array('rst'=>1, 'msj'=>'Registro realizado correctamente.', 'id'=>$formatolic->id));
         }
     }
-
 
     public function getVerdoclicenciaconstruc($id, $tamano, $tipo) //$data
     {
@@ -324,4 +335,76 @@ class FormatoLicenciaController extends \BaseController
         return $pdf->stream();
     }
 
+    public function postBuscarpersona()
+    {
+        if(Input::get('tipobus') == 1)
+        {
+            $dni = Input::get('dni');
+            $sql = "SELECT p.* 
+                FROM personas p
+                    WHERE p.dni = '$dni';"; 
+        }
+        else
+        {
+            $where = '';
+            $nombres = Input::get('nombres');
+            $arr_nom = explode(" ", $nombres);
+
+            foreach ($arr_nom as $key => $value) {
+                if($key == 0) $condicion = ' WHERE (';
+                else $condicion = ' AND ';
+                $where .= $condicion." CONCAT(p.paterno, p.materno, p.nombre) LIKE '%".$value."%' ";
+            }
+            $sql = "SELECT p.* 
+                FROM personas p ".$where." );"; 
+            //echo $sql;
+        }
+        $r = DB::select($sql);
+        
+        return Response::json(
+                          array(
+                              'rst'=>1,
+                              'datos'=>$r
+                          )
+                    );
+    }
+
+    public function postCrearpersona()
+    {
+        if ( Request::ajax() ) {
+            $regex = 'regex:/^([a-zA-Z .,ñÑÁÉÍÓÚáéíóú]{2,60})$/i';
+            $required = 'required';
+            $reglas = array(
+                //'expediente' => $required.'|'.$regex,
+            );
+
+            $mensaje= array(
+                'required' => ':attribute Es requerido',
+                'regex'    => ':attribute Solo debe ser Texto',
+            );
+
+            $validator = Validator::make(Input::all(), $reglas, $mensaje);
+
+            if ( $validator->fails() ) {
+                return Response::json( array('rst'=>2, 'msj'=>$validator->messages()) );
+            }
+
+            $persona = new Persona;
+            $persona->paterno = Input::get('paterno');
+            $persona->materno = Input::get('materno');
+            $persona->nombre = Input::get('nombre');
+            $persona->dni = Input::get('dni');
+
+            $persona->estado = 1;
+            $persona->created_at = date('Y-m-d h:m:s');
+            $persona->usuario_created_at = Auth::user()->id;
+            $persona->save();
+
+            return Response::json(
+                        array('rst'=>1, 
+                                'msj'=>'Registro realizado correctamente.',
+                                'id'=>$persona->id,
+                                'nombres'=>$persona->nombre.' '.$persona->materno.' '.$persona->paterno));
+        }
+    }
 }
