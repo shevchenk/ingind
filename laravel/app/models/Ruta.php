@@ -495,8 +495,8 @@ class Ruta extends Eloquent
         $idAPI = 1272;
         $areaAPI = 19;
         $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
-
-        $IDSISC_NUMEROID=Input::get('id_incidencia').':'.Input::get('codigo');
+        $x = (Input::get('id_incidencia')==''?time():Input::get('id_incidencia'));
+        $IDSISC_NUMEROID=$x.':'.Input::get('codigo');
         $id_documento='';
         
         $selectfecha = "SELECT NOW() as fecha;";
@@ -677,31 +677,13 @@ class Ruta extends Eloquent
                 $rutaDetalle['usuario_created_at']= $idAPI;
                 $rutaDetalle->save();
                 
-                if( $rd->norden==1 AND Input::has('carta_id') ){
-                    $rutaDetalleVerbo = new RutaDetalleVerbo;
-                    $rutaDetalleVerbo['ruta_detalle_id']= $rutaDetalle->id;
-                    $rutaDetalleVerbo['nombre']= '-';
-                    $rutaDetalleVerbo['condicion']= '0';
-                    $rol_id=1;
-
-
-                    $rutaDetalleVerbo['rol_id']= $rol_id;
-                    $rutaDetalleVerbo['verbo_id']= '1';
-                    $rutaDetalleVerbo['documento_id']= '57';//Carta de inicio
-                    $rutaDetalleVerbo['orden']= '0';
-                    $rutaDetalleVerbo['finalizo']='1';
-                    $rutaDetalleVerbo['documento']=$IDSISC_NUMEROID;
-                    $rutaDetalleVerbo['usuario_created_at']= $idAPI;
-                    $rutaDetalleVerbo['usuario_updated_at']= $idAPI;
-                    $rutaDetalleVerbo->save();
-                }
-
                 $qrutaDetalleVerbo=DB::table('rutas_flujo_detalle_verbo')
                                 ->where('ruta_flujo_detalle_id', '=', $rd->id)
                                 ->where('estado', '=', '1')
                                 ->orderBy('orden', 'ASC')
                                 ->get();
                     if(count($qrutaDetalleVerbo)>0){
+
                         foreach ($qrutaDetalleVerbo as $rdv) {
                             $rutaDetalleVerbo = new RutaDetalleVerbo;
                             $rutaDetalleVerbo['ruta_detalle_id']= $rutaDetalle->id;
@@ -711,6 +693,12 @@ class Ruta extends Eloquent
                             $rutaDetalleVerbo['verbo_id']= $rdv->verbo_id;
                             $rutaDetalleVerbo['documento_id']= $rdv->documento_id;
                             $rutaDetalleVerbo['orden']= $rdv->orden;
+
+                            if($rd->norden == 1){
+                                $rutaDetalleVerbo['finalizo']='1';
+                                $rutaDetalleVerbo['documento']=$IDSISC_NUMEROID;
+                            }
+
                             $rutaDetalleVerbo['usuario_created_at']= $idAPI;
                             $rutaDetalleVerbo->save();
                         }

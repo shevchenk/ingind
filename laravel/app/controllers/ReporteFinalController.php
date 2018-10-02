@@ -267,6 +267,44 @@ class ReporteFinalController extends BaseController
         $r2=$r;
       }
 
+      $new = array();
+      
+        $ftp_server = "10.0.100.11";
+        $conn_id = ftp_connect($ftp_server);
+        $login_result = ftp_login($conn_id, 'anonymous', '');
+        $contents = ftp_nlist($conn_id, ".");
+        $new=array();
+        foreach ($contents as $key => $value) {
+          $new[$key]=utf8_decode($value);
+        }
+
+        $ftp_server = "10.0.1.61";
+        $conn_id = ftp_connect($ftp_server);
+        $login_result = ftp_login($conn_id, 'anonymous', '');
+        $contents = ftp_nlist($conn_id, ".");
+        foreach ($contents as $key => $value) {
+          $new[$key]=utf8_decode($value);
+        }
+
+        foreach ($r2 as $ind => $ndc) {
+                $ad=explode(" - ", $ndc->id_union);
+                if(isset($ad[1]))
+                foreach ($new as $iFile => $dFile) {
+
+                        $daFile=strtolower(str_replace(' ', '', $dFile));
+                        $nom = strtolower(str_replace(' ', '', $ad[0]));
+                        $num = (int)str_replace("Nº ", '', $ad[1]);
+
+                        $c1 = strpos($daFile, $nom);
+                        $c2 = strpos($daFile, "".$num);
+                        if($c1 !== false && $c2 !== false){
+                                //echo "FOUND: $ndc->id_union -> ".$new[$iFile];
+                          $r2[$ind]->id_union .= ' <b><a href="javascript:loadVid('.($ind+1).');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$new[$iFile].'"> </i></a></b>';
+                        }
+                }
+        }
+
+
 
       $retorno["data"]=$r2;
       $retorno["recordsTotal"]=$cant;
@@ -276,7 +314,7 @@ class ReporteFinalController extends BaseController
 
       return Response::json( $retorno );
     }
-    
+
         ////////// query para lo solicitado
     public function postBandejatramitearea()
     {
