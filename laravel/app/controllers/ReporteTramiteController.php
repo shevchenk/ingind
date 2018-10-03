@@ -122,10 +122,10 @@ class ReporteTramiteController extends BaseController
             } while ($x[$i]=="");
             if($x[$i]=="<DIR>"){
                     unset($x[$i]);
-                    $result = array_merge($result,$this->getFilesR($conn_id,$path.'/'.implode($x,' '),$srv));
+                    $result = array_merge($result,$this->getFilesR($conn_id,$path.'/'.trim(implode($x,' ')),$srv));
             }else{
                     unset($x[$i]);
-                    $result[] = 'ftp://'.$srv.$path.'/'.implode($x,' ');
+                    $result[] = 'ftp://'.$srv.$path.'/'.trim(implode($x,' '));
             }
         }
         return $result;
