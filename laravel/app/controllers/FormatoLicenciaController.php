@@ -16,7 +16,12 @@ class FormatoLicenciaController extends \BaseController
     {
         //si la peticion es ajax
         if ( Request::ajax() ) {
-            $cargos = FormatoLicenciaContruccion::get(Input::all());
+            //$cargos = FormatoLicenciaContruccion::get(Input::all());
+            $sql = "SELECT lc.* 
+                FROM licencia_construccion lc
+                    WHERE estado = 1;";        
+            $cargos = DB::select($sql);
+
             return Response::json(array('rst'=>1,'datos'=>$cargos));
         }
     }
@@ -160,6 +165,27 @@ class FormatoLicenciaController extends \BaseController
             $formatolic->save();
 
             return Response::json(array('rst'=>1, 'msj'=>'Registro realizado correctamente.', 'id'=>$formatolic->id));
+        }
+    }
+
+    public function postCambiarestado()
+    {
+        if ( Request::ajax() ) {
+            $estado = Input::get('estado');
+            $cargoId = Input::get('id');
+            $formatolic = FormatoLicenciaContruccion::find($cargoId);
+            $formatolic->persona_id_updated_at = Auth::user()->id;
+            $formatolic->estado = Input::get('estado');
+            $formatolic->updated_at = date('Y-m-d h:m:s');
+            $formatolic->persona_id_updated_at = Auth::user()->id;
+            $formatolic->save();
+
+            return Response::json(
+                array(
+                'rst'=>1,
+                'msj'=>'Registro actualizado correctamente',
+                )
+            );
         }
     }
 

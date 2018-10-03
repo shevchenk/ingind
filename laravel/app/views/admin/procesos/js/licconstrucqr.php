@@ -150,6 +150,12 @@ validaCampos = function(){
 activarTabla=function(){
     $("#t_cargos").dataTable(); // inicializo el datatable    
 };
+desactivar=function(id){
+    sweetalertG.confirm("Confirmación!", "Desea Eliminar el Registro?", function(){
+            Data.CambiarEstadoLicenContruc(id,0);
+    });
+};
+
 
 HTMLDatos=function(datos){
     var html="";
@@ -165,7 +171,11 @@ HTMLDatos=function(datos){
             "<td >"+data.distrito+"</td>";
         
         html+='<td>'+
-                '<a class="btn btn-warning active btn-xs" href="#" onclick="openPlantilla('+data.id+',4,0); return false;" data-titulo="Previsualizar"><i class="fa fa-print"></i>&nbsp;Ver</a></td>';
+                '<a class="btn btn-danger active btn-xs" href="#" onclick="desactivar('+data.id+')"><i class="glyphicon glyphicon-ban-circle"></i>&nbsp;borrar</a>';
+        html+="</td>";
+
+        html+='<td>'+
+                '<a class="btn btn-warning active btn-xs" href="#" onclick="openPlantilla('+data.id+',4,0); return false;" data-titulo="Previsualizar"><i class="fa fa-print"></i>&nbsp;Ver</a>';
         html+="</td>";
         
 

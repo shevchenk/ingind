@@ -91,7 +91,7 @@
                           <div class="col-md-3">
                             <input class="form-control" name="txt_uso" id="txt_uso" type="text" value="" placeholder="Uso">
                           </div>
-                          <label for="" class="col-md-1 col-form-label">ZONIFICA</label>
+                          <label for="" class="col-md-1 col-form-label" style="padding-left: 0px;margin-left: -11px;margin-right: 11px;">ZONIFICACION</label>
                           <div class="col-md-2">
                             <input class="form-control" name="txt_zonifica" id="txt_zonifica" type="text" value="" placeholder="Zonificación">
                           </div>
@@ -253,6 +253,7 @@
                                   <th>Modal</th>
                                   <th>Distrito</th>
                                   <th> [ ] </th>
+                                  <th> [ ] </th>
                               </tr>
                           </thead>
                           <tbody id="tb_cargos">
@@ -265,6 +266,7 @@
                                   <th>Licencia Edifica</th>
                                   <th>Modal</th>
                                   <th>Distrito</th>
+                                  <th> [ ] </th>
                                   <th> [ ] </th>
                               </tr>
                           </tfoot>
