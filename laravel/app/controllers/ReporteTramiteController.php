@@ -63,7 +63,7 @@ class ReporteTramiteController extends BaseController
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
 
-        if(is_array($new)){
+        if(is_array($new) && count($new)>0){
             $new = array_merge($new,$this->getFilesR($conn_id,'/', $ftp_server));
         }else{   
             $new = $this->getFilesR($conn_id,'/', $ftp_server);
@@ -73,11 +73,10 @@ class ReporteTramiteController extends BaseController
 
 
 
-
         foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
                 if(isset($ad[1]))
-                foreach ($new as  $dFile) {
+                foreach ($new as $dFile) {
 
                         $daFile=strtolower(str_replace(' ', '', $dFile));
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
