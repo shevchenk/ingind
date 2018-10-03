@@ -112,10 +112,9 @@ class ReporteTramiteController extends BaseController
       $result = array();
       $list = ftp_rawlist($conn_id, $path, TRUE);
         if(is_array($list))foreach($list as $ind => $val){
-            echo $val;
             $x = explode(' ',$val);
             $i=3;
-            unset($x[0]);unset($x[1]);unset($x[2]);unset($x[3]);
+            unset($x[0]);unset($x[1]);unset($x[2]);
 
             do {
               unset($x[$i]);
