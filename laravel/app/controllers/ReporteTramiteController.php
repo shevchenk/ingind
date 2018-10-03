@@ -90,14 +90,14 @@ class ReporteTramiteController extends BaseController
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
 
-                        if($found===true || ($c1 !== false && $c2 !== false)){
+                        if($found!==false || ($c1 !== false && $c2 !== false)){
                             $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
                 }
         }
 
         var_dump($rst);die();
-        
+
       return Response::json(
             array(
                 'rst'=>1,
