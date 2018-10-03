@@ -51,6 +51,14 @@ class ReporteTramiteController extends BaseController
 
         $new = array();
 
+        $ftp_server = "10.0.100.11";
+        $conn_id = ftp_connect($ftp_server);
+        $login_result = ftp_login($conn_id, 'anonymous', '');
+        
+        $new = $this->getFilesR($conn_id,'/', $ftp_server);
+        ftp_close($conn_id);
+
+        
         $ftp_server = "10.0.1.61";
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
@@ -59,12 +67,6 @@ class ReporteTramiteController extends BaseController
 
         ftp_close($conn_id);
 
-        $ftp_server = "10.0.100.11";
-        $conn_id = ftp_connect($ftp_server);
-        $login_result = ftp_login($conn_id, 'anonymous', '');
-        
-        $new = $this->getFilesR($conn_id,'/', $ftp_server);
-        ftp_close($conn_id);
 
 
 
