@@ -91,7 +91,7 @@ class ReporteTramiteController extends BaseController
         );
     }
 
-    function getFilesR($conn,$path='/',$srv){
+    function getFilesR($conn_id,$path='/',$srv){
       $result = array();
       $list = ftp_rawlist($conn_id, $path, TRUE);
         foreach($list as $ind => $val){
@@ -106,7 +106,7 @@ class ReporteTramiteController extends BaseController
             } while ($x[$i]=="");
             if($x[$i]=="<DIR>"){
                     unset($x[$i]);
-                    $result = array_merge($result,$this->getFilesR($conn,$path.'/'.implode($x,' '),$srv));
+                    $result = array_merge($result,$this->getFilesR($conn_id,$path.'/'.implode($x,' '),$srv));
             }else{
                     unset($x[$i]);
                     $result[] = 'ftp://'.$srv.$path.'/'.implode($x,' ');
