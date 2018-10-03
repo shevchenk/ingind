@@ -68,7 +68,7 @@ class ReporteTramiteController extends BaseController
         foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
                 if(isset($ad[1]))
-                foreach ($new as $iFile => $dFile) {
+                foreach ($new as  $dFile) {
 
                         $daFile=strtolower(str_replace(' ', '', $dFile));
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
