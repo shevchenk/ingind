@@ -72,8 +72,8 @@ class ReporteTramiteController extends BaseController
 */
 
 
-        print_r($rst);
-        die();
+       // print_r($rst);
+       // die();
 
 
         foreach ($rst as $ind => $ndc){
