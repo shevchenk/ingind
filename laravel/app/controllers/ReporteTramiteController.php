@@ -131,6 +131,7 @@ class ReporteTramiteController extends BaseController
                     unset($x[$i]);
                     $result[] = 'ftp://'.$srv.$path.'/'.urlencode(trim(implode($x,' ')));
             }
+
         }
         return $result;
     }
