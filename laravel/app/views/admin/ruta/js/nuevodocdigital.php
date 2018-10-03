@@ -78,7 +78,7 @@ $(document).ready(function() {
 	    var text = $.trim( button.data('texto') );
 	    var id= $.trim( button.data('id') );
 	    var camposP = {'nombre':text,'id':id};
-            var data={activo:1};
+            var data={activo:1, tipo:'asignar'};
         docdigital.Cargar(HTMLCargar,camposP,data);
     });
 
