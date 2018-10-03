@@ -85,8 +85,8 @@ class ReporteTramiteController extends BaseController
 
 
                         $found=strpos(
-                            str_replace(array(' ','°','º','-','�'), "",trim($dFile)), 
-                            str_replace(array(' ','°','º','-','�'), "",trim($ndc->referido))
+                            str_replace(array(' ','°','º','-','�','NÂº'), "",trim($dFile)), 
+                            str_replace(array(' ','°','º','-','�','NÂº'), "",trim($ndc->referido))
                         );
 
                         $c1 = strpos($daFile, $nom);
@@ -106,7 +106,7 @@ class ReporteTramiteController extends BaseController
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
-               // 'allFiles'=>$new
+                'allFiles'=>$new
             )
         );
     }
