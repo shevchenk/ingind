@@ -94,7 +94,7 @@ class ReporteTramiteController extends BaseController
     function getFilesR($conn_id,$path='/',$srv){
       $result = array();
       $list = ftp_rawlist($conn_id, $path, TRUE);
-        foreach($list as $ind => $val){
+        if(is_array($list))foreach($list as $ind => $val){
 
             $x = explode(' ',$val);
             $i=3;
