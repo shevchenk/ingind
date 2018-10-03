@@ -56,6 +56,8 @@ class ReporteTramiteController extends BaseController
         $login_result = ftp_login($conn_id, 'anonymous', '');
         
         $new = $this->getFilesR($conn_id,'/', $ftp_server);
+        ftp_close($conn_id);
+
 
         $ftp_server = "10.0.1.61";
         $conn_id = ftp_connect($ftp_server);
@@ -67,7 +69,7 @@ class ReporteTramiteController extends BaseController
 
         var_dump($new);
         die();
-        
+
         foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
                 if(isset($ad[1]))
@@ -77,10 +79,12 @@ class ReporteTramiteController extends BaseController
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
                         $num = (int)str_replace("Nº ", '', $ad[1]);
 
+                        strpos(haystack, needle)
+                        $found=(strpos(str_replace(array(' ','°','º','-'), "",$dFile), str_replace(array(' ','°','º','-'), "",$ndc->referido)));
                         //
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
-                        if($dFile == $ndc->referido || ($c1 !== false && $c2 !== false)){
+                        if($found===true || ($c1 !== false && $c2 !== false)){
                         
 
                                 //echo "FOUND: $ndc->referido -> ".$new[$iFile];
