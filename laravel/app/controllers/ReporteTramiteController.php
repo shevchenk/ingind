@@ -56,29 +56,45 @@ class ReporteTramiteController extends BaseController
         $login_result = ftp_login($conn_id, 'anonymous', '');
         
         $new = $this->getFilesR($conn_id,'/', $ftp_server);
+        ftp_close($conn_id);
+
 
         $ftp_server = "10.0.1.61";
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
 
-        $new = array_merge($new,$this->getFilesR($conn_id,'/', $ftp_server));
+        if(is_array($new) && count($new)>0){
+            $new = array_merge($new,$this->getFilesR($conn_id,'/', $ftp_server));
+        }else{   
+            $new = $this->getFilesR($conn_id,'/', $ftp_server);
+        }
 
         ftp_close($conn_id);
+
+        var_dump($new);
+        die();
+        
+
 
         foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
                 if(isset($ad[1]))
-                foreach ($new as $iFile => $dFile) {
+                foreach ($new as $dFile) {
 
                         $daFile=strtolower(str_replace(' ', '', $dFile));
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
                         $num = (int)str_replace("Nº ", '', $ad[1]);
 
+
+                        $found=strpos(
+                            str_replace(array(' ','°','º','-'), "",$dFile), 
+                            str_replace(array(' ','°','º','-'), "",$ndc->referido)
+                        );
+
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
-                        if($c1 !== false && $c2 !== false){
-                                //echo "FOUND: $ndc->referido -> ".$new[$iFile];
-                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
+                        if($found===true || ($c1 !== false && $c2 !== false)){
+                            $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
                 }
         }
@@ -86,7 +102,8 @@ class ReporteTramiteController extends BaseController
       return Response::json(
             array(
                 'rst'=>1,
-                'datos'=>$rst
+                'datos'=>$rst,
+                //'allFiles'=>$new
             )
         );
     }
