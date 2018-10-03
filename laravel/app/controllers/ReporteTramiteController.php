@@ -81,12 +81,10 @@ class ReporteTramiteController extends BaseController
 
                         $daFile=strtolower(str_replace(' ', '', trim($dFile)));
                         $nom = strtolower(str_replace(' ', '', trim($ad[0])));
-                        $num = (int)str_replace("Nº ", '', trim($ad[1]));
-
-
+                        $num = (int)preg_replace("/[^A-Za-z0-9]/", "", trim($ad[1]));
                         $found=strpos(
-                            str_replace(array(' ','°','º','-','�','NÂº'), "",trim($dFile)), 
-                            str_replace(array(' ','°','º','-','�','NÂº'), "",trim($ndc->referido))
+                            preg_replace("/[^A-Za-z0-9]/", "",trim($dFile)), 
+                            preg_replace("/[^A-Za-z0-9]/", "",trim($ndc->referido))
                         );
 
                         $c1 = strpos($daFile, $nom);
@@ -97,9 +95,6 @@ class ReporteTramiteController extends BaseController
                         }
                 }
         }
-
-        var_dump($new);
-        die();
 
       return Response::json(
             array(
