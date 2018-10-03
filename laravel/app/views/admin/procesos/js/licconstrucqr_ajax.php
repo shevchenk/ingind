@@ -21,7 +21,6 @@ var Data = {
                     window.open("formatolicencia/verdoclicenciaconstruc/"+obj.id+"/4/0",
                                 "PrevisualizarPlantilla",
                                 "toolbar=no,menubar=no,resizable,scrollbars,status,width=900,height=700");
-
                     swal({
                           title: "Excelente!",   
                           text: obj.msj,
