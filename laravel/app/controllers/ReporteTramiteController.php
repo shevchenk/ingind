@@ -70,7 +70,7 @@ class ReporteTramiteController extends BaseController
                 if(isset($ad[1]))
                 foreach ($new as $iFile => $dFile) {
 
-                        $daFile=strtolower(str_replace(' ', '', $dFile['nombre']));
+                        $daFile=strtolower(str_replace(' ', '', $dFile));
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
                         $num = (int)str_replace("Nº ", '', $ad[1]);
 
@@ -78,7 +78,7 @@ class ReporteTramiteController extends BaseController
                         $c2 = strpos($daFile, "".$num);
                         if($c1 !== false && $c2 !== false){
                                 //echo "FOUND: $ndc->referido -> ".$new[$iFile];
-                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile['server'].'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile['nombre'].'"> </i></a></b>';
+                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
                 }
         }
