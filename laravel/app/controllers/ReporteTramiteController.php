@@ -74,11 +74,13 @@ class ReporteTramiteController extends BaseController
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
                         $num = (int)str_replace("Nº ", '', $ad[1]);
 
-                        $x = $daFile.' NOM:'.$nom.' NUM:'.$num;
-                        die($x);
+                        //
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
                         if($c1 !== false && $c2 !== false){
+                            $x = $daFile.' NOM:'.$nom.' NUM:'.$num;
+                            die($x);
+
                                 //echo "FOUND: $ndc->referido -> ".$new[$iFile];
                           $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
