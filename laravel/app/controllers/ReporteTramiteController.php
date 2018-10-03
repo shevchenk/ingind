@@ -74,7 +74,7 @@ class ReporteTramiteController extends BaseController
 
         print_r($rst);
         die();
-        
+
 
         foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
@@ -93,8 +93,9 @@ class ReporteTramiteController extends BaseController
                         $c2 = strpos($daFile, "".$num);
 
                         if($found!==false || ($c1 !== false && $c2 !== false)){
-
-                            $rst->$ind->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
+                            echo "FOUND:".var_dump($rst[$ind]);
+                            die();
+                            $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
                 }
         }
