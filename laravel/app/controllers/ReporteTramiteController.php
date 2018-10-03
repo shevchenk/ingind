@@ -93,9 +93,10 @@ class ReporteTramiteController extends BaseController
                         $c2 = strpos($daFile, "".$num);
 
                         if($found!==false || ($c1 !== false && $c2 !== false)){
-                            echo "FOUND:".var_dump($rst[$ind]);
-                            die();
+                            var_dump($rst[$ind]);
                             $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
+                            var_dump($rst[$ind]);
+                            die();
                         }
                 }
         }
