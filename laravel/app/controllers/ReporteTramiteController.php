@@ -71,8 +71,6 @@ class ReporteTramiteController extends BaseController
         ftp_close($conn_id);
 */
 
-        var_dump($new);
-        die();
 
 
 
@@ -103,7 +101,7 @@ class ReporteTramiteController extends BaseController
             array(
                 'rst'=>1,
                 'datos'=>$rst,
-                //'allFiles'=>$new
+                'allFiles'=>$new
             )
         );
     }
