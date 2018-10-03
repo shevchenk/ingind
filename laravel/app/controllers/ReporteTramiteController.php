@@ -113,12 +113,12 @@ class ReporteTramiteController extends BaseController
       $list = ftp_rawlist($conn_id, $path, TRUE);
         if(is_array($list))foreach($list as $ind => $val){
             $x = explode(' ',$val);
-            $i=3;
-            unset($x[0]);unset($x[1]);unset($x[2]);
+            $i=2;
+            unset($x[0]);unset($x[1]);
 
             do {
               unset($x[$i]);
-             $i++;
+              $i++;
             } while ($x[$i]=="");
             if($x[$i]=="<DIR>"){
                     unset($x[$i]);
