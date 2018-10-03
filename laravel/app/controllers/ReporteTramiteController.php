@@ -66,6 +66,8 @@ class ReporteTramiteController extends BaseController
         $new = $this->getFilesR($conn_id,'/', $ftp_server);
         ftp_close($conn_id);
 
+
+
         foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
                 if(isset($ad[1]))
@@ -92,7 +94,8 @@ class ReporteTramiteController extends BaseController
       return Response::json(
             array(
                 'rst'=>1,
-                'datos'=>$rst
+                'datos'=>$rst,
+                'allFiles'=>$new
             )
         );
     }
