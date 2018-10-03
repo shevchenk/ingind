@@ -51,6 +51,14 @@ class ReporteTramiteController extends BaseController
 
         $new = array();
 
+        $ftp_server = "10.0.1.61";
+        $conn_id = ftp_connect($ftp_server);
+        $login_result = ftp_login($conn_id, 'anonymous', '');
+
+        $new = array_merge($new,$this->getFilesR($conn_id,'/', $ftp_server));
+
+        ftp_close($conn_id);
+        
         $ftp_server = "10.0.100.11";
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
@@ -59,13 +67,6 @@ class ReporteTramiteController extends BaseController
         ftp_close($conn_id);
 
 
-        $ftp_server = "10.0.1.61";
-        $conn_id = ftp_connect($ftp_server);
-        $login_result = ftp_login($conn_id, 'anonymous', '');
-
-        $new = array_merge($new,$this->getFilesR($conn_id,'/', $ftp_server));
-
-        ftp_close($conn_id);
 
         var_dump($new);
         die();
@@ -84,14 +85,11 @@ class ReporteTramiteController extends BaseController
                             str_replace(array(' ','°','º','-'), "",$dFile), 
                             str_replace(array(' ','°','º','-'), "",$ndc->referido)
                         );
-                        //
+
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
                         if($found===true || ($c1 !== false && $c2 !== false)){
-                        
-
-                                //echo "FOUND: $ndc->referido -> ".$new[$iFile];
-                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
+                            $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
                 }
         }
