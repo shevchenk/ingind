@@ -129,7 +129,7 @@ class ReporteTramiteController extends BaseController
                     $result = array_merge($result,$this->getFilesR($conn_id,$path.'/'.trim(implode($x,' ')),$srv));
             }else{
                     unset($x[$i]);
-                    $result[] = 'ftp://'.$srv.$path.'/'.trim(implode($x,' '));
+                    $result[] = 'ftp://'.$srv.$path.'/'.urlencode(trim(implode($x,' ')));
             }
         }
         return $result;
