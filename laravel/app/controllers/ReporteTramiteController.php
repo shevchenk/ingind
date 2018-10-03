@@ -66,9 +66,6 @@ class ReporteTramiteController extends BaseController
         $new = $this->getFilesR($conn_id,'/', $ftp_server);
         ftp_close($conn_id);
 
-        var_dump($new);
-        die();
-
         foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
                 if(isset($ad[1]))
