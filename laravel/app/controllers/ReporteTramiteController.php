@@ -94,7 +94,7 @@ class ReporteTramiteController extends BaseController
 
                         if($found!==false || ($c1 !== false && $c2 !== false)){
 
-                            $rst[$ind]->referido .= ' <b><a href="javascript:window.open(atob(\''.base64_encode($dFile).'\'));"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.base64_encode($dFile).'"> </i></a></b>';
+                            $rst[$ind]->referido .= ' <b><a href="javascript:window.open(atob(\''.base64_encode(urlencode($dFile)).'\'));"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.base64_encode($dFile).'"> </i></a></b>';
                             //var_dump($rst[$ind]);
                         }
                 }
@@ -129,9 +129,8 @@ class ReporteTramiteController extends BaseController
                     $result = array_merge($result,$this->getFilesR($conn_id,$path.'/'.trim(implode($x,' ')),$srv));
             }else{
                     unset($x[$i]);
-                    $result[] = 'ftp://'.$srv.$path.'/'.urlencode(trim(implode($x,' ')));
+                    $result[] = 'ftp://'.$srv.$path.'/'.trim(implode($x,' '));
             }
-
         }
         return $result;
     }
