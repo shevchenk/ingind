@@ -77,7 +77,7 @@ class ReporteTramiteController extends BaseController
                         //
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
-                        if($c1 !== false && $c2 !== false){
+                        if($dFile == $ndc->referido || ($c1 !== false && $c2 !== false)){
                             $x = $daFile.' NOM:'.$nom.' NUM:'.$num;
                             die($x);
 
