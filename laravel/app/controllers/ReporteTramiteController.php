@@ -79,8 +79,11 @@ class ReporteTramiteController extends BaseController
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
                         $num = (int)str_replace("Nº ", '', $ad[1]);
 
-                        strpos(haystack, needle)
-                        $found=(strpos(str_replace(array(' ','°','º','-'), "",$dFile), str_replace(array(' ','°','º','-'), "",$ndc->referido)));
+
+                        $found=strpos(
+                            str_replace(array(' ','°','º','-'), "",$dFile), 
+                            str_replace(array(' ','°','º','-'), "",$ndc->referido)
+                        );
                         //
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
