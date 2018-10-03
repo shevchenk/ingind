@@ -94,7 +94,15 @@ class ReporteTramiteController extends BaseController
 
                         if($found!==false || ($c1 !== false && $c2 !== false)){
 
-                            $rst[$ind]->referido .= ' <b><a href="javascript:window.open(atob(\''.base64_encode( rawurlencode($dFile) ).'\'));"<i class="fa fa-video-camera"></i></a></b>';
+
+                            $v0 = substr($dFile, 0,strpos($dFile, "/", 8));
+                            $v1 = substr($dFile, strpos($dFile, "/", 8),0);
+
+
+                            $vidName= $v0.rawurlencode($v1);
+
+
+                            $rst[$ind]->referido .= ' <b><a href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';
                             //var_dump($rst[$ind]);
                         }
                 }
