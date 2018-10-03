@@ -99,7 +99,7 @@ class ReporteTramiteController extends BaseController
       return Response::json(
             array(
                 'rst'=>1,
-                //'datos'=>$rst, 
+                'datos'=>$rst, 
                 //'allFiles'=>$new
             )
         );
