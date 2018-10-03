@@ -21,7 +21,7 @@ var Data = {
                     window.open("formatolicencia/verdoclicenciaconstruc/"+obj.id+"/4/0",
                                 "PrevisualizarPlantilla",
                                 "toolbar=no,menubar=no,resizable,scrollbars,status,width=900,height=700");
-                    swal({
+                    /*swal({
                           title: "Excelente!",   
                           text: obj.msj,
                           type: "success",
@@ -30,7 +30,11 @@ var Data = {
                              $('input[type="text"]').not('.data_fija').val('');
                              $('#txt_person_id').val('');
                              Data.CargarDatos(activarTabla);
-                      });                    
+                      });*/
+                    $('input[type="text"]').not('.data_fija').val('');
+                    $('#txt_person_id').val('');
+                    Data.CargarDatos(activarTabla);
+
                 } else {
                     swal("Mensaje!", "Debe ingresar el Expediente!", "error")
                 }
