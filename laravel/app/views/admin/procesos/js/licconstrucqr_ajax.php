@@ -17,7 +17,10 @@ var Data = {
                 $(".overlay, .loading-img").remove();
                 if(obj.rst==1){
                     //window.location='formatolicencia/verdoclicenciaconstruc/1';
-                    window.open('formatolicencia/verdoclicenciaconstruc/'+obj.id+'/4/0','_blank');
+                    //window.open('formatolicencia/verdoclicenciaconstruc/'+obj.id+'/4/0','_blank');
+                    window.open("formatolicencia/verdoclicenciaconstruc/"+obj.id+"/4/0",
+                                "PrevisualizarPlantilla",
+                                "toolbar=no,menubar=no,resizable,scrollbars,status,width=900,height=700");
 
                     swal({
                           title: "Excelente!",   
