@@ -220,4 +220,13 @@ openPlantilla=function(id, tamano, tipo){
                 "toolbar=no,menubar=no,resizable,scrollbars,status,width=900,height=700");
 };
 
+function justNumbers(e)
+{
+  var keynum = window.event ? window.event.keyCode : e.which;
+  if ((keynum == 8) || (keynum == 46))
+    return true;
+  
+  return /\d/.test(String.fromCharCode(keynum));
+}
+
 </script>

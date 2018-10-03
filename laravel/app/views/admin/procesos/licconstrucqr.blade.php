@@ -83,7 +83,7 @@
                           </div>
                           <label for="" class="col-md-2 col-form-label">MODALIDAD</label>
                           <div class="col-md-2">
-                            <input class="form-control" name="txt_modalidad" id="txt_modalidad" type="text" value="" placeholder="B">
+                            <input class="form-control" name="txt_modalidad" id="txt_modalidad" type="text" value="" placeholder="">
                           </div>
                         </div>   
                         <div class="form-group row">
@@ -112,7 +112,12 @@
                           
                           <label for="" class="col-md-2 col-form-label">PROPIETARIO</label>
                           <div class="col-md-2">
-                            <input class="form-control" name="txt_propietario" id="txt_propietario" type="text" value="" placeholder="B">
+                            <!-- <input class="form-control" name="txt_propietario" id="txt_propietario" type="text" value="" placeholder="B"> -->
+                            <select class="form-control" name="slct_propietario" id="slct_propietario">
+                              <!-- <option value='0'>- Seleccione -</option> -->
+                              <option value='SI'>SI</option>
+                              <option value='NO'>NO</option>
+                            </select>
                           </div>
                         </div>
                         
@@ -150,9 +155,9 @@
                           <div class="col-md-2">
                             <input class="form-control" name="txt_area_terreno" id="txt_area_terreno" type="text" value="" placeholder="Area de Terreno">
                           </div>
-                          <label for="" class="col-md-1 col-form-label">VALOR</label>
+                          <label for="" class="col-md-1 col-form-label" style="padding-right: 0px; padding-left: 0px;">VALOR (S/)</label>
                           <div class="col-md-3">
-                            <input class="form-control" name="txt_valor_obra" id="txt_valor_obra" type="text" value="" placeholder="Valor de Obra">
+                            <input class="form-control" name="txt_valor_obra" id="txt_valor_obra" type="text" value="" onkeypress="return justNumbers(event);" placeholder="Valor de Obra">
                           </div>
                         </div>
                         
@@ -182,6 +187,10 @@
                                   <tr>
                                     <td><input class="form-control" name="txt_piso_4" id="txt_piso_4" type="text" value=""></td>
                                     <td><input class="form-control" name="txt_area_4" id="txt_area_4" type="text" value="" placeholder="000.00 m2"></td>
+                                  </tr>
+                                  <tr>
+                                    <td><input class="form-control" name="txt_piso_5" id="txt_piso_5" type="text" value=""></td>
+                                    <td><input class="form-control" name="txt_area_5" id="txt_area_5" type="text" value="" placeholder="000.00 m2"></td>
                                   </tr>
                                 </tbody>
                               </table>
