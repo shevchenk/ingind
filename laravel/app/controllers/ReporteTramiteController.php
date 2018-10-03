@@ -71,6 +71,9 @@ class ReporteTramiteController extends BaseController
 
         ftp_close($conn_id);
 
+        var_dump($new);
+        die();
+        
 
 
         foreach ($rst as $ind => $ndc){
