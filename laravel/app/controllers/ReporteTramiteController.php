@@ -101,7 +101,7 @@ class ReporteTramiteController extends BaseController
             array(
                 'rst'=>1,
                 'datos'=>$rst,
-                'allFiles'=>$new
+               // 'allFiles'=>$new
             )
         );
     }
