@@ -98,12 +98,14 @@ class ReporteTramiteController extends BaseController
                 }
         }
 
+        var_dump($new);
+        die();
 
       return Response::json(
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
-                'allFiles'=>$new
+                //'allFiles'=>$new
             )
         );
     }
