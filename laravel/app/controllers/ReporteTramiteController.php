@@ -100,7 +100,7 @@ class ReporteTramiteController extends BaseController
                 }
         }
 
-        var_dump($rst);die();
+        ///var_dump($rst);die();
 
       return Response::json(
             array(
