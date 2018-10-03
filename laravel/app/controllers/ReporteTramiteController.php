@@ -79,18 +79,19 @@ class ReporteTramiteController extends BaseController
                 if(isset($ad[1]))
                 foreach ($new as $dFile) {
 
-                        $daFile=strtolower(str_replace(' ', '', $dFile));
-                        $nom = strtolower(str_replace(' ', '', $ad[0]));
-                        $num = (int)str_replace("Nº ", '', $ad[1]);
+                        $daFile=strtolower(str_replace(' ', '', trim($dFile)));
+                        $nom = strtolower(str_replace(' ', '', trim($ad[0])));
+                        $num = (int)str_replace("Nº ", '', trim($ad[1]));
 
 
                         $found=strpos(
-                            str_replace(array(' ','°','º','-'), "",$dFile), 
-                            str_replace(array(' ','°','º','-'), "",$ndc->referido)
+                            str_replace(array(' ','°','º','-','�'), "",trim($dFile)), 
+                            str_replace(array(' ','°','º','-','�'), "",trim($ndc->referido))
                         );
 
                         $c1 = strpos($daFile, $nom);
                         $c2 = strpos($daFile, "".$num);
+
                         if($found===true || ($c1 !== false && $c2 !== false)){
                             $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
@@ -99,7 +100,7 @@ class ReporteTramiteController extends BaseController
 
         var_dump($rst);
         die();
-        
+
 
       return Response::json(
             array(
