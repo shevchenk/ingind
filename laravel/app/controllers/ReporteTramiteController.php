@@ -47,34 +47,30 @@ class ReporteTramiteController extends BaseController
 
     public function postExpedienteunico()
     {
-      $rst=ReporteTramite::ExpedienteUnico(); 
+        $rst=ReporteTramite::ExpedienteUnico(); 
 
+        $new = array();
 
-       $new = array();
-      
         $ftp_server = "10.0.100.11";
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
-        $contents = ftp_nlist($conn_id, ".");
-        $new=array();
-        foreach ($contents as $key => $value) {
-          $new[$key]=array('server'=>"10.0.100.11",'nombre'=>utf8_decode($value));
-        }
+        
+        $new = $this->getFilesR($conn_id,'/', $ftp_server);
 
         $ftp_server = "10.0.1.61";
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
-        $contents = ftp_nlist($conn_id, ".");
-        foreach ($contents as $key => $value) {
-          $new[$key]=array('server'=>"10.0.1.61",'nombre'=>utf8_decode($value));
-        }
 
-        foreach ($rst as $ind => $ndc) {
+        $new = array_merge($new,$this->getFilesR($conn_id,'/', $ftp_server));
+
+        ftp_close($conn_id);
+
+        foreach ($rst as $ind => $ndc){
                 $ad=explode(" - ", $ndc->referido);
                 if(isset($ad[1]))
                 foreach ($new as $iFile => $dFile) {
 
-                        $daFile=strtolower(str_replace(' ', '', $dFile['nombre']));
+                        $daFile=strtolower(str_replace(' ', '', $dFile));
                         $nom = strtolower(str_replace(' ', '', $ad[0]));
                         $num = (int)str_replace("Nº ", '', $ad[1]);
 
@@ -82,7 +78,7 @@ class ReporteTramiteController extends BaseController
                         $c2 = strpos($daFile, "".$num);
                         if($c1 !== false && $c2 !== false){
                                 //echo "FOUND: $ndc->referido -> ".$new[$iFile];
-                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile['server'].'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile['nombre'].'"> </i></a></b>';
+                          $rst[$ind]->referido .= ' <b><a href="javascript:loadVid('.($ind+1).',\''.$dFile.'\');"<i class="fa fa-video-camera"><input type="hidden" id="vid_'.($ind+1).'" value="'.$dFile.'"> </i></a></b>';
                         }
                 }
         }
@@ -93,5 +89,29 @@ class ReporteTramiteController extends BaseController
                 'datos'=>$rst
             )
         );
+    }
+
+    function getFilesR($conn_id,$path='/',$srv){
+      $result = array();
+      $list = ftp_rawlist($conn_id, $path, TRUE);
+        if(is_array($list))foreach($list as $ind => $val){
+
+            $x = explode(' ',$val);
+            $i=3;
+            unset($x[0]);unset($x[1]);unset($x[2]);unset($x[3]);
+
+            do {
+              unset($x[$i]);
+             $i++;
+            } while ($x[$i]=="");
+            if($x[$i]=="<DIR>"){
+                    unset($x[$i]);
+                    $result = array_merge($result,$this->getFilesR($conn_id,$path.'/'.implode($x,' '),$srv));
+            }else{
+                    unset($x[$i]);
+                    $result[] = 'ftp://'.$srv.$path.'/'.implode($x,' ');
+            }
+        }
+        return $result;
     }
 }
