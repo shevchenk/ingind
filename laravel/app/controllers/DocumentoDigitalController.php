@@ -972,15 +972,19 @@ class DocumentoDigitalController extends \BaseController {
         imagettftext($im, 9, 0, 102, 115+10, $black, $font2, $area);
                 
         if(($rol_id == 8 || $rol_id == 9) && $area_id != 10) {
-            imagettftext($im, 9, 0, 102, 145+14+$dobleLinea, $black, $font,"Resol. ");
-            imagettftext($im, 9, 0, 145 , 145+14+$dobleLinea, $black, $font2, $resolucion);
+            if($resolucion) {
+                imagettftext($im, 9, 0, 102, 145+14+$dobleLinea, $black, $font,"Resol. ");
+                imagettftext($im, 9, 0, 145 , 145+14+$dobleLinea, $black, $font2, $resolucion);
+            }
         }
 
         if($area_id == 10) {
-            imagettftext($im, 9, 0, 102, 145+14+$dobleLinea, $black, $font,"Cod Inspector: ");
-            imagettftext($im, 9, 0, 203, 145+14+$dobleLinea, $black, $font2, $codInspector);
-            imagettftext($im, 9, 0, 102, 160+14+$dobleLinea, $black, $font,"Resol. ");
-            imagettftext($im, 9, 0, 145, 160+14+$dobleLinea, $black, $font2, $resolucion);
+            if($codInspector) {
+                imagettftext($im, 9, 0, 102, 145+14+$dobleLinea, $black, $font,"Cod Inspector: ");
+                imagettftext($im, 9, 0, 203, 145+14+$dobleLinea, $black, $font2, $codInspector);
+                imagettftext($im, 9, 0, 102, 160+14+$dobleLinea, $black, $font,"Resol. ");
+                imagettftext($im, 9, 0, 145, 160+14+$dobleLinea, $black, $font2, $resolucion);
+            }
         }     
 
         $stamp = getImageFromUrl($rutaFoto);
