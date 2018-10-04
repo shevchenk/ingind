@@ -747,7 +747,7 @@ class Reporte extends Eloquent
                     LEFT JOIN rutas r ON r.ruta_flujo_id=rf.id AND r.estado=1 ".$f_fecha.
                     " LEFT JOIN rutas_detalle rd ON rd.ruta_id=r.id AND rd.estado=1 ";
         $sSql .=$left;
-        $sSql.="WHERE f.estado=1 ";
+        $sSql.="WHERE f.estado=1 AND f.tipo_flujo=1 ";
         if (Input::has('area_id') && Input::get('area_id')) {
             $id_area = Input::get('area_id');
             $sSql .= " AND a.id IN ($id_area)";
