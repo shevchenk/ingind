@@ -1,17 +1,18 @@
 <?php
-use PhpOffice\PhpWord\SimpleType\DocProtect;
+//use PhpOffice\PhpWord\SimpleType\DocProtect;
 class FormatoLicenciaController extends \BaseController
 {
-    protected $_errorController;
+    //protected $_errorController;
     /**
      * Valida sesion activa
      */
+    /*
     public function __construct(ErrorController $ErrorController)
     {
         $this->beforeFilter('auth');
         $this->_errorController = $ErrorController;
     }
-
+    */
     public function postCargar()
     {
         //si la peticion es ajax
