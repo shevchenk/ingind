@@ -142,7 +142,5 @@ class ReporteTramiteController extends BaseController
                 }
         }
 
-
-        return $result;
     }
 }
