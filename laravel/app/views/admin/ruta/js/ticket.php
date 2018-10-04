@@ -72,7 +72,7 @@ $(document).ready(function() {
       var button = $(event.relatedTarget); // captura al boton
       var titulo = button.data('titulo'); // extrae del atributo data-
       var modal = $(this); //captura el modal
-      modal.find('.modal-title').text(titulo+' Ticket');
+      modal.find('.modal-title').text(titulo+' Incidencia');
       $('#form_tickets_modal [data-toggle="tooltip"]').css("display","none");
       $("#form_tickets_modal input[type='hidden']").not('.mant').remove();
 
