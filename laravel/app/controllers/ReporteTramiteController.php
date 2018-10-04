@@ -1,6 +1,8 @@
 <?php
 class ReporteTramiteController extends BaseController
 {
+
+    private $archivos = array();
     public function postTramiteunico()
     {
       $array=array();
@@ -49,69 +51,15 @@ class ReporteTramiteController extends BaseController
     {
         $rst=ReporteTramite::ExpedienteUnico(); 
 
-        $new = array();
-
-        $ftp_server = "10.0.100.11";
-        $conn_id = ftp_connect($ftp_server);
-        $login_result = ftp_login($conn_id, 'anonymous', '');
-        
-        $new = $this->getFilesR($conn_id,'/', $ftp_server);
-        ftp_close($conn_id);
-
-/*
-        $ftp_server = "10.0.1.61";
-        $conn_id = ftp_connect($ftp_server);
-        $login_result = ftp_login($conn_id, 'anonymous', '');
-
-        if(is_array($new) && count($new)>0){
-            $new = array_merge($new,$this->getFilesR($conn_id,'/', $ftp_server));
-        }else{   
-            $new = $this->getFilesR($conn_id,'/', $ftp_server);
-        }
-        ftp_close($conn_id);
-*/
-
-
-       // print_r($rst);
-       // die();
-
-
         foreach ($rst as $ind => $ndc){
-                $ad=explode(" - ", $ndc->referido);
-                if(isset($ad[1]))
-                foreach ($new as $dFile) {
-
-                        $daFile=strtolower(str_replace(' ', '', trim($dFile)));
-                        $nom = strtolower(str_replace(' ', '', trim($ad[0])));
-                        $num = (int)preg_replace("/[^A-Za-z0-9]/", "", trim($ad[1]));
-                        $found=strpos(
-                            preg_replace("/[^A-Za-z0-9]/", "",trim($dFile)), 
-                            preg_replace("/[^A-Za-z0-9]/", "",trim($ndc->referido))
-                        );
-
-                        $c1 = false;//strpos($daFile, $nom);
-                        $c2 = false;//strpos($daFile, "".$num);
-
-                        if($found!==false || ($c1 !== false && $c2 !== false)){
-
-                            $v0 = substr($dFile, 0,strrpos($dFile, "/")+1);
-                            $v1 = substr($dFile, strrpos($dFile, "/")+1);
-
-                            $vidName= $v0.rawurlencode($v1);
-
-                            $rst[$ind]->referido .= ' <b><a href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';
-                            //var_dump($rst[$ind]);
-                        }
-                }
+          $this->addVideoLink($rst[$ind]->referido);
         }
-
-        ///var_dump($rst);die();
 
       return Response::json(
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
-                //'allFiles'=>$new
+                //'allFiles'=>$this->archivos
             )
         );
     }
@@ -137,6 +85,64 @@ class ReporteTramiteController extends BaseController
                     $result[] = 'ftp://'.$srv.$path.'/'.trim(implode($x,' '));
             }
         }
+        return $result;
+    }
+
+
+    function addVideoLink(&$reference){
+
+        if(!is_array($this->archivos) || count($this->archivos<1)){
+
+          $ftp_server = "10.0.100.11";
+          $conn_id = ftp_connect($ftp_server);
+          $login_result = ftp_login($conn_id, 'anonymous', '');
+          
+          $this->archivos = $this->getFilesR($conn_id,'/', $ftp_server);
+          ftp_close($conn_id);
+
+/*
+        $ftp_server = "10.0.1.61";
+        $conn_id = ftp_connect($ftp_server);
+        $login_result = ftp_login($conn_id, 'anonymous', '');
+
+        if(is_array($this->archivos) && count($this->archivos)>0){
+            $this->archivos = array_merge($this->archivos,$this->getFilesR($conn_id,'/', $ftp_server));
+        }else{   
+            $this->archivos = $this->getFilesR($conn_id,'/', $ftp_server);
+        }
+        ftp_close($conn_id);
+*/
+        }
+
+        $ad=explode(" - ", $reference);
+
+        if(isset($ad[1]))
+        foreach ($this->archivos as $dFile) {
+
+                $daFile=strtolower(str_replace(' ', '', trim($dFile)));
+                $nom = strtolower(str_replace(' ', '', trim($ad[0])));
+                $num = (int)preg_replace("/[^A-Za-z0-9]/", "", trim($ad[1]));
+                $found=strpos(
+                    preg_replace("/[^A-Za-z0-9]/", "",trim($dFile)), 
+                    preg_replace("/[^A-Za-z0-9]/", "",trim($reference))
+                );
+
+                $c1 = false;//strpos($daFile, $nom);
+                $c2 = false;//strpos($daFile, "".$num);
+
+                if($found!==false || ($c1 !== false && $c2 !== false)){
+
+                    $v0 = substr($dFile, 0,strrpos($dFile, "/")+1);
+                    $v1 = substr($dFile, strrpos($dFile, "/")+1);
+
+                    $vidName= $v0.rawurlencode($v1);
+
+                    $reference .= ' <b><a href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';
+                    //var_dump($rst[$ind]);
+                }
+        }
+
+
         return $result;
     }
 }
