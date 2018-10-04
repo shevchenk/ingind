@@ -100,7 +100,7 @@ class ReporteTramiteController extends BaseController
           $this->archivos = $this->getFilesR($conn_id,'/', $ftp_server);
           ftp_close($conn_id);
 
-/*
+
         $ftp_server = "10.0.1.61";
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
@@ -111,7 +111,7 @@ class ReporteTramiteController extends BaseController
             $this->archivos = $this->getFilesR($conn_id,'/', $ftp_server);
         }
         ftp_close($conn_id);
-*/
+
         }
 
         $ad=explode(" - ", $reference);
