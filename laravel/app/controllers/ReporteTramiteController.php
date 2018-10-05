@@ -141,6 +141,5 @@ class ReporteTramiteController extends BaseController
               //var_dump($rst[$ind]);
           }
         }
-        return $errors;
     }
 }
