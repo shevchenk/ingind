@@ -85,7 +85,7 @@ class RutaDetalle extends Eloquent
                     "=>",
                     IF(rdv.condicion=0,"NO",CONCAT("+",rdv.condicion) ),
                     "=>",
-                    IFNULL(rdv.doc_digital_id,""),
+                    IFNULL(rdv.documento,""),
                     "=>",
                     IFNULL(rdv.observacion,""),
                     "=>",
