@@ -50,15 +50,19 @@ class ReporteTramiteController extends BaseController
     public function postExpedienteunico()
     {
         $rst=ReporteTramite::ExpedienteUnico(); 
-
+        $x = array();
         foreach ($rst as $ind => $ndc){
-          $this->addVideoLink($rst[$ind]->referido);
+          $x = $this->addVideoLink($rst[$ind]->referido);
+          if(count($x)>0){
+            $e[]=$x;
+          }
         }
 
       return Response::json(
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
+                'errors'=>$x,
                 //'allFiles'=>$this->archivos
             )
         );
@@ -91,18 +95,29 @@ class ReporteTramiteController extends BaseController
 
     function addVideoLink(&$reference){
 
+        $errors = array();
+
         if(!is_array($this->archivos) || count($this->archivos<1)){
           $ftp_server = "10.0.100.11";
           $conn_id = ftp_connect($ftp_server);
           $login_result = ftp_login($conn_id, 'anonymous', '');
-          $list = $this->getFilesR($conn_id,'/', $ftp_server);
-          ftp_close($conn_id);
+
+          if($login_result){
+            $list = $this->getFilesR($conn_id,'/', $ftp_server);
+            ftp_close($conn_id);
+          }else{
+            $errors['conn2']="No login en $ftp_server";
+          }
 
           $ftp_server0 = "10.0.1.61";
           $conn_id0 = ftp_connect($ftp_server0);
           $login_result0 = ftp_login($conn_id0, 'anonymous', '');
-          $list0 = $this->getFilesR($conn_id,'/', $ftp_server);
-          ftp_close($conn_id0);
+          if($login_result0){
+            $list0 = $this->getFilesR($conn_id,'/', $ftp_server);
+            ftp_close($conn_id0);
+          }else{
+            $errors['conn2']="No login en $ftp_server0";
+          }
 
           $this->archivos = array_merge($list,$list0);
           var_dump($this->archivos);
@@ -134,6 +149,6 @@ class ReporteTramiteController extends BaseController
               //var_dump($rst[$ind]);
           }
         }
-
+        return $errors;
     }
 }
