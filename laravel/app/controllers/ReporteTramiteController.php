@@ -104,7 +104,7 @@ class ReporteTramiteController extends BaseController
             $list = $this->getFilesR($conn_id,'/', $ftp_server);
             ftp_close($conn_id);
           }else{
-            $errors['conn2']="No login en $ftp_server";
+            $errors['conn1']="No login en $ftp_server";
           }
 
           $ftp_server0 = "10.0.1.61";
