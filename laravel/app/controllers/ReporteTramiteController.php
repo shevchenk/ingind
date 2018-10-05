@@ -50,19 +50,14 @@ class ReporteTramiteController extends BaseController
     public function postExpedienteunico()
     {
         $rst=ReporteTramite::ExpedienteUnico(); 
-        $x = array();
         foreach ($rst as $ind => $ndc){
-          $x = $this->addVideoLink($rst[$ind]->referido);
-          if(count($x)>0){
-            $e[]=$x;
-          }
+          $this->addVideoLink($rst[$ind]->referido);
         }
 
       return Response::json(
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
-                'errors'=>$x,
                 //'allFiles'=>$this->archivos
             )
         );
