@@ -95,15 +95,17 @@ class ReporteTramiteController extends BaseController
           $ftp_server = "10.0.100.11";
           $conn_id = ftp_connect($ftp_server);
           $login_result = ftp_login($conn_id, 'anonymous', '');
-          $this->archivos = $this->getFilesR($conn_id,'/', $ftp_server);
+          $list = $this->getFilesR($conn_id,'/', $ftp_server);
           ftp_close($conn_id);
 
-          $ftp_server = "10.0.1.61";
-          $conn_id = ftp_connect($ftp_server);
-          $login_result = ftp_login($conn_id, 'anonymous', '');
-          $this->archivos = array_merge($this->archivos,$this->getFilesR($conn_id,'/', $ftp_server));
-          ftp_close($conn_id);
+          $ftp_server0 = "10.0.1.61";
+          $conn_id0 = ftp_connect($ftp_server0);
+          $login_result0 = ftp_login($conn_id0, 'anonymous', '');
+          $list0 = $this->getFilesR($conn_id,'/', $ftp_server);
+          ftp_close($conn_id0);
 
+          $this->archivos = array_merge($list,$list0);
+          var_dump($this->archivos);
         }
 
         $ad=explode(" - ", $reference);
