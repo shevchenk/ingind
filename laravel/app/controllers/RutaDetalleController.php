@@ -113,7 +113,7 @@ class RutaDetalleController extends \BaseController
 
                     if(is_array($docExp) && count($docExp)>0 && isset($docExp[1])){
                         //$this->addVideoLink($docExp[0],$fList);
-                        $d1[4] = $docExp[0].' <a target="_blank" href="documentodig/vista/'.$docExp[1].'/4/0"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
+                        $d1[4] = $docExp[0].' <a target="_blank" href="documentodig/vista/'.$docExp[1].'/4/1"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
                         $make=true;
                     }
 
