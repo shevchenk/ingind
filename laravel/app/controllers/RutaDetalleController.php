@@ -98,7 +98,7 @@ class RutaDetalleController extends \BaseController
             $d = explode('|', $res->verbo);
             
 
-            $fList = $this->prepareFiles();
+            //$fList = $this->prepareFiles();
             for ($i=0; $i < count($d); $i++) {
 
                 $d1 = explode("=>", $d[$i]);
@@ -107,8 +107,8 @@ class RutaDetalleController extends \BaseController
                     $docExp = explode("_", $d1[4]);
 
                     if(is_array($docExp) && count($docExp)>0 && isset($docExp[1])){
-                        $this->addVideoLink($docExp[0],$fList);
-                        $d1[4] = $docExp[0].' <a target="_blank" href="documentodig/vista/'.$docExp[1].'/4/0"><button class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></button></a> ';
+                        //$this->addVideoLink($docExp[0],$fList);
+                        $d1[4] = $docExp[0].' <a target="_blank" href="documentodig/vista/'.$docExp[1].'/4/0"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
                         $make=true;
                     }
 
@@ -852,7 +852,7 @@ writen by Jhoubert @ Veflat.com
 
               $vidName= $v0.rawurlencode($v1);
 
-              $reference .= ' <b><a href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<button class="btn btn-info"><i class="fa fa-video-camera"></i></button></a></b>';
+              $reference .= ' <b><a class="btn btn-info" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';
 
           }
         }

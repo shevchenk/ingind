@@ -147,7 +147,7 @@ class ReporteTramiteController extends BaseController
 
               $vidName= $v0.rawurlencode($v1);
 
-              $reference .= ' <b><a href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<button class="btn btn-info"><i class="fa fa-video-camera"></i></button></a></b>';              //var_dump($rst[$ind]);
+              $reference .= ' <b><a class="btn btn-info" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';              //var_dump($rst[$ind]);
           }
         }
     }
