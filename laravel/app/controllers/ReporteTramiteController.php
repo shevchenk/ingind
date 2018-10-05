@@ -70,7 +70,7 @@ class ReporteTramiteController extends BaseController
 
     function getFilesR($conn_id,$path='/',$srv){
       $result = array();
-      $list = @ftp_rawlist($conn_id, $path, TRUE);
+      $list = ftp_rawlist($conn_id, $path, TRUE);
         if(is_array($list))foreach($list as $ind => $val){
             $x = explode(' ',$val);
             $i=3;
@@ -113,7 +113,7 @@ class ReporteTramiteController extends BaseController
           $conn_id0 = ftp_connect($ftp_server0);
           $login_result0 = ftp_login($conn_id0, 'anonymous', '');
           if($login_result0){
-            $list0 = $this->getFilesR($conn_id,'/', $ftp_server);
+            $list0 = $this->getFilesR($conn_id0,'/', $ftp_server);
             ftp_close($conn_id0);
           }else{
             $errors['conn2']="No login en $ftp_server0";
