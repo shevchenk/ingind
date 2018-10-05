@@ -75,8 +75,6 @@ class ReporteTramiteController extends BaseController
             $x = explode(' ',$val);
             $i=3;
             unset($x[0]);unset($x[1]);unset($x[2]);unset($x[3]);
-
-
             do {
               unset($x[$i]);
               $i++;
@@ -121,6 +119,8 @@ class ReporteTramiteController extends BaseController
 
           $this->archivos = array_merge($list,$list0);
           var_dump($this->archivos);
+          die();
+          
         }
 
         $ad=explode(" - ", $reference);
