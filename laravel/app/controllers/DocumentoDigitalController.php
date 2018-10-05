@@ -952,6 +952,13 @@ class DocumentoDigitalController extends \BaseController {
             $area_1 .= substr($area, 29, 17);
             $area = $area_1;
         }
+        else if($area_id == 36) //Sub. Gerencia de Ejecutoria Coactiva
+        {
+            $area_1 = substr($area, 0, 16)."\r\n";
+            $area_1 .= substr($area, 17, 20);
+            //$area_1 .= substr($area, 27, 8);
+            $area = $area_1;
+        }
         else
         {
             $area = $text;
