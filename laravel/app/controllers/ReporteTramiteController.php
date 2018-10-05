@@ -51,17 +51,25 @@ class ReporteTramiteController extends BaseController
     {
         $rst=ReporteTramite::ExpedienteUnico(); 
 
+        $times = array();
 
+
+        $time[] = "init:".time();
+
+        $fList = $this->prepareFiles();
+        $time[] = "archivos listos:".time();
+        
         foreach ($rst as $ind => $ndc){
-            $fList = $this->prepareFiles();
             $this->addVideoLink($rst[$ind]->referido,$fList);
         }
+        $time[] = "links listos:".time();
+
 
       return Response::json(
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
-                //'allFiles'=>$this->archivos
+                'tiempos'=>$time,
             )
         );
     }
@@ -89,7 +97,7 @@ class ReporteTramiteController extends BaseController
     }
 
     function prepareFiles(){
-        
+
         $ftp_server = "10.0.100.11";
         $conn_id = ftp_connect($ftp_server);
         $login_result = ftp_login($conn_id, 'anonymous', '');
