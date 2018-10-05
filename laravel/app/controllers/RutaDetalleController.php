@@ -99,7 +99,7 @@ class RutaDetalleController extends \BaseController
             
 
             //$fList = $this->prepareFiles();
-            for ($i=0; $i < count($d); $i++) {
+            if(0)for ($i=0; $i < count($d); $i++) {
 
                 $d1 = explode("=>", $d[$i]);
                 $make=false;
