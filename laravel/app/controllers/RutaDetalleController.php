@@ -91,19 +91,18 @@ class RutaDetalleController extends \BaseController
         $res        = Array();
         $res        = $r->getRutadetalle();
 
-        $time=array();
+
 
         if ( Input::get('ruta_detalle_id') ) {
 
             $d = explode('|', $res->verbo);
             
 
-            $time[] = "init:".time();
+        $time[] = "init:".time();
 
-            $fList = $this->prepareFiles();
-            $time[] = "archivos listos:".time();
-
-
+        $fList = $this->prepareFiles();
+        $time[] = "archivos listos:".time();
+        
             for ($i=0; $i < count($d); $i++) {
 
                 $d1 = explode("=>", $d[$i]);
@@ -122,8 +121,6 @@ class RutaDetalleController extends \BaseController
                 }
 
             }
-             $time[] = "links listos:".time();
-
             $res->verbo = implode("|", $d);
             
 
@@ -138,8 +135,7 @@ class RutaDetalleController extends \BaseController
                 array(
                     'rst'=>'1',
                     'msj'=>'Detalle cargado',
-                    'datos'=>$res,
-                    'tiempos'=>$time;
+                    'datos'=>$res
                 )
             );
         }
