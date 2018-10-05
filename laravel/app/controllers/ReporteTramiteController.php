@@ -118,9 +118,6 @@ class ReporteTramiteController extends BaseController
           }
 
           $this->archivos = array_merge($list,$list0);
-          var_dump($this->archivos);
-          die();
-
         }
 
         $ad=explode(" - ", $reference);
