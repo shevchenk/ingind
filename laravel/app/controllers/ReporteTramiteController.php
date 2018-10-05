@@ -111,7 +111,7 @@ class ReporteTramiteController extends BaseController
           $conn_id0 = ftp_connect($ftp_server0);
           $login_result0 = ftp_login($conn_id0, 'anonymous', '');
           if($login_result0){
-            $list0 = $this->getFilesR($conn_id0,'/', $ftp_server);
+            $list0 = $this->getFilesR($conn_id0,'/', $ftp_server0);
             ftp_close($conn_id0);
           }else{
             $errors['conn2']="No login en $ftp_server0";
@@ -120,7 +120,7 @@ class ReporteTramiteController extends BaseController
           $this->archivos = array_merge($list,$list0);
           var_dump($this->archivos);
           die();
-          
+
         }
 
         $ad=explode(" - ", $reference);
