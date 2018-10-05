@@ -15,7 +15,7 @@ class recoveryController extends \BaseController
 
                 $destinationPath = public_path().'/'.$path;
                 $i = 0 ;
-                var_dump($allFiles);
+                //var_dump($allFiles);
                 foreach ($allFiles['documento'] as $key => $file) {
                     $extension = $file->getClientOriginalExtension();
                     $filename        = str_random(5) . '_' . time();
