@@ -117,8 +117,8 @@ class RutaDetalleController extends \BaseController
                 }
 
             }
+            if(0)$res->verbo = implode("|", $d);
             
-            $res->verbo = implode("|", $d);
 
 
 
