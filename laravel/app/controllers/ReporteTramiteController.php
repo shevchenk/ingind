@@ -50,8 +50,11 @@ class ReporteTramiteController extends BaseController
     public function postExpedienteunico()
     {
         $rst=ReporteTramite::ExpedienteUnico(); 
+
+
         foreach ($rst as $ind => $ndc){
-          $this->addVideoLink($rst[$ind]->referido);
+            $fList = $this->prepareFiles();
+            $this->addVideoLink($rst[$ind]->referido,$fList);
         }
 
       return Response::json(
@@ -85,40 +88,39 @@ class ReporteTramiteController extends BaseController
         return $result;
     }
 
+    function prepareFiles(){
+        
+        $ftp_server = "10.0.100.11";
+        $conn_id = ftp_connect($ftp_server);
+        $login_result = ftp_login($conn_id, 'anonymous', '');
 
-    function addVideoLink(&$reference){
-
-        $errors = array();
-
-        if(!is_array($this->archivos) || count($this->archivos<1)){
-          $ftp_server = "10.0.100.11";
-          $conn_id = ftp_connect($ftp_server);
-          $login_result = ftp_login($conn_id, 'anonymous', '');
-
-          if($login_result){
-            $list = $this->getFilesR($conn_id,'/', $ftp_server);
-            ftp_close($conn_id);
-          }else{
-            $errors['conn1']="No login en $ftp_server";
-          }
-
-          $ftp_server0 = "10.0.1.61";
-          $conn_id0 = ftp_connect($ftp_server0);
-          $login_result0 = ftp_login($conn_id0, 'anonymous', '');
-          if($login_result0){
-            $list0 = $this->getFilesR($conn_id0,'/', $ftp_server0);
-            ftp_close($conn_id0);
-          }else{
-            $errors['conn2']="No login en $ftp_server0";
-          }
-
-          $this->archivos = array_merge($list,$list0);
+        if($login_result){
+          $list = $this->getFilesR($conn_id,'/', $ftp_server);
+          ftp_close($conn_id);
+        }else{
+          $errors['conn1']="No login en $ftp_server";
         }
+
+        $ftp_server0 = "10.0.1.61";
+        $conn_id0 = ftp_connect($ftp_server0);
+        $login_result0 = ftp_login($conn_id0, 'anonymous', '');
+        if($login_result0){
+          $list0 = $this->getFilesR($conn_id0,'/', $ftp_server0);
+          ftp_close($conn_id0);
+        }else{
+          $errors['conn2']="No login en $ftp_server0";
+        }
+
+        return array_merge($list,$list0);
+            
+    }
+
+    function addVideoLink(&$reference,$fileList){
 
         $ad=explode(" - ", $reference);
 
         if(isset($ad[1]))
-        foreach ($this->archivos as $dFile) {
+        foreach ($fileList as $dFile) {
           $daFile=strtolower(str_replace(' ', '', trim($dFile)));
           $nom = strtolower(str_replace(' ', '', trim($ad[0])));
           $num = (int)preg_replace("/[^A-Za-z0-9]/", "", trim($ad[1]));
