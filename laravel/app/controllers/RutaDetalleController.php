@@ -99,7 +99,7 @@ class RutaDetalleController extends \BaseController
             
 
             //$fList = $this->prepareFiles();
-            if(0)for ($i=0; $i < count($d); $i++) {
+            for ($i=0; $i < count($d); $i++) {
 
                 $d1 = explode("=>", $d[$i]);
                 $make=false;
@@ -110,6 +110,8 @@ class RutaDetalleController extends \BaseController
                         //$this->addVideoLink($docExp[0],$fList);
                         $d1[4] = $docExp[0].' <a target="_blank" href="documentodig/vista/'.$docExp[1].'/4/0"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
                         $make=true;
+                    }else{
+                        $this->addVideoLink($d1[4],$fList);
                     }
 
                 if($make){
@@ -117,7 +119,7 @@ class RutaDetalleController extends \BaseController
                 }
 
             }
-            if(0)$res->verbo = implode("|", $d);
+            $res->verbo = implode("|", $d);
             
 
 
