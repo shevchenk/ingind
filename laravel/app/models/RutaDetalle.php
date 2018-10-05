@@ -47,7 +47,7 @@ class RutaDetalle extends Eloquent
         }
             
 
-        $t0 = (Input::get('ruta_detalle_id')?'concat(rdv.documento,\'_\',rdv.doc_digital_id)':'rdv.documento');
+        $t0 = (Input::get('ruta_detalle_id') ? 'concat(rdv.documento,\'_\',rdv.doc_digital_id)' : 'rdv.documento');
 
         $set=DB::select('SET group_concat_max_len := @@max_allowed_packet');
         $set=DB::select('SET SESSION group_concat_max_len = 5000;');
@@ -85,7 +85,7 @@ class RutaDetalle extends Eloquent
                     "=>",
                     IF(rdv.condicion=0,"NO",CONCAT("+",rdv.condicion) ),
                     "=>",
-                    IFNULL(rdv.documento,""),
+                    IFNULL('.$t0.',""),
                     "=>",
                     IFNULL(rdv.observacion,""),
                     "=>",
