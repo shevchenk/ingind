@@ -831,7 +831,19 @@ prepareFiles
 writen by Jhoubert @ Veflat.com
 
 */
+    
 
+    function getRefreshfiles(){
+        $files = $this->prepareFiles();
+        FtpFiles::truncate();
+        foreach ($files as $ind => $tFile) {
+            $files = new FtpFiles;
+            $files['link']=$tFile;
+            $files->save();
+        }
+
+        echo "OK"; 
+    }
 
     function addVideoLink(&$reference,$fileList){
 
@@ -916,6 +928,6 @@ writen by Jhoubert @ Veflat.com
 
 
 /*
-    END JHOUBER
+    END JHOUBERT
 */
 }
