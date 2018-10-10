@@ -912,7 +912,9 @@ function HTMLExpedienteUnico(data){
                 link='';
             }
 
-            html+="<tr data-id="+cont+" data-parent="+parent+" data-level="+child+">";
+            var dd = (parent>0?'style=""':'style="background-color: rgba(255, 244, 162, 0.42);"');
+
+            html+="<tr data-id="+cont+" "+dd+" data-parent="+parent+" data-level="+child+">";
             html+=    "<td data-column=name>"+referido+link+"</td>";
             html+=    "<td>"+fhora+"</td>";
             html+=    "<td>"+proc+"</td>";
