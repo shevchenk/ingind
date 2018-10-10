@@ -74,81 +74,30 @@ class ReporteTramiteController extends BaseController
         );
     }
 
-    function getFilesR($conn_id,$path='/',$srv){
-      $result = array();
-      $list = ftp_rawlist($conn_id, $path, TRUE);
-        if(is_array($list))foreach($list as $ind => $val){
-            $x = explode(' ',$val);
-            $i=3;
-            unset($x[0]);unset($x[1]);unset($x[2]);unset($x[3]);
-            do {
-              unset($x[$i]);
-              $i++;
-            } while ($x[$i]=="");
-            if($x[$i]=="<DIR>"){
-                    unset($x[$i]);
-                    $result = array_merge($result,$this->getFilesR($conn_id,$path.'/'.trim(implode($x,' ')),$srv));
-            }else{
-                    unset($x[$i]);
-                    $result[] = 'ftp://'.$srv.$path.'/'.trim(implode($x,' '));
+
+
+    function addVideoLink(&$reference){
+        $ad=explode(" - ", $reference);
+        if(isset($ad[1])){
+            $nom = str_replace(' - ', '%', trim($ad[0]));
+            $num = (int)preg_replace("/[^0-9]/", "", trim($ad[1]));
+            $anio = trim($ad[2]);
+            $gr = trim($ad[3]);
+            $strFind = '%'.$nom.'%'.$num.'%'.$anio.'%'.$gr.'%';
+            $r = FtpFiles::getVideoLink($strFind);
+            if(count($r)>0){
+                foreach ($r as $index => $obj) {
+                    $v0 = substr($obj->link, 0,strrpos($obj->link, "/")+1);
+                    $v1 = substr($obj->link, strrpos($obj->link, "/")+1);
+
+                    $vidName = $v0.rawurlencode($v1);
+                    $vidName = str_replace("A?O", 'A%D1O', $vidName);
+                    $vidName = str_replace("%3F%20", '%BA%20', $vidName);
+                    $reference .= ' <b><a class="btn btn-info btn-sm" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
+                }
             }
         }
-        return $result;
     }
 
-    function prepareFiles(){
 
-        $ftp_server = "10.0.100.11";
-        $conn_id = ftp_connect($ftp_server);
-        $login_result = ftp_login($conn_id, 'anonymous', '');
-
-        if($login_result){
-          $list = $this->getFilesR($conn_id,'/', $ftp_server);
-          ftp_close($conn_id);
-        }else{
-          $errors['conn1']="No login en $ftp_server";
-        }
-
-        $ftp_server0 = "10.0.1.61";
-        $conn_id0 = ftp_connect($ftp_server0);
-        $login_result0 = ftp_login($conn_id0, 'anonymous', '');
-        if($login_result0){
-          $list0 = $this->getFilesR($conn_id0,'/', $ftp_server0);
-          ftp_close($conn_id0);
-        }else{
-          $errors['conn2']="No login en $ftp_server0";
-        }
-
-        return array_merge($list,$list0);
-            
-    }
-
-    function addVideoLink(&$reference,$fileList){
-
-        $ad=explode(" - ", $reference);
-
-        if(isset($ad[1]))
-        foreach ($fileList as $dFile) {
-          $daFile=strtolower(str_replace(' ', '', trim($dFile)));
-          $nom = strtolower(str_replace(' ', '', trim($ad[0])));
-          $num = (int)preg_replace("/[^A-Za-z0-9]/", "", trim($ad[1]));
-          $found=strpos(
-              preg_replace("/[^A-Za-z0-9]/", "",trim($dFile)), 
-              preg_replace("/[^A-Za-z0-9]/", "",trim($reference))
-          );
-
-          $c1 = false;//strpos($daFile, $nom);
-          $c2 = false;//strpos($daFile, "".$num);
-
-          if($found!==false || ($c1 !== false && $c2 !== false)){
-
-              $v0 = substr($dFile, 0,strrpos($dFile, "/")+1);
-              $v1 = substr($dFile, strrpos($dFile, "/")+1);
-
-              $vidName= $v0.rawurlencode($v1);
-
-              $reference .= ' <b><a class="btn btn-info" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';              //var_dump($rst[$ind]);
-          }
-        }
-    }
 }
