@@ -402,6 +402,7 @@ class RutaDetalleController extends \BaseController
                         if( count($refid)==0 ){
                             $referido=new Referido;
                             $referido['ruta_id']=$r->id;
+                            $referido['doc_digital_id']=$r->doc_digital_id; // JHOUBERT
                             $referido['tabla_relacion_id']=$tablaReferido->tabla_relacion_id;
                             $referido['ruta_detalle_id']=$rd->id;
                             $referido['norden']=$rd->norden;
@@ -423,6 +424,7 @@ class RutaDetalleController extends \BaseController
                             $sustento['ruta_detalle_verbo_id']=$rdv->id;
                             $sustento['documento_id']=$rdv->documento_id;
                             $sustento['sustento']=$rdv->documento;
+                            $sustento['doc_digital_id']=$rdv->doc_digital_id; // JHOUBERT
                             $sustento['fecha_hora_sustento']=$rdv->updated_at;
                             $sustento['usuario_sustento']=$rdv->usuario_updated_at;
                             $sustento['usuario_created_at']=Auth::user()->id;
@@ -432,6 +434,7 @@ class RutaDetalleController extends \BaseController
                             $referido=Referido::find($referidoid);
                             $referido['documento_id']=$rdv->documento_id;
                             $referido['ruta_detalle_verbo_id']=$rdv->id; /*$referido['id_tipo']=$rdv->id;*/
+                            $referido['doc_digital_id']=$rdv->doc_digital_id; // JHOUBERT
                             $referido['referido']=$rdv->documento;
                             $referido['fecha_hora_referido']=$rdv->updated_at;
                             $referido['usuario_referido']=$rdv->usuario_updated_at;
