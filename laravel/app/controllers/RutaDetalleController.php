@@ -860,7 +860,7 @@ class RutaDetalleController extends \BaseController
                     $v0 = substr($obj->link, 0,strrpos($obj->link, "/")+1);
                     $v1 = substr($obj->link, strrpos($obj->link, "/")+1);
                     $vidName= $v0.rawurlencode($v1);
-                    $reference .= ' <b><a class="btn btn-info" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
+                    $reference .= ' <b><a class="btn btn-info btn-sm" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
                 }
             }
         }
