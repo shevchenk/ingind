@@ -48,9 +48,9 @@ class ReporteTramiteController extends BaseController
     }
 
     public function postExpedienteunico(){
-      
+
         $rst=ReporteTramite::ExpedienteUnico(); 
-        $times = array();
+        //$times = array();
         
         foreach ($rst as $ind => $ndc){
             $this->addVideoLink($rst[$ind]->referido);
@@ -64,7 +64,7 @@ class ReporteTramiteController extends BaseController
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
-                'tiempos'=>$time,
+                //'tiempos'=>$time,
             )
         );
     }
