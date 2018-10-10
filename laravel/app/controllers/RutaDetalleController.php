@@ -112,7 +112,7 @@ class RutaDetalleController extends \BaseController
                     $docExp = explode("_", $d1[4]);
 
                     if(is_array($docExp) && count($docExp)>0 && isset($docExp[1])){
-                        //$this->addVideoLink($docExp[0],$fList);
+                        $this->addVideoLink($docExp[0]);
                         $d1[4] = $docExp[0].' <a target="_blank" href="documentodig/vista/'.$docExp[1].'/4/1"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
                         $make=true;
                     }
@@ -821,16 +821,16 @@ class RutaDetalleController extends \BaseController
 
 
 
-/*
+    /*
 
-Functions: 
-AddVideoLink
-getFilesR
-prepareFiles
+    Functions: 
+    AddVideoLink
+    getFilesR
+    prepareFiles
 
-writen by Jhoubert @ Veflat.com
+    writen by Jhoubert @ Veflat.com
 
-*/
+    */
     
 
     function getRefreshfiles(){
@@ -846,33 +846,23 @@ writen by Jhoubert @ Veflat.com
         echo "OK"; 
     }
 
-    function addVideoLink(&$reference,$fileList){
-
+    function addVideoLink(&$reference){
         $ad=explode(" - ", $reference);
-
-        if(isset($ad[1]))
-        foreach ($fileList as $dFile) {
-          $daFile=strtolower(str_replace(' ', '', trim($dFile)));
-          $nom = strtolower(str_replace(' ', '', trim($ad[0])));
-          $num = (int)preg_replace("/[^A-Za-z0-9]/", "", trim($ad[1]));
-          $found=strpos(
-              preg_replace("/[^A-Za-z0-9]/", "",trim($dFile)), 
-              preg_replace("/[^A-Za-z0-9]/", "",trim($reference))
-          );
-
-          $c1 = false;//strpos($daFile, $nom);
-          $c2 = false;//strpos($daFile, "".$num);
-
-          if($found!==false || ($c1 !== false && $c2 !== false)){
-
-              $v0 = substr($dFile, 0,strrpos($dFile, "/")+1);
-              $v1 = substr($dFile, strrpos($dFile, "/")+1);
-
-              $vidName= $v0.rawurlencode($v1);
-
-              $reference .= ' <b><a class="btn btn-info" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';
-
-          }
+        if(isset($ad[1])){
+            $nom = str_replace(' - ', '%', trim($ad[0]));
+            $num = (int)preg_replace("/[^0-9]/", "", trim($ad[1]));
+            $anio = trim($ad[2]);
+            $gr = trim($ad[3]);
+            $strFind = '%'.$nom.'%'.$num.'%'.$anio.'%'.$gr.'%';
+            $r = FtpFiles::getVideoLink($strFind);
+            if(count($r)>0){
+                foreach ($r as $index => $obj) {
+                    $v0 = substr($obj->link, 0,strrpos($obj->link, "/")+1);
+                    $v1 = substr($obj->link, strrpos($obj->link, "/")+1);
+                    $vidName= $v0.rawurlencode($v1);
+                    $reference .= ' <b><a class="btn btn-info" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
+                }
+            }
         }
     }
 
