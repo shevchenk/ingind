@@ -106,7 +106,7 @@ class ReporteTramite extends Eloquent
                     LEFT JOIN areas a ON rd.area_id=a.id  
                     WHERE re.estado=1 and re.tabla_relacion_id='".$referido->tabla_relacion_id."'
                     UNION
-                    SELECT re.ruta_id,re.ruta_detalle_id,sustento,re.doc_digital_id,fecha_hora_sustento fecha_hora,f.nombre proceso,a.nombre area,rd.norden,'s' tipo
+                    SELECT re.ruta_id,re.ruta_detalle_id,sustento,s.doc_digital_id,fecha_hora_sustento fecha_hora,f.nombre proceso,a.nombre area,rd.norden,'s' tipo
                     FROM sustentos s
                     INNER JOIN referidos re ON re.id=s.referido_id AND re.tabla_relacion_id='".$referido->tabla_relacion_id."'
                     INNER JOIN rutas_detalle rd ON rd.id=s.ruta_detalle_id
