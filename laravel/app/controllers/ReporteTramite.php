@@ -93,12 +93,12 @@ class ReporteTramite extends Eloquent
         return $r;
     }
 
-    public static function ExpedienteUnico()
-    {
+    public static function ExpedienteUnico(){
+
         $referido=Referido::where('ruta_id', '=', Input::get('ruta_id'))->firstOrFail();
         if($referido){
             $data = [];
-            $sql = "SELECT re.ruta_id,re.ruta_detalle_id,re.referido,re.fecha_hora_referido fecha_hora,f.nombre proceso,a.nombre area,re.norden, 'r' tipo 
+            $sql = "SELECT re.ruta_id,re.ruta_detalle_id,re.referido,re.doc_digital_id,re.fecha_hora_referido fecha_hora,f.nombre proceso,a.nombre area,re.norden, 'r' tipo 
                     FROM referidos re 
                     INNER JOIN rutas r ON re.ruta_id=r.id 
                     INNER JOIN flujos f ON r.flujo_id=f.id 
@@ -106,7 +106,7 @@ class ReporteTramite extends Eloquent
                     LEFT JOIN areas a ON rd.area_id=a.id  
                     WHERE re.estado=1 and re.tabla_relacion_id='".$referido->tabla_relacion_id."'
                     UNION
-                    SELECT re.ruta_id,re.ruta_detalle_id,sustento,fecha_hora_sustento fecha_hora,f.nombre proceso,a.nombre area,rd.norden,'s' tipo
+                    SELECT re.ruta_id,re.ruta_detalle_id,sustento,re.doc_digital_id,fecha_hora_sustento fecha_hora,f.nombre proceso,a.nombre area,rd.norden,'s' tipo
                     FROM sustentos s
                     INNER JOIN referidos re ON re.id=s.referido_id AND re.tabla_relacion_id='".$referido->tabla_relacion_id."'
                     INNER JOIN rutas_detalle rd ON rd.id=s.ruta_detalle_id
@@ -115,6 +115,8 @@ class ReporteTramite extends Eloquent
                     INNER JOIN flujos f ON r.flujo_id=f.id
                     WHERE s.estado = 1 and re.estado = 1
                     ORDER BY ruta_id,norden,tipo";
+
+                    //die($sql);
             $r=DB::select($sql);
             return $r;
         }

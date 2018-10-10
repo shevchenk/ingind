@@ -47,24 +47,20 @@ class ReporteTramiteController extends BaseController
       );
     }
 
-    public function postExpedienteunico()
-    {
+    public function postExpedienteunico(){
+      
         $rst=ReporteTramite::ExpedienteUnico(); 
-
         $times = array();
-
-
-        $time[] = "init:".time();
-
-        $time[] = "archivos listos:".time();
         
         foreach ($rst as $ind => $ndc){
             $this->addVideoLink($rst[$ind]->referido);
+
+            if($ndc->doc_digital_id != null){
+              $rst[$ind]->referido .= ' <a target="_blank" href="documentodig/vista/'.$ndc->doc_digital_id.'/4/1"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
+            }
         }
-        $time[] = "links listos:".time();
 
-
-      return Response::json(
+        return Response::json(
             array(
                 'rst'=>1,
                 'datos'=>$rst, 
