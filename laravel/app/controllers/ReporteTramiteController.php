@@ -59,7 +59,7 @@ class ReporteTramiteController extends BaseController
         $time[] = "archivos listos:".time();
         
         foreach ($rst as $ind => $ndc){
-            $this->addVideoLink($rst[$ind]->referido,$fList);
+            $this->addVideoLink($rst[$ind]->referido);
         }
         $time[] = "links listos:".time();
 
