@@ -861,6 +861,7 @@ class RutaDetalleController extends \BaseController
 
                     $vidName = $v0.rawurlencode($v1);
                     $vidName = str_replace("A?O", 'A%D1O', $vidName);
+                    $vidName = str_replace("%3F%20", '%BA%20', $vidName);
                     $reference .= ' <b><a class="btn btn-info btn-sm" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
                 }
             }
