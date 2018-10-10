@@ -100,7 +100,6 @@ class RutaDetalleController extends \BaseController
 
         $time[] = "init:".time();
 
-        //$fList = $this->prepareFiles();
         $fList='';
         $time[] = "archivos listos:".time();
         
@@ -859,7 +858,9 @@ class RutaDetalleController extends \BaseController
                 foreach ($r as $index => $obj) {
                     $v0 = substr($obj->link, 0,strrpos($obj->link, "/")+1);
                     $v1 = substr($obj->link, strrpos($obj->link, "/")+1);
-                    $vidName= $v0.rawurlencode($v1);
+
+                    $vidName = $v0.rawurlencode($v1);
+                    $vidName = str_replace("A?O", 'A%D1O', $vidName);
                     $reference .= ' <b><a class="btn btn-info btn-sm" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
                 }
             }
