@@ -56,7 +56,7 @@ class ReporteTramiteController extends BaseController
             $this->addVideoLink($rst[$ind]->referido);
 
             if($ndc->doc_digital_id != null){
-              $rst[$ind]->referido .= ' <a target="_blank" href="documentodig/vista/'.$ndc->doc_digital_id.'/4/1"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
+              $rst[$ind]->referido .= ' <a target="_blank" href="documentodig/vista/'.$ndc->doc_digital_id.'/4/0"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
             }
         }
 
