@@ -494,7 +494,21 @@ class Ruta extends Eloquent
 
         $idAPI = 1272;
         $areaAPI = 19;
-        $rutaFlujoIDGET=(Input::get('ruta_flujo_id') == 5569 ? 5806 : Input::get('ruta_flujo_id'));
+        $rutaFlujoIDGET=0;
+
+        switch (Input::get('ruta_flujo_id')) {
+            case '5569':
+            case '16':
+                $rutaFlujoIDGET = 5806;
+                break;
+            case '17':
+                $rutaFlujoIDGET = 5806;
+            default:
+                $rutaFlujoIDGET = 5806;
+                break;
+        }
+
+
         $x = (Input::get('id_incidencia')==''?time():Input::get('id_incidencia'));
         $IDSISC_NUMEROID=$x.':'.Input::get('codigo');
         $id_documento='';
