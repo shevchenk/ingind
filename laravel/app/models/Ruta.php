@@ -502,7 +502,7 @@ class Ruta extends Eloquent
                 $rutaFlujoIDGET = 5806;
                 break;
             case '17':
-                $rutaFlujoIDGET = 5806;
+                $rutaFlujoIDGET = 5859;
             default:
                 $rutaFlujoIDGET = 5806;
                 break;
