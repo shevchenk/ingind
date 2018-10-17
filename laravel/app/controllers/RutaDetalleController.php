@@ -100,7 +100,6 @@ class RutaDetalleController extends \BaseController
 
         $time[] = "init:".time();
 
-        //$fList = $this->prepareFiles();
         $fList='';
         $time[] = "archivos listos:".time();
         
@@ -112,7 +111,7 @@ class RutaDetalleController extends \BaseController
                     $docExp = explode("_", $d1[4]);
 
                     if(is_array($docExp) && count($docExp)>0 && isset($docExp[1])){
-                        //$this->addVideoLink($docExp[0],$fList);
+                        $this->addVideoLink($docExp[0]);
                         $d1[4] = $docExp[0].' <a target="_blank" href="documentodig/vista/'.$docExp[1].'/4/1"><span class="btn btn-default btn-sm" title="Ver documento"><i class="fa fa-eye"></i></span></a> ';
                         $make=true;
                     }
@@ -403,6 +402,7 @@ class RutaDetalleController extends \BaseController
                         if( count($refid)==0 ){
                             $referido=new Referido;
                             $referido['ruta_id']=$r->id;
+                            $referido['doc_digital_id']=$r->doc_digital_id; // JHOUBERT
                             $referido['tabla_relacion_id']=$tablaReferido->tabla_relacion_id;
                             $referido['ruta_detalle_id']=$rd->id;
                             $referido['norden']=$rd->norden;
@@ -424,6 +424,7 @@ class RutaDetalleController extends \BaseController
                             $sustento['ruta_detalle_verbo_id']=$rdv->id;
                             $sustento['documento_id']=$rdv->documento_id;
                             $sustento['sustento']=$rdv->documento;
+                            $sustento['doc_digital_id']=$rdv->doc_digital_id; // JHOUBERT
                             $sustento['fecha_hora_sustento']=$rdv->updated_at;
                             $sustento['usuario_sustento']=$rdv->usuario_updated_at;
                             $sustento['usuario_created_at']=Auth::user()->id;
@@ -433,6 +434,7 @@ class RutaDetalleController extends \BaseController
                             $referido=Referido::find($referidoid);
                             $referido['documento_id']=$rdv->documento_id;
                             $referido['ruta_detalle_verbo_id']=$rdv->id; /*$referido['id_tipo']=$rdv->id;*/
+                            $referido['doc_digital_id']=$rdv->doc_digital_id; // JHOUBERT
                             $referido['referido']=$rdv->documento;
                             $referido['fecha_hora_referido']=$rdv->updated_at;
                             $referido['usuario_referido']=$rdv->usuario_updated_at;
@@ -821,45 +823,51 @@ class RutaDetalleController extends \BaseController
 
 
 
-/*
+    /*
 
-Functions: 
-AddVideoLink
-getFilesR
-prepareFiles
+    Functions: 
+    AddVideoLink
+    getFilesR
+    prepareFiles
 
-writen by Jhoubert @ Veflat.com
+    writen by Jhoubert @ Veflat.com
 
-*/
+    */
+    
 
+    function getRefreshfiles(){
+        $files = $this->prepareFiles();
+        if(is_array($files) && count($files)>0){
+            FtpFiles::truncate();
+            foreach ($files as $ind => $tFile) {
+                $files = new FtpFiles;
+                $files['link']=$tFile;
+                $files->save();
+            }
+        }
+        echo "OK"; 
+    }
 
-    function addVideoLink(&$reference,$fileList){
-
+    function addVideoLink(&$reference){
         $ad=explode(" - ", $reference);
+        if(isset($ad[1])){
+            $nom = str_replace(' - ', '%', trim($ad[0]));
+            $num = (int)preg_replace("/[^0-9]/", "", trim($ad[1]));
+            $anio = trim($ad[2]);
+            $gr = trim($ad[3]);
+            $strFind = '%'.$nom.'%'.$num.'%'.$anio.'%'.$gr.'%';
+            $r = FtpFiles::getVideoLink($strFind);
+            if(count($r)>0){
+                foreach ($r as $index => $obj) {
+                    $v0 = substr($obj->link, 0,strrpos($obj->link, "/")+1);
+                    $v1 = substr($obj->link, strrpos($obj->link, "/")+1);
 
-        if(isset($ad[1]))
-        foreach ($fileList as $dFile) {
-          $daFile=strtolower(str_replace(' ', '', trim($dFile)));
-          $nom = strtolower(str_replace(' ', '', trim($ad[0])));
-          $num = (int)preg_replace("/[^A-Za-z0-9]/", "", trim($ad[1]));
-          $found=strpos(
-              preg_replace("/[^A-Za-z0-9]/", "",trim($dFile)), 
-              preg_replace("/[^A-Za-z0-9]/", "",trim($reference))
-          );
-
-          $c1 = false;//strpos($daFile, $nom);
-          $c2 = false;//strpos($daFile, "".$num);
-
-          if($found!==false || ($c1 !== false && $c2 !== false)){
-
-              $v0 = substr($dFile, 0,strrpos($dFile, "/")+1);
-              $v1 = substr($dFile, strrpos($dFile, "/")+1);
-
-              $vidName= $v0.rawurlencode($v1);
-
-              $reference .= ' <b><a class="btn btn-info" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"<i class="fa fa-video-camera"></i></a></b>';
-
-          }
+                    $vidName = $v0.rawurlencode($v1);
+                    $vidName = str_replace("A?O", 'A%D1O', $vidName);
+                    $vidName = str_replace("%3F%20", '%BA%20', $vidName);
+                    $reference .= ' <b><a class="btn btn-info btn-sm" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
+                }
+            }
         }
     }
 
@@ -916,6 +924,6 @@ writen by Jhoubert @ Veflat.com
 
 
 /*
-    END JHOUBER
+    END JHOUBERT
 */
 }

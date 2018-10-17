@@ -35,8 +35,11 @@ function HTMLExpedienteUnico(data){
             area =(el.area !=null) ? el.area : '';
             nord =(el.norden !=null) ? el.norden : '';
 
-            html+="<tr data-id="+cont+" data-parent="+parent+" data-level="+child+">";
-            html+=    "<td data-column=name>"+referido+"</td>";
+            var dd = (parent>0?'style="background-color: rgba(255, 244, 162, 0.42);"':'style=""');
+            var dd2 =  (parent>0?'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i>':'');
+
+            html+="<tr data-id="+cont+" "+dd+" data-parent="+parent+" data-level="+child+">";
+            html+=    "<td data-column=name>"+dd2+referido+"</td>";
             html+=    "<td>"+fhora+"</td>";
             html+=    "<td>"+proc+"</td>";
             html+=    "<td>"+area+"</td>";

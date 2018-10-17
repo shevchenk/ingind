@@ -378,6 +378,7 @@ class CargarController extends BaseController {
                                         $referido['tabla_relacion_id'] = $tablarelacion->id;
                                         $referido['tipo'] = 1;
                                         $referido['ruta_detalle_id'] = $rutaDetalle->id;
+                                        $referido['doc_digital_id'] = $rdv->doc_digital_id; // JHOUBERT
                                         $referido['norden'] = $rutaDetalle->norden;
                                         $referido['estado_ruta'] = $rutaDetalle->estado_ruta;
                                         $referido['referido'] = utf8_encode($detfile[7]);
@@ -1464,6 +1465,7 @@ class CargarController extends BaseController {
                                         $referido['tipo'] = 1;
                                         $referido['ruta_detalle_id'] = $rutaDetalle->id;
                                         $referido['norden'] = $rutaDetalle->norden;
+                                        $referido['doc_digital_id'] = $rdv->doc_digital_id;
                                         $referido['estado_ruta'] = $rutaDetalle->estado_ruta;
                                         $referido['referido'] = utf8_encode($detfile[7]);
                                         $referido['ruta_detalle_verbo_id'] = $rdv->id;
@@ -2370,6 +2372,11 @@ class CargarController extends BaseController {
                                                 $referido['fecha_hora_referido'] = $rutaDetalle->dtiempo_final;
                                                 $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
+
+                                                if(count($doc_digital) > 0) {
+                                                        $referido['doc_digital_id'] = $doc_digital[0]->id;
+                                                }
+
                                                 $referido->save();
                                             }
                                         }
@@ -2550,6 +2557,9 @@ class CargarController extends BaseController {
                                                 $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
                                                 $referido['tipo'] = 1;
                                                 $referido['referido'] = '';
+                                                if(count($doc_digital) > 0) {
+                                                        $referido['doc_digital_id'] = $doc_digital[0]->id;
+                                                }
                                                 $referido['fecha_hora_referido'] = $rutaDetalle2->dtiempo_final;
                                                 $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
@@ -2711,6 +2721,10 @@ class CargarController extends BaseController {
                                                 $referido['ruta_detalle_id'] = $rutaDetalle3->id;
                                                 $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
                                                 $referido['tipo'] = 1;
+                                                if(count($doc_digital) > 0) {
+                                                        $referido['doc_digital_id'] = $doc_digital[0]->id;
+                                                }
+
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle3->dtiempo_final;
                                                 $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
@@ -3451,6 +3465,9 @@ class CargarController extends BaseController {
                                                 $referido['ruta_detalle_id'] = $rutaDetalle66->id;
                                                 $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
                                                 $referido['tipo'] = 1;
+                                                if(count($doc_digital) > 0) {
+                                                        $referido['doc_digital_id'] = $doc_digital[0]->id;
+                                                }
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle66->dtiempo_final;
                                                 $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
