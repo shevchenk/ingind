@@ -2096,7 +2096,6 @@ class CargarController extends BaseController {
 
                 $aux_ruta_detalle3 = '';
                 $aux_observacion_20 = '';
-                //$aux_observacion_21 = '';
                 $aux_fecha_update_21 = '';
                 $ind_19 = 0;
 
