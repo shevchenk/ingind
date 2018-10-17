@@ -2094,6 +2094,7 @@ class CargarController extends BaseController {
 
                 $aux_ruta_detalle3 = '';
                 $aux_observacion_20 = '';
+                //$aux_observacion_21 = '';
                 $aux_fecha_update_21 = '';
                 $ind_19 = 0;
 
@@ -2113,7 +2114,10 @@ class CargarController extends BaseController {
                     }
                     if($c >= 4)
                     {
-                        //print_r($fields);
+                        /*
+                        print_r($fields);
+                        exit;
+                        */
                         DB::beginTransaction();
                         if($fields[2]) // INSERTA CABECERAS CON EL NOMBRE DEL REQUERIMIENTO
                         {
@@ -3926,7 +3930,8 @@ class CargarController extends BaseController {
 
                     // ***************************************************************************
                     // ********************** RECORRIDO ADICIONAL BLOQUE 2 ***********************
-                    if($aux_observacion_20 != '' && $aux_observacion_21 != '')
+                    //if($aux_observacion_20 != '' && $aux_observacion_21 != '')
+                    if($aux_observacion_20 != '' && $aux_fecha_update_21 != '')
                     {
                         $rutaFlujo = RutaFlujo::find(5600); //Re-programación
                         $qrutaDetalle = DB::table('rutas_flujo_detalle')
