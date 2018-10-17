@@ -2670,48 +2670,7 @@ class CargarController extends BaseController {
                                                     $aux_ruta_detalle3 = $rutaDetalle3->id;
                                                     $aux_observacion_20 = $fields[20];
                                                     $aux_fecha_update_21 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[21]))).' '.date("H:i:s");
-                                                    //--
-                                                    /*
-                                                    $selectdd="SELECT *
-                                                                FROM doc_digital_temporal
-                                                                    WHERE UPPER(titulo) LIKE '%".$fields[20]."%';";
-                                                    $doc_digital = DB::select($selectdd);
-
-                                                    $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;
-                                                    $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
-                                                    $rutaDetalleVerbo['observacion'] = $fields[20];
-                                                    $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
-                                                    $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
-                                                    if(count($doc_digital) > 0) {
-                                                        $rutaDetalleVerbo['doc_digital_id'] = $doc_digital[0]->id;
-                                                        $rutaDetalleVerbo['verbo_id'] = 1;
-                                                    } else {
-                                                        $rutaDetalleVerbo['verbo_id'] = 29;
-                                                    }
-                                                    $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
-                                                    $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
-                                                    $rutaDetalleVerbo['finalizo'] = 1;
-                                                    $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
-                                                    $rutaDetalleVerbo->save();
-
-                                                    $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                    $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id;
-                                                    $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
-                                                    $rutaDetalleVerbo['observacion'] = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[21])));
-                                                    $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
-                                                    $rutaDetalleVerbo['rol_id'] = $qrutaDetalleVerbo[0]->rol_id;
-                                                    $rutaDetalleVerbo['verbo_id'] = 29;
-                                                    $rutaDetalleVerbo['documento_id'] = 82;
-                                                    $rutaDetalleVerbo['orden'] = $qrutaDetalleVerbo[0]->orden;
-                                                    $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
-                                                    $rutaDetalleVerbo['finalizo'] = 1;
-                                                    $rutaDetalleVerbo['usuario_updated_at'] = 1272;
-                                                    $rutaDetalleVerbo['updated_at'] = date('Y-m-d H:i:s');
-                                                    $rutaDetalleVerbo->save();
-                                                    */
+                                                    //--                                                    
                                                 /*  }
                                                 }*/
 
