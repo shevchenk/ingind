@@ -499,12 +499,12 @@ class Ruta extends Eloquent
         switch (Input::get('ruta_flujo_id')) {
             case '5569':
             case '16':
-                $rutaFlujoIDGET = 5806;
+                $rutaFlujoIDGET = '5806';
                 break;
             case '17':
-                $rutaFlujoIDGET = 5859;
+                $rutaFlujoIDGET = '5859';
             default:
-                $rutaFlujoIDGET = 5806;
+                $rutaFlujoIDGET = '5806';
                 break;
         }
 
@@ -528,7 +528,7 @@ class Ruta extends Eloquent
                             'rutas as r',
                             'tr.id','=','r.tabla_relacion_id'
                         )
-                        ->where('tr.id_union', 'like', Input::get('id_incidencia').":%")
+                        ->where('tr.id_union', 'like', $x.":%")
                         ->where('r.ruta_flujo_id', '=', $rutaFlujoIDGET)
                         ->where('tr.estado', '=', '1')
                         ->where('r.estado', '=', '1')
