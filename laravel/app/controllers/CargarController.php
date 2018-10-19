@@ -2113,7 +2113,7 @@ class CargarController extends BaseController {
                         $gr_constancia_consen = $fields[65];
                         $gr_fecha_consta = $fields[66];
                     }
-                    if($c >= 4)
+                    if($c >= 4) // && $fields[1] == 2
                     {
                         /*
                         print_r($fields);
@@ -2196,7 +2196,7 @@ class CargarController extends BaseController {
                                     $tablarelacion->fecha_tramite = $fecha_req;
                                     $tablarelacion->tipo_persona = 3;
                                     $tablarelacion->area_id = $rutaFlujo->area_id;
-                                    $tablarelacion->usuario_created_at = Auth::user()->id;
+                                    $tablarelacion->usuario_created_at = //Auth::user()->id;
                                     $tablarelacion->save();
                                     
                                     // ENCONTRAR RUTA
@@ -2672,7 +2672,7 @@ class CargarController extends BaseController {
                                                     $aux_fecha_update_21 = date ('Y-m-d' , strtotime ('+1 day', dateunixstamp($fields[21]))).' '.date("H:i:s");
                                                     //--                                                    
                                                 /*  }
-                                                }*/
+                                                }*/                                                
 
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
@@ -3634,7 +3634,7 @@ class CargarController extends BaseController {
 
 
                                 // ***************************************************************************
-                                // ********************** RECORRIDO ADICIONAL BLOQUE 6 ***********************
+                                // ********************** RECORRIDO ADICIONAL BLOQUE 3 ***********************
                                 if($aux_observacion_20 != '' && $aux_fecha_update_21 != '')
                                 {
                                     if($aux_observacion_20 != $fields[20] && $aux_fecha_update_21 != $fields[21])
@@ -3904,7 +3904,7 @@ class CargarController extends BaseController {
                     // --
 
                     // ***************************************************************************
-                    // ********************** RECORRIDO ADICIONAL BLOQUE 2 ***********************
+                    // ********************** RECORRIDO ADICIONAL BLOQUE 3 ***********************
                     //if($aux_observacion_20 != '' && $aux_observacion_21 != '')
                     if($aux_observacion_20 != '' && $aux_fecha_update_21 != '')
                     {
@@ -3932,7 +3932,7 @@ class CargarController extends BaseController {
                                 $doc_digital = DB::select($selectdd);
                                 
                                 $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle2;
+                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle3;
                                 $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                 $rutaDetalleVerbo['observacion'] = $aux_observacion_20;
                                 $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
