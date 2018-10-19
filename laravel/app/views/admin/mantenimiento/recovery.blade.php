@@ -327,7 +327,7 @@ var tipodoc={1:'PROVEIDO',3:'MEMORANDO',4:'OFICIO',5:'INFORME',7:'CARTA',10:'COM
                 }
                 
 
-				trd=trd+'<tr id="TR_'+data[i].id+'"><td>'+(i+1)+'</td> <td>'+tipodoc[data[i].tipo_doc]+'</td> <td>'+data[i].numero+'</td><td>'+data[i].fecha_doc+'</td><td> <span class="btn btn-warning btn-sm" onclick="edit(\''+data[i].id+'\');"><i class="fa fa-edit"></i></span> - '+imgs+'</td></tr>';
+				trd=trd+'<tr id="TR_'+data[i].id+'"><td>'+data[i].id+'</td> <td>'+tipodoc[data[i].tipo_doc]+'</td> <td>'+data[i].numero+'</td><td>'+data[i].fecha_doc+'</td><td> <span class="btn btn-warning btn-sm" onclick="edit(\''+data[i].id+'\');"><i class="fa fa-edit"></i></span> - '+imgs+'</td></tr>';
 
 			}else{
 				trd='<tr><td colspan="4">No hay documentos registrados.</td></tr>';
