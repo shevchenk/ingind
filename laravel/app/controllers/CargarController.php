@@ -1722,7 +1722,7 @@ class CargarController extends BaseController {
     }
     
                     
-    // (RA - 2018/06/25): Carga de Archivo para los Gastos Contables.
+    // (RA - 2018/06/25): Carga de Archivo
     public function postCargaractividades() {
         ini_set('memory_limit', '512M');
         if (isset($_FILES['carga']) and $_FILES['carga']['size'] > 0) {
@@ -2057,7 +2057,7 @@ class CargarController extends BaseController {
     }
     // --
 
-    // (RA - 2018/07/11): Carga de Archivo para los Gastos Contables.
+    // (RA - 2018/07/11): Carga de Archivo Fisca Tributario
     public function postCargatributaria() {        
         set_time_limit(0);
         ini_set('max_execution_time', 0);
@@ -2089,17 +2089,17 @@ class CargarController extends BaseController {
 
             if(count($xlsx->rows()))
             {
-                $aux_ruta_detalle2 = '';
+                $aux_ruta_detalle2 = 0;
                 $aux_observacion_12 = '';
                 $aux_fecha_update_13 = '';
                 $ind_11 = 0;
 
-                $aux_ruta_detalle3 = '';
+                $aux_ruta_detalle3 = 0;
                 $aux_observacion_20 = '';
                 $aux_fecha_update_21 = '';
                 $ind_19 = 0;
 
-                $aux_ruta_detalle6 = '';
+                $aux_ruta_detalle6 = 0;
                 $aux_observacion_50 = '';
                 $aux_fecha_update_51 = '';
                 $ind_50 = 0;
@@ -2163,7 +2163,7 @@ class CargarController extends BaseController {
                                                     AND r.estado=1
                                                     LIMIT 1;";
                                 $rutas = DB::select($selectruta);
-
+                            
                                 if(count($rutas) > 0)
                                 {
                                     // Anula el documento al encontrarlo                                    
@@ -2176,9 +2176,10 @@ class CargarController extends BaseController {
                                     $tr['estado']=0;
                                     $tr['usuario_updated_at']=Auth::user()->id;
                                     $tr->save();
-                                    DB::commit();
+                                    //DB::commit();
                                     // --
-
+                                }
+                            }
                                     $fecha_req = $fecha_requerimiento;
                                     $fecha_notif_req = $fecha_requerimiento_notifa;
                                     $fecha_req = $fecha_req.' '.date('H:i:s'); // date('Y-m-d H:i:s')
@@ -3569,9 +3570,6 @@ class CargarController extends BaseController {
                                         }
                                     }
                                     // --
-
-                                }
-                            }
                             
 
                                 // ***************************************************************************
@@ -3661,9 +3659,8 @@ class CargarController extends BaseController {
                                                             FROM doc_digital_temporal
                                                                 WHERE UPPER(titulo) LIKE '%".$aux_observacion_20."%';";
                                                 $doc_digital = DB::select($selectdd);
-                                                
                                                 $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle3;
+                                                $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle3;//$aux_ruta_detalle3;
                                                 $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                                 $rutaDetalleVerbo['observacion'] = $aux_observacion_20;
                                                 $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3770,10 +3767,9 @@ class CargarController extends BaseController {
                                                                     ->where('estado', '=', '1')
                                                                     ->orderBy('orden', 'ASC')
                                                                     ->get();
-
                                             $ind_19++;
                                             $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                            $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle3->id; //$aux_ruta_detalle3;//(@$rutaDetalle3)?$rutaDetalle3->id:0;
+                                            $rutaDetalleVerbo['ruta_detalle_id'] = $aux_ruta_detalle3; //$aux_ruta_detalle3;//(@$rutaDetalle3)?$rutaDetalle3->id:0;
                                             $rutaDetalleVerbo['nombre'] = $qrutaDetalleVerbo[0]->nombre;
                                             $rutaDetalleVerbo['observacion'] = $fields[19];
                                             $rutaDetalleVerbo['condicion'] = $qrutaDetalleVerbo[0]->condicion;
@@ -3792,7 +3788,7 @@ class CargarController extends BaseController {
                             }
 
                             // ***************************************************************************
-                            // ********************** RECORRIDO DE CUARTO BLOQUE (6) *********************
+                            // ********************** RECORRIDO DE SEXTO BLOQUE (6) *********************
                             if($fields[50])
                             {
                                 if(trim($fields[50]) != '-')
