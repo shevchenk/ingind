@@ -290,7 +290,8 @@ mostrarDetalleHTML=function(datos){
                     }
                 }else{
                     if(verbo=="Generar"){
-                        imagenadd= '<input name="txtdocumento[]" id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4]+'" class="txt_'+detalle[i].split("=>")[0]+'"/>';                            
+                        
+                        imagenadd= '<input name="txtdocumento[]" id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4].split(" <a")[0]+'" class="txt_'+detalle[i].split("=>")[0]+'"/>';                            
                     }
                 }
 
