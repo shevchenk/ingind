@@ -401,6 +401,7 @@ guardarTodo=function(){
 
 function lapiz(id,rdi){
     $("#d_"+id).find("#txtdocumento").removeAttr("disabled");
+    $("#btn_"+id).removeClass("btn-warning").addClass("btn-success").html("<i class=\"fa fa-check\"></i>");
     console.log(id,rdi);
 }
 
