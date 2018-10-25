@@ -290,8 +290,8 @@ mostrarDetalleHTML=function(datos){
                     }
                 }else{
                     if(verbo=="Generar"){
-                        
-                        imagenadd= '<input name="txtdocumento[]" id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4].split(" <a")[0]+'" class="txt_'+detalle[i].split("=>")[0]+'"/>';                            
+
+                        imagenadd= '<input name="txtdocumento[]" disabled id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4].split(" <a")[0]+'" class="txt_'+detalle[i].split("=>")[0]+'"/><span id="btn_'+i+'" onclick="lapiz('+i+','+detalle[i].split("=>")[0]+')" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></span>';
                     }
                 }
 
@@ -397,6 +397,11 @@ guardarTodo=function(){
             }
         }
     }
+}
+
+function lapiz(id,rdi){
+    $("#btn_"+id).removeAttr("disabled");
+    console.log(id,rdi);
 }
 
 eventoSlctGlobalSimple=function(slct,valores){
