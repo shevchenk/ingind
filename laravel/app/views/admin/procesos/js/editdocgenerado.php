@@ -291,7 +291,7 @@ mostrarDetalleHTML=function(datos){
                 }else{
                     if(verbo=="Generar"){
 
-                        imagenadd= '<input name="txtdocumento[]" disabled id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4].split(" <a")[0]+'" class="txt_'+detalle[i].split("=>")[0]+'"/><span id="btn_'+i+'" onclick="lapiz('+i+','+detalle[i].split("=>")[0]+')" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></span>';
+                        imagenadd= '<div id="d_'+i+'"><input name="txtdocumento[]" disabled id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4].split(" <a")[0]+'" class="txt_'+detalle[i].split("=>")[0]+'"/><span id="btn_'+i+'" onclick="lapiz('+i+','+detalle[i].split("=>")[0]+')" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></span><div>';
                     }
                 }
 
@@ -400,7 +400,7 @@ guardarTodo=function(){
 }
 
 function lapiz(id,rdi){
-    $("#btn_"+id).removeAttr("disabled");
+    $("#d_"+id).find("#txtdocumento").removeAttr("disabled");
     console.log(id,rdi);
 }
 
