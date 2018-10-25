@@ -291,7 +291,7 @@ mostrarDetalleHTML=function(datos){
                 }else{
                     if(verbo=="Generar"){
 
-                        imagenadd= '<div id="d_'+i+'"><input name="txtdocumento[]" disabled id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4].split(" <a")[0]+'" class="txt_'+detalle[i].split("=>")[0]+'"/><span id="btn_'+i+'" onclick="lapiz('+i+','+detalle[i].split("=>")[0]+')" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></span><div>';
+                        imagenadd= '<div id="d_'+i+'"><input name="txtdocumento[]" disabled id="txtdocumento" rtverbo="'+detalle[i].split("=>")[0]+'" type="text" value="'+detalle[i].split("=>")[4].split(" <a")[0]+'" class="txt_'+detalle[i].split("=>")[0]+'"/><span id="btn_'+i+'" onclick="lapiz('+i+','+detalle[i].split("=>")[0]+')" class="btn btn-warning btn-sm"><i class="fa fa-pencil"></i></span><span onclick="getDoc('+i+','+detalle[i].split("=>")[0]+')" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i></span><div>';
                     }
                 }
 
@@ -403,6 +403,10 @@ function lapiz(id,rdi){
     $("#d_"+id).find("#txtdocumento").removeAttr("disabled");
     $("#btn_"+id).removeClass("btn-warning").addClass("btn-success").html("<i class=\"fa fa-check\"></i>");
     console.log(id,rdi);
+}
+
+function getDoc(id,rdi){
+    $("#docsModal").modal("show");
 }
 
 eventoSlctGlobalSimple=function(slct,valores){
