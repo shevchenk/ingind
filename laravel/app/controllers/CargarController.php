@@ -1990,7 +1990,7 @@ class CargarController extends BaseController {
                             $rutaDetalle['tiempo_id'] = $rd->tiempo_id;
                             // Calcula fecha Final
                             $sql="SELECT CalcularFechaFinal( '".date('Y-m-d H:i:s')."', (3*1440), ".$rd->area_id." ) fproy";
-                            $fproy= DB::select($sql);                                
+                            $fproy= DB::select($sql);
                             $rutaDetalle['fecha_proyectada'] = $fproy[0]->fproy;
 
                             $rutaDetalle['dtiempo'] = $rd->dtiempo;
@@ -2133,7 +2133,7 @@ class CargarController extends BaseController {
                             //DB::beginTransaction();
                             //$cadena = 'REQUERIMIENTO N°034-2017-GFCM/MDI';
                             $cad_req = substr($requerimiento, 14, 100);
-                            $arr_req = explode('-', $cad_req);  
+                            $arr_req = explode('-', $cad_req);
 
                             preg_match('/^(\N|)(\ |)/i', $arr_req[0], $matches, PREG_OFFSET_CAPTURE); // N° 000002
                             if($matches <= 0)
@@ -2186,23 +2186,24 @@ class CargarController extends BaseController {
 
                                     //PROCESO DE FISCALIZACION TRIBUTARIA-PRICOS
                                     $rutaFlujo = RutaFlujo::find(5567);
-                                    $tablarelacion = new TablaRelacion;
-                                    $tablarelacion->software_id = 1;
-                                    $tablarelacion->id_union = $requerimiento;
-                                    $tablarelacion->razon_social = $razon_social_req;
-                                    $tablarelacion->sumilla = $sumilla_req;
-                                    $tablarelacion->dni = $dni_req;
-                                    $tablarelacion->estado = 1;
-                                    //$tablarelacion->fecha_tramite = date('Y-m-d H:i:s');
-                                    $tablarelacion->fecha_tramite = $fecha_req;
-                                    $tablarelacion->tipo_persona = 3;
-                                    $tablarelacion->area_id = $rutaFlujo->area_id;
-                                    $tablarelacion->usuario_created_at = //Auth::user()->id;
-                                    $tablarelacion->save();
+                                    $tabla_relacion = new TablaRelacion;
+                                    $tabla_relacion->software_id = 1;
+                                    $tabla_relacion->id_union = $requerimiento;
+                                    $tabla_relacion->razon_social = $razon_social_req;
+                                    $tabla_relacion->sumilla = $sumilla_req;
+                                    $tabla_relacion->dni = $dni_req;
+                                    $tabla_relacion->estado = 1;
+                                    //$tabla_relacion->fecha_tramite = date('Y-m-d H:i:s');
+                                    $tabla_relacion->fecha_tramite = $fecha_req;
+                                    $tabla_relacion->tipo_persona = 3;
+                                    $tabla_relacion->area_id = $rutaFlujo->area_id;
+                                    //$tabla_relacion->usuario_created_at = Auth::user()->id;
+                                    $tabla_relacion->usuario_created_at = 1272;
+                                    $tabla_relacion->save();
                                     
                                     // ENCONTRAR RUTA
                                     $ruta = new Ruta;
-                                    $ruta['tabla_relacion_id'] = $tablarelacion->id;
+                                    $ruta['tabla_relacion_id'] = $tabla_relacion->id;
                                     $ruta['fecha_inicio'] = $fecha_req;
                                     $ruta['ruta_flujo_id'] = $rutaFlujo->id;
                                     $ruta['flujo_id'] = $rutaFlujo->flujo_id;
@@ -2211,6 +2212,9 @@ class CargarController extends BaseController {
                                     $ruta['usuario_created_at'] = Auth::user()->id;
                                     $ruta->save();
 
+                                    /*echo 'dato : '.$tabla_relacion->id_union;
+                                    DB::commit();
+                                    exit;*/
                                     $qrutaDetalle = DB::table('rutas_flujo_detalle')
                                                 ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                                 ->where('estado', '=', '1')
@@ -2678,7 +2682,7 @@ class CargarController extends BaseController {
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
                                                 $referido['ruta_detalle_id'] = $rutaDetalle3->id;
-                                                $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                                $referido['tabla_relacion_id'] = $tabla_relacion->id;
                                                 $referido['tipo'] = 1;
                                                 if(count($doc_digital) > 0) {
                                                         $referido['doc_digital_id'] = $doc_digital[0]->id;
@@ -2686,7 +2690,7 @@ class CargarController extends BaseController {
 
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle3->dtiempo_final;
-                                                $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                                $referido['usuario_referido'] = $tabla_relacion->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
                                                 $referido->save();
                                             }
@@ -2895,11 +2899,11 @@ class CargarController extends BaseController {
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
                                                 $referido['ruta_detalle_id'] = $rutaDetalle4->id;
-                                                $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                                $referido['tabla_relacion_id'] = $tabla_relacion->id;
                                                 $referido['tipo'] = 1;
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle4->dtiempo_final;
-                                                $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                                $referido['usuario_referido'] = $tabla_relacion->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
                                                 $referido->save();
                                             }
@@ -3109,11 +3113,11 @@ class CargarController extends BaseController {
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
                                                 $referido['ruta_detalle_id'] = $rutaDetalle5->id;
-                                                $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                                $referido['tabla_relacion_id'] = $tabla_relacion->id;
                                                 $referido['tipo'] = 1;
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle5->dtiempo_final;
-                                                $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                                $referido['usuario_referido'] = $tabla_relacion->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
                                                 $referido->save();
                                             }
@@ -3198,11 +3202,11 @@ class CargarController extends BaseController {
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
                                                 $referido['ruta_detalle_id'] = $rutaDetalle6->id;
-                                                $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                                $referido['tabla_relacion_id'] = $tabla_relacion->id;
                                                 $referido['tipo'] = 1;
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle6->dtiempo_final;
-                                                $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                                $referido['usuario_referido'] = $tabla_relacion->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
                                                 $referido->save();
                                             }
@@ -3422,14 +3426,14 @@ class CargarController extends BaseController {
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
                                                 $referido['ruta_detalle_id'] = $rutaDetalle66->id;
-                                                $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                                $referido['tabla_relacion_id'] = $tabla_relacion->id;
                                                 $referido['tipo'] = 1;
                                                 if(count($doc_digital) > 0) {
                                                         $referido['doc_digital_id'] = $doc_digital[0]->id;
                                                 }
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle66->dtiempo_final;
-                                                $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                                $referido['usuario_referido'] = $tabla_relacion->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
                                                 $referido->save();
 
@@ -3559,11 +3563,11 @@ class CargarController extends BaseController {
                                                 $referido = new Referido;
                                                 $referido['ruta_id'] = $ruta->id;
                                                 $referido['ruta_detalle_id'] = $rutaDetalle7->id;
-                                                $referido['tabla_relacion_id'] = $tabla_relacion[0]->id;
+                                                $referido['tabla_relacion_id'] = $tabla_relacion->id;
                                                 $referido['tipo'] = 1;
                                                 $referido['referido'] = '';
                                                 $referido['fecha_hora_referido'] = $rutaDetalle7->dtiempo_final;
-                                                $referido['usuario_referido'] = $tabla_relacion[0]->usuario_created_at;
+                                                $referido['usuario_referido'] = $tabla_relacion->usuario_created_at;
                                                 $referido['usuario_created_at'] =Auth::user()->id;
                                                 $referido->save();
                                             }
