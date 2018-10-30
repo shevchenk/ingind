@@ -899,10 +899,14 @@ class CargarController extends BaseController {
                         $arrayExist[] = $detfile[0] . "; No se puede ingresar trámite anulado";
                     } else {
 
+
                         $tipoPersona = TipoSolicitante::where('nombre_relacion', '=', $detfile[2])->first();
                         if (count($tipoPersona) == 0) {
                             $arrayExist[] = $detfile[0] . "; TipoPersona no existe";
                         } else {
+                            
+                            $procede = true;
+
                             DB::beginTransaction();
 
                             $tr = new TablaRelacion;
@@ -973,94 +977,105 @@ class CargarController extends BaseController {
                                         ->where('estado', '=', '1')
                                         ->first();
                             }
+                            
 
-                            $rutaFlujo = RutaFlujo::find($rf->id);
+                            if(isset($rf->id)){
 
+                                                           
+                                $rutaFlujo = RutaFlujo::find($rf->id);
 
-                            $ruta = new Ruta;
-                            $ruta['tabla_relacion_id'] = $tr->id;
-                            $ruta['fecha_inicio'] = $fecha_inicio;
-                            $ruta['ruta_flujo_id'] = $rutaFlujo->id;
-                            $ruta['flujo_id'] = $rutaFlujo->flujo_id;
-                            $ruta['persona_id'] = $rutaFlujo->persona_id;
-                            $ruta['area_id'] = $rutaFlujo->area_id;
-                            $ruta['usuario_created_at'] = Auth::user()->id;
-                            $ruta->save();
+                                $ruta = new Ruta;
+                                $ruta['tabla_relacion_id'] = $tr->id;
+                                $ruta['fecha_inicio'] = $fecha_inicio;
+                                $ruta['ruta_flujo_id'] = $rutaFlujo->id;
+                                $ruta['flujo_id'] = $rutaFlujo->flujo_id;
+                                $ruta['persona_id'] = $rutaFlujo->persona_id;
+                                $ruta['area_id'] = $rutaFlujo->area_id;
+                                $ruta['usuario_created_at'] = Auth::user()->id;
+                                $ruta->save();
 
-                            /*                             * **********Agregado de referidos************ */
-                            $referido = new Referido;
-                            $referido['ruta_id'] = $ruta->id;
-                            $referido['tabla_relacion_id'] = $tr->id;
-                            $referido['tipo'] = 0;
-                            $referido['referido'] = $tr->id_union;
-                            $referido['fecha_hora_referido'] = $tr->created_at;
-                            $referido['usuario_referido'] = $tr->usuario_created_at;
-                            $referido['usuario_created_at'] = Auth::user()->id;
-                            $referido->save();
-                            /*                             * ******************************************* */
+                                /*                             * **********Agregado de referidos************ */
+                                $referido = new Referido;
+                                $referido['ruta_id'] = $ruta->id;
+                                $referido['tabla_relacion_id'] = $tr->id;
+                                $referido['tipo'] = 0;
+                                $referido['referido'] = $tr->id_union;
+                                $referido['fecha_hora_referido'] = $tr->created_at;
+                                $referido['usuario_referido'] = $tr->usuario_created_at;
+                                $referido['usuario_created_at'] = Auth::user()->id;
+                                $referido->save();
+                                /*                             * ******************************************* */
 
-                            $qrutaDetalle = DB::table('rutas_flujo_detalle')
-                                    ->where('ruta_flujo_id', '=', $rutaFlujo->id)
-                                    ->where('estado', '=', '1')
-                                    ->orderBy('norden', 'ASC')
-                                    ->get();
-                            $validaactivar = 0;
-                            foreach ($qrutaDetalle as $rd) {
-                                $cero='';
-                                if($rd->norden<10){
-                                    $cero='0';
-                                }
-                                $rutaDetalle = new RutaDetalle;
-                                $rutaDetalle['ruta_id'] = $ruta->id;
-                                $rutaDetalle['area_id'] = $rd->area_id;
-                                $rutaDetalle['tiempo_id'] = $rd->tiempo_id;
-                                $rutaDetalle['dtiempo'] = $rd->dtiempo;
-                                $rutaDetalle['norden'] =  $cero.$rd->norden;
-                                $rutaDetalle['estado_ruta'] = $rd->estado_ruta;
-                                if ($rd->norden == 1 or $rd->norden == 2 or ( $rd->norden > 1 and $validaactivar == 0 and $rd->estado_ruta == 2)) {
-                                    if ($rd->norden == 1) {
-                                        $rutaDetalle['dtiempo_final'] = $fecha_inicio;
-                                        $rutaDetalle['tipo_respuesta_id'] = 2;
-                                        $rutaDetalle['tipo_respuesta_detalle_id'] = 1;
-                                        $rutaDetalle['observacion'] = "";
-                                        $rutaDetalle['usuario_updated_at'] = Auth::user()->id;
-                                        $rutaDetalle['updated_at'] = $fecha_inicio;
-                                    }
-                                    $rutaDetalle['fecha_inicio'] = $fecha_inicio;
-                                } else {
-                                    $validaactivar = 1;
-                                }
-                                $rutaDetalle['usuario_created_at'] = Auth::user()->id;
-                                $rutaDetalle->save();
-
-                                $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
-                                        ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                $qrutaDetalle = DB::table('rutas_flujo_detalle')
+                                        ->where('ruta_flujo_id', '=', $rutaFlujo->id)
                                         ->where('estado', '=', '1')
-                                        ->orderBy('orden', 'ASC')
+                                        ->orderBy('norden', 'ASC')
                                         ->get();
-                                if (count($qrutaDetalleVerbo) > 0) {
-                                    foreach ($qrutaDetalleVerbo as $rdv) {
-                                        $rutaDetalleVerbo = new RutaDetalleVerbo;
-                                        $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle->id;
-                                        $rutaDetalleVerbo['nombre'] = $rdv->nombre;
-                                        $rutaDetalleVerbo['condicion'] = $rdv->condicion;
-                                        $rutaDetalleVerbo['rol_id'] = $rdv->rol_id;
-                                        $rutaDetalleVerbo['verbo_id'] = $rdv->verbo_id;
-                                        $rutaDetalleVerbo['documento_id'] = $rdv->documento_id;
-                                        $rutaDetalleVerbo['orden'] = $rdv->orden;
-                                        $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
-
-                                        if ($rd->norden == 1) {
-                                            $rutaDetalleVerbo['usuario_updated_at'] = Auth::user()->id;
-                                            $rutaDetalleVerbo['updated_at'] = $fecha_inicio;
-                                            $rutaDetalleVerbo['finalizo'] = 1;
-                                        }
-
-                                        $rutaDetalleVerbo->save();
-                                    }
+                                $validaactivar = 0;
+                                foreach ($qrutaDetalle as $rd) {
+                                         $cero='';
+                                         if($rd->norden<10){
+                                             $cero='0';
+                                         }
+                                         $rutaDetalle = new RutaDetalle;
+                                         $rutaDetalle['ruta_id'] = $ruta->id;
+                                         $rutaDetalle['area_id'] = $rd->area_id;
+                                         $rutaDetalle['tiempo_id'] = $rd->tiempo_id;
+                                         $rutaDetalle['dtiempo'] = $rd->dtiempo;
+                                         $rutaDetalle['norden'] =  $cero.$rd->norden;
+                                         $rutaDetalle['estado_ruta'] = $rd->estado_ruta;
+                                         if ($rd->norden == 1 or $rd->norden == 2 or ( $rd->norden > 1 and $validaactivar == 0 and $rd->estado_ruta == 2)) {
+                                             if ($rd->norden == 1) {
+                                                 $rutaDetalle['dtiempo_final'] = $fecha_inicio;
+                                                 $rutaDetalle['tipo_respuesta_id'] = 2;
+                                                 $rutaDetalle['tipo_respuesta_detalle_id'] = 1;
+                                                 $rutaDetalle['observacion'] = "";
+                                                 $rutaDetalle['usuario_updated_at'] = Auth::user()->id;
+                                                 $rutaDetalle['updated_at'] = $fecha_inicio;
+                                             }
+                                             $rutaDetalle['fecha_inicio'] = $fecha_inicio;
+                                         } else {
+                                             $validaactivar = 1;
+                                         }
+                                         $rutaDetalle['usuario_created_at'] = Auth::user()->id;
+                                         $rutaDetalle->save();
+     
+                                         $qrutaDetalleVerbo = DB::table('rutas_flujo_detalle_verbo')
+                                                 ->where('ruta_flujo_detalle_id', '=', $rd->id)
+                                                 ->where('estado', '=', '1')
+                                                 ->orderBy('orden', 'ASC')
+                                                 ->get();
+                                         if (count($qrutaDetalleVerbo) > 0) {
+                                             foreach ($qrutaDetalleVerbo as $rdv) {
+                                                 $rutaDetalleVerbo = new RutaDetalleVerbo;
+                                                 $rutaDetalleVerbo['ruta_detalle_id'] = $rutaDetalle->id;
+                                                 $rutaDetalleVerbo['nombre'] = $rdv->nombre;
+                                                 $rutaDetalleVerbo['condicion'] = $rdv->condicion;
+                                                 $rutaDetalleVerbo['rol_id'] = $rdv->rol_id;
+                                                 $rutaDetalleVerbo['verbo_id'] = $rdv->verbo_id;
+                                                 $rutaDetalleVerbo['documento_id'] = $rdv->documento_id;
+                                                 $rutaDetalleVerbo['orden'] = $rdv->orden;
+                                                 $rutaDetalleVerbo['usuario_created_at'] = Auth::user()->id;
+     
+                                                 if ($rd->norden == 1) {
+                                                     $rutaDetalleVerbo['usuario_updated_at'] = Auth::user()->id;
+                                                     $rutaDetalleVerbo['updated_at'] = $fecha_inicio;
+                                                     $rutaDetalleVerbo['finalizo'] = 1;
+                                                 }
+     
+                                                 $rutaDetalleVerbo->save();
+                                             }
+                                         }
+                                     }
+                                }else{
+                                    $procede = false;    
                                 }
+
+                            if($procede){
+                                DB::commit();
+                            }else{
+                                DB::rollback();
                             }
-                            DB::commit();
                         }
                     } //es codigo nuevo
                 }// valida si tiene flujo id
