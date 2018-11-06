@@ -233,18 +233,20 @@ class FormatoLicenciaController extends \BaseController
 
         $oData=FormatoLicenciaContruccion::verDataFormatoLicencia($id);
         
-        if(date("m") == '01') $mes_ac = 'Enero';
-        else if(date("m") == '02') $mes_ac = 'Febrero';
-        else if(date("m") == '03') $mes_ac = 'Marzo';
-        else if(date("m") == '04') $mes_ac = 'Abril';
-        else if(date("m") == '05') $mes_ac = 'Mayo';
-        else if(date("m") == '06') $mes_ac = 'Junio';
-        else if(date("m") == '07') $mes_ac = 'Julio';
-        else if(date("m") == '08') $mes_ac = 'Agosto';
-        else if(date("m") == '09') $mes_ac = 'Septiembre';
-        else if(date("m") == '10') $mes_ac = 'Octubre';
-        else if(date("m") == '11') $mes_ac = 'Noviembre';
-        else if(date("m") == '12') $mes_ac = 'Diciembre';
+        $mMes = substr($oData[0]->fecha_emision, 5,2);
+
+        if($mMes == '01') $mes_ac = 'Enero';
+        else if($mMes == '02') $mes_ac = 'Febrero';
+        else if($mMes == '03') $mes_ac = 'Marzo';
+        else if($mMes == '04') $mes_ac = 'Abril';
+        else if($mMes == '05') $mes_ac = 'Mayo';
+        else if($mMes == '06') $mes_ac = 'Junio';
+        else if($mMes == '07') $mes_ac = 'Julio';
+        else if($mMes == '08') $mes_ac = 'Agosto';
+        else if($mMes == '09') $mes_ac = 'Septiembre';
+        else if($mMes == '10') $mes_ac = 'Octubre';
+        else if($mMes == '11') $mes_ac = 'Noviembre';
+        else if($mMes == '12') $mes_ac = 'Diciembre';
 
         $params = [
             'reporte'=>1,            
@@ -277,7 +279,7 @@ class FormatoLicenciaController extends \BaseController
             'recibo' => $oData[0]->recibo,
             'fecha_recibo' => $oData[0]->fecha_recibo,
 
-            'fecha_actual_texto' => date("d") . " del " . $mes_ac . " de " . date("Y"),
+            'fecha_actual_texto' => substr($oData[0]->fecha_emision, 8,2) . " del " . $mes_ac . " de " . substr($oData[0]->fecha_emision, 0,4),
             'anio' => date("Y"),
             'tamano'=>$tamano,
             'vistaprevia'=>$vistaprevia,
