@@ -307,41 +307,29 @@ footer .izq {
         <td style="border: 1px solid #CCC; font-size:12px;" width="50%">{{ $area_techada }}</td>
       </tr>
       <?php 
-            $tot_area = 0;
-            if($piso_1 != '' && $area_1 != ''): $tot_area = $tot_area + $area_1; ?>
+      $tot_area = 0;
+      
+      $aPisos = json_decode($pisos);
+      foreach ($aPisos as $key => $value) {
+        $tot_area+=$value;
+
+      echo '
       <tr>
-        <td style="border: 1px solid #CCC;" width="50%"><?=$piso_1?></td>
-        <td style="border: 1px solid #CCC;" width="50%"><?=number_format($area_1, 2)?> m2</td>
+        <td style="border: 1px solid #CCC;" width="50%">'.$key.'</td>
+        <td style="border: 1px solid #CCC;" width="50%">'.$value.' m2</td>
       </tr>
-      <?php endif;?>
-      <?php if($piso_2 != '' && $area_2 != ''): $tot_area = $tot_area + $area_2; ?>
-      <tr>
-        <td style="border: 1px solid #CCC;" width="50%"><?=$piso_2?></td>
-        <td style="border: 1px solid #CCC;" width="50%"><?=number_format($area_2, 2)?> m2</td>
-      </tr>
-      <?php endif;?>
-      <?php if($piso_3 != '' && $area_3 != ''): $tot_area = $tot_area + $area_3; ?>
-      <tr>
-        <td style="border: 1px solid #CCC;" width="50%"><?=$piso_3?></td>
-        <td style="border: 1px solid #CCC;" width="50%"><?=number_format($area_3, 2)?> m2</td>
-      </tr>
-      <?php endif;?>
-      <?php if($piso_4 != '' && $area_4 != ''): $tot_area = $tot_area + $area_4; ?>
-      <tr>
-        <td style="border: 1px solid #CCC;" width="50%"><?=$piso_4?></td>
-        <td style="border: 1px solid #CCC;" width="50%"><?=number_format($area_4, 2)?> m2</td>
-      </tr>
-      <?php endif;?>
-      <?php if($piso_5 != '' && $area_5 != ''): $tot_area = $tot_area + $area_5; ?>
-      <tr>
-        <td style="border: 1px solid #CCC;" width="50%"><?=$piso_5?></td>
-        <td style="border: 1px solid #CCC;" width="50%"><?=number_format($area_5, 2)?> m2</td>
-      </tr>
-      <?php endif;?>
+
+      ';
+
+      }
+
+      ?>
+
       <tr>
         <td style="border: 1px solid #CCC;" width="50%">&nbsp;</td>
         <td style="border: 1px solid #CCC;" width="50%"><?=number_format($tot_area,2)?> m2</td>
       </tr>
+
      </table>
     </div>
     <br/><br/>

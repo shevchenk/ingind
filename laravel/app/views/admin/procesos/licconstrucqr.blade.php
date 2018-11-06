@@ -169,30 +169,18 @@
                                   <tr>
                                     <th><input class="form-control data_fija" name="txt_piso" id="txt_piso" type="text" value="Piso"></th>
                                     <th><input class="form-control data_fija" name="txt_area_techada" id="txt_area_techada" type="text" value="Area Techada"></th>
+                                    <th>[-]</th>
                                   </tr>
                                 </thead>
-                                <tbody>
-                                  <tr>
-                                    <td><input class="form-control data_fija" name="txt_piso_1" id="txt_piso_1" type="text" value="1° Piso"></td>
-                                    <td><input class="form-control" name="txt_area_1" id="txt_area_1" type="text" value="" placeholder="000.00 m2"></td>
-                                  </tr>
-                                  <tr>
-                                    <td><input class="form-control data_fija" name="txt_piso_2" id="txt_piso_2" type="text" value="2° Piso"></td>
-                                    <td><input class="form-control" name="txt_area_2" id="txt_area_2" type="text" value="" placeholder="000.00 m2"></td>
-                                  </tr>
-                                  <tr>
-                                    <td><input class="form-control" name="txt_piso_3" id="txt_piso_3" type="text" value=""></td>
-                                    <td><input class="form-control" name="txt_area_3" id="txt_area_3" type="text" value="" placeholder="000.00 m2"></td>
-                                  </tr>
-                                  <tr>
-                                    <td><input class="form-control" name="txt_piso_4" id="txt_piso_4" type="text" value=""></td>
-                                    <td><input class="form-control" name="txt_area_4" id="txt_area_4" type="text" value="" placeholder="000.00 m2"></td>
-                                  </tr>
-                                  <tr>
-                                    <td><input class="form-control" name="txt_piso_5" id="txt_piso_5" type="text" value=""></td>
-                                    <td><input class="form-control" name="txt_area_5" id="txt_area_5" type="text" value="" placeholder="000.00 m2"></td>
-                                  </tr>
+                                <tbody id="tbodyPisos">
+
                                 </tbody>
+                                <tfoot>
+                                   <tr>
+                                    <th colspan="3" align="center"><button onclick="agregarInput();return false;" class="btn btn-info"><i class="fa fa-plus"></i>Agregar</button></th>
+                                  </tr>
+                                </tfoot>
+
                               </table>
                           </div>                              
                         </div>
@@ -375,5 +363,31 @@
         </div>
       </div>
       <!-- -->
+
+
+<script type="text/javascript">
+
+
+var iter = 0;
+
+
+function eliminarInput(id){
+  $("#tro_"+id).remove();
+}
+
+function agregarInput(){
+    iter++;
+    var tr="";
+        tr+='<tr id="tro_'+iter+'">';
+        tr+=' <td><input class="form-control data_fija" name="pisos[]" type="text" placeholder="1er Piso"></td>';
+        tr+=' <td><input class="form-control" name="areas[]" type="text" value="" placeholder="000.00 m2"></td>';
+        tr+=' <td><button class="btn btn-danger" onclick="eliminarInput('+iter+');return false;"><i class="fa fa-times"></button></td>';
+        tr+='</tr>';
+
+    $("#tbodyPisos").append(tr);
+}
+agregarInput();
+
+</script>
 
 @stop

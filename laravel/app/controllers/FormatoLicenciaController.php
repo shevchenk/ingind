@@ -119,7 +119,29 @@ class FormatoLicenciaController extends \BaseController
                 $formatolic->nom_piso = Input::get('piso');
             if(Input::get('area_techada'))
                 $formatolic->nom_area = Input::get('area_techada');
+            
 
+
+            $pisos = Input::get('pisos');
+            $areas = Input::get('areas');
+            
+            $comb = array();
+            if(is_array($pisos))foreach ($pisos as $key => $value) {
+                $comb[$pisos[$key]] = $areas[$key];
+            }
+
+            $pisos_areas = json_encode($comb);
+            
+            $formatolic->pisos_areas =$pisos_areas;
+
+
+            /*
+            echo $pisos_areas;
+
+            die();*/
+
+
+            /*
             if(Input::get('piso_1'))
                 $formatolic->piso_1 = Input::get('piso_1');
 
@@ -149,6 +171,8 @@ class FormatoLicenciaController extends \BaseController
             
             if(Input::get('area_5'))
                 $formatolic->area_5 = Input::get('area_5');
+
+            */
 
             if(Input::get('derecho_licencia'))
                 $formatolic->derecho_licencia = Input::get('derecho_licencia');
@@ -248,16 +272,7 @@ class FormatoLicenciaController extends \BaseController
 
             'piso' => $oData[0]->nom_piso,
             'area_techada' => $oData[0]->nom_area,
-            'piso_1' => $oData[0]->piso_1,
-            'area_1' => $oData[0]->area_1,
-            'piso_2' => $oData[0]->piso_2,
-            'area_2' => $oData[0]->area_2,
-            'piso_3' => $oData[0]->piso_3,
-            'area_3' => $oData[0]->area_3,
-            'piso_4' => $oData[0]->piso_4,
-            'area_4' => $oData[0]->area_4,
-            'piso_5' => $oData[0]->piso_5,
-            'area_5' => $oData[0]->area_5,
+            'pisos' => $oData[0]->pisos_areas,
             'derecho_licencia' => number_format($oData[0]->derecho_licencia, 2),
             'recibo' => $oData[0]->recibo,
             'fecha_recibo' => $oData[0]->fecha_recibo,
