@@ -716,7 +716,7 @@ class CargarController extends BaseController {
             $arrayExist = array();
 
             /*            $file=file('txt/inventario/'.$archivoNuevo); */
-            $file = file('/var/www/html/ingind/public/txt/inventario/' . $archivoNuevo);
+            $file = file('/srv/http/ingind/public/txt/inventario/' . $archivoNuevo);
             for ($i = 0; $i < count($file); $i++) {
                 DB::beginTransaction();
                 if (trim($file[$i]) != '') {
@@ -846,7 +846,7 @@ class CargarController extends BaseController {
             /* $file=file('C:\\xampp\\www\\htdocs\\ingind\\public\\txt\\asignacion\\'.$archivoNuevo); */
             //$file=file('/home/m1ndepen/public_html/procesosmuni/public/txt/asignacion/'.$archivoNuevo);
 
-            $file = file('/var/www/html/ingind/public/txt/asignacion/' . $archivoNuevo);
+            $file = file('txt/asignacion/' . $archivoNuevo);
             $tipoTramite['01'] = 'EN TRAMITE';
             $tipoTramite['02'] = 'ANULADO';
             $tipoTramite['03'] = 'RESUELTO';
@@ -1074,6 +1074,7 @@ class CargarController extends BaseController {
                             if($procede){
                                 DB::commit();
                             }else{
+                                $arrayExist[] = $detfile[0] . "; no existe el flujo {$ainterna->flujo_id} ";
                                 DB::rollback();
                             }
                         }
