@@ -96,7 +96,7 @@ SelectDocDig = function (obj, id) {
             "<input type='hidden' name='doc_id[]' id='doc_id' value='" + id + "'></td></td> " +
             "<td>";
     html += '<input type="text"  readOnly class="form-control input-sm" id="pago_nombre"  name="pago_nombre[]" value="' + nombre + '">';
-    html += "</td>" +
+    html += "</td> <td> <textarea name=\"observaciones[]\"></textarea> </td>" +
             '<td><a id="btnDelete"  name="btnDelete" class="btn btn-danger btn-xs btnDelete">' +
             '<i class="fa fa-trash fa-lg"></i>' +
             '</a></td>';

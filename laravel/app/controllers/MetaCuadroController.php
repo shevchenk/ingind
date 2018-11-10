@@ -428,8 +428,7 @@ class MetaCuadroController extends \BaseController {
         return $url. $type;
     }
     
-        public function postCreatedoc()
-    {
+        public function postCreatedoc(){
         if ( Request::ajax() ) {
             $regex = 'regex:/^([a-zA-Z .,ñÑÁÉÍÓÚáéíóú]{2,60})$/i';
             $required = 'required';
@@ -453,9 +452,13 @@ class MetaCuadroController extends \BaseController {
                 $docid = Input::get('doc_id');
                 $avance_id=Input::get('avance_id');
                 $tipo_avance=Input::get('tipo_avance');
-                if (Input::has("fecha_id") ) {
+
+                if (Input::has("fecha_id"))
                     $fecha_id = Input::get("fecha_id");
-                }
+
+                $observaciones=array();
+                if (Input::has("observaciones"))
+                    $observaciones = Input::get("observaciones");
            
                 for ($i=0; $i < count($length); $i++) {
 
@@ -463,11 +466,31 @@ class MetaCuadroController extends \BaseController {
                     $archivo->avance_id = $avance_id[$i];
                     $archivo->tipo_avance = $tipo_avance[$i];
                     $archivo->doc_digital_id = $docid[$i];
-                    if (Input::has("fecha_id")) {
-                    $archivo->fecha_id=$fecha_id[$i];}
+
+                    if(isset($observaciones[$i]))
+                        $archivo->observacion = $observaciones[$i];
+                    
+                    if (Input::has("fecha_id"))
+                        $archivo->fecha_id=$fecha_id[$i];
+
                     $archivo->usuario_created_at = Auth::user()->id;
                     $archivo->save();
                 }
+
+
+
+                if (Input::has("c_id")){
+                    $act=Input::get('c_id');
+                    $obs_E=Input::get('observaciones_edit');  
+
+                    if(is_array($act)) for ($xi=0; $xi < count($act); $xi++) { 
+                        $archivo = MetaDocdigital::find($act[$i]);
+                        $archivo->observacion = $obs_E[$i];
+                        $archivo->save();
+                    } 
+                }
+
+
 
             return Response::json(array('rst' => 1, 'msj' => 'Documento registrado correctamente'));
         }
@@ -501,9 +524,14 @@ class MetaCuadroController extends \BaseController {
                 $nombre = Input::get('pago_nombre');
                 $avance_id=Input::get('avance_id');
                 $tipo_avance=Input::get('tipo_avance');
-                if (Input::has("fecha_id")) {
+
+                if (Input::has("fecha_id"))
                     $fecha_id = Input::get("fecha_id");
-                }
+                
+                $observaciones=array();
+                if (Input::has("observaciones"))
+                    $observaciones = Input::get("observaciones");
+
                 $file = Input::get('pago_archivo');
                 
                 for ($i=0; $i < count($length); $i++) {
@@ -515,8 +543,13 @@ class MetaCuadroController extends \BaseController {
                     $archivo->avance_id = $avance_id[$i];
                     $archivo->tipo_avance = $tipo_avance[$i];
                     $archivo->ruta = $ruta;
-                     if (Input::has("fecha_id")) {
-                     $archivo->fecha_id=$fecha_id[$i];}
+
+                    if(isset($observaciones[$i]))
+                        $archivo->observacion = $observaciones[$i];
+
+                    if (Input::has("fecha_id")) 
+                        $archivo->fecha_id=$fecha_id[$i];
+
                     $archivo->usuario_created_at = Auth::user()->id;
                     $archivo->save();
                 }

@@ -41,7 +41,7 @@
                 '<i class="fa fa-file-image-o fa-lg"></i>' +
                 '<input type="file" style="display: none;" onchange="onPagos(event,' + ap + ',\'#t_aparchivo' + cont1 + '\');" >' +
                 '</label>';
-        html += "</td>" +
+        html += "</td> <td> <textarea name=\"observaciones[]\"></textarea> </td>" +
                 '<td><a id="btnDelete"  name="btnDelete" class="btn btn-danger btn-xs btnDelete">' +
                 '<i class="fa fa-trash fa-lg"></i>' +
                 '</a></td>';
@@ -67,7 +67,7 @@
                 '<i class="fa fa-file-image-o fa-lg"></i>' +
                 '<input type="file" style="display: none;" onchange="onPagos(event,' + ad + ',\'#t_darchivo' + cont2 + '\');" >' +
                 '</label>';
-        html += "</td>" +
+        html += "</td> <td> <textarea name=\"observaciones[]\"></textarea> </td>" +
                 '<td><a id="btnDelete"  name="btnDelete" class="btn btn-danger btn-xs btnDelete">' +
                 '<i class="fa fa-trash fa-lg"></i>' +
                 '</a></td>';
@@ -93,7 +93,7 @@
                 '<i class="fa fa-file-image-o fa-lg"></i>' +
                 '<input type="file" style="display: none;" onchange="onPagos(event,' + aa + ',\'#t_aarchivo' + cont3 + '\');" >' +
                 '</label>';
-        html += "</td>" +
+        html += "</td> <td> <textarea name=\"observaciones[]\"></textarea> </td>" +
                 '<td><a id="btnDelete"  name="btnDelete" class="btn btn-danger btn-xs btnDelete">' +
                 '<i class="fa fa-trash fa-lg"></i>' +
                 '</a></td>';
@@ -119,7 +119,7 @@
                 '<i class="fa fa-file-image-o fa-lg"></i>' +
                 '<input type="file" style="display: none;" onchange="onPagos(event,' + am + ',\'#t_marchivo' + cont4 + '\');" >' +
                 '</label>';
-        html += "</td>" +
+        html += "</td> <td> <textarea name=\"observaciones[]\"></textarea> </td>" +
                 '<td><a id="btnDelete"  name="btnDelete" class="btn btn-danger btn-xs btnDelete">' +
                 '<i class="fa fa-trash fa-lg"></i>' +
                 '</a></td>';
@@ -146,7 +146,7 @@
                 '<i class="fa fa-file-image-o fa-lg"></i>' +
                 '<input type="file" style="display: none;" onchange="onPagos(event,' + aq + ',\'#t_qarchivo' + cont4_1 + '\');" >' +
                 '</label>';
-        html += "</td>" +
+        html += "</td> <td> <textarea name=\"observaciones[]\"></textarea> </td>" +
                 '<td><a id="btnDelete"  name="btnDelete" class="btn btn-danger btn-xs btnDelete">' +
                 '<i class="fa fa-trash fa-lg"></i>' +
                 '</a></td>';
@@ -353,12 +353,13 @@
                     var d_q_id = d_q[1].split(',');
                     var d_q_doc_digital_id = d_q[2].split(',');
                     var d_q_fechaid = d_q[3].split(',');
+                    var d_q_obs = d_q[4].split(',');
                     pos_aq = 1;
                     for (i = 0; i < d_q_nombre.length; i++) {
                         if(d_q_fechaid[i]==d){    
                         html += "<tr>" +
                                 "<td>" + pos_aq + "<input type='hidden' name='c_id[]' id='c_id' value='" + d_q_id[i] + "'></td></td> " +
-                                "<td><a target='_blank' href='documentodig/vista/" + d_q_doc_digital_id[i] + "/4/1'>" + d_q_nombre[i] + "</a></td>" ;
+                                "<td><a target='_blank' href='documentodig/vista/" + d_q_doc_digital_id[i] + "/4/1'>" + d_q_nombre[i] + "</a></td><td><textarea name=\"observaciones_edit[]\">"+d_q_obs[i]+"</textarea></td>" ;
                         if (anio+"-"+arr_fecha[j] >= Cuadro.fecha_actual) {
                         html += '<td><a id="c_Delete"  name="c_Delete" class="btn btn-danger btn-xs" onClick="EliminarDoc(\'' + d_q_id[i] + '\',this)">' +
                                 '<i class="fa fa-trash fa-lg"></i>' +
@@ -576,12 +577,13 @@
                     var d_d_nombre = d_d[0].split(',');
                     var d_d_id = d_d[1].split(',');
                     var d_d_doc_digital_id = d_d[2].split(',');
+                    var d_d_obs = d_d[3].split(',');
                     pos_d = 1;
                     for (i = 0; i < d_d_nombre.length; i++) {
 
                         html += "<tr>" +
                                 "<td>" + pos_d + "<input type='hidden' name='c_id[]' id='c_id' value='" + d_d_id[i] + "'></td></td> " +
-                                "<td><a target='_blank' href='documentodig/vista/" + d_d_doc_digital_id[i] + "/4/1'>" + d_d_nombre[i] + "</a></td>" ;
+                                "<td><a target='_blank' href='documentodig/vista/" + d_d_doc_digital_id[i] + "/4/1'>" + d_d_nombre[i] + "</a></td><td><textarea name=\"observaciones_edit[]\">"+d_d_obs[i]+"</textarea></td>" ;
                         if (data.df >= Cuadro.fecha_actual) {
                         html += '<td><a id="c_Delete"  name="c_Delete" class="btn btn-danger btn-xs" onClick="EliminarDoc(\'' + d_d_id[i] + '\',this)">' +
                                 '<i class="fa fa-trash fa-lg"></i>' +
@@ -689,12 +691,13 @@
                     var d_a_id = d_a[1].split(',');
                     var d_a_doc_digital_id = d_a[2].split(',');
                     var d_a_valida = d_a[3].split(',');
+                    var d_a_obs = d_a[4].split(',');
                     pos_a = 1;
                     for (i = 0; i < d_a_nombre.length; i++) {
 
                         html += "<tr>" +
                                 "<td>" + pos_a + "<input type='hidden' name='c_id[]' id='c_id' value='" + d_a_id[i] + "'></td></td> " +
-                                "<td><a target='_blank' href='documentodig/vista/" + d_a_doc_digital_id[i] + "/4/1'>" + d_a_nombre[i] + "</a></td>" +
+                                "<td><a target='_blank' href='documentodig/vista/" + d_a_doc_digital_id[i] + "/4/1'>" + d_a_nombre[i] + "</a></td><td><textarea name=\"observaciones_edit[]\">"+d_a_obs[i]+"</textarea></td>" +
                                 '<td>';
                         if (data.af >= Cuadro.fecha_actual && d_a_valida[i]==1) {
                         html +='<a id="c_Delete"  name="c_Delete" class="btn btn-danger btn-xs" onClick="EliminarDoc(\'' + d_a_id[i] + '\',this)">' +
@@ -857,12 +860,13 @@
                     var d_m_nombre = d_m[0].split(',');
                     var d_m_id = d_m[1].split(',');
                     var d_m_doc_digital_id = d_m[2].split(',');
+                    var d_m_obs = d_m[3].split(',');
                     pos_m = 1;
                     for (i = 0; i < d_m_nombre.length; i++) {
 
                         html += "<tr>" +
                                 "<td>" + pos_m + "<input type='hidden' name='c_id[]' id='c_id' value='" + d_m_id[i] + "'></td></td> " +
-                                "<td><a target='_blank' href='documentodig/vista/" + d_m_doc_digital_id[i] + "/4/1'>" + d_m_nombre[i] + "</a></td>" ;
+                                "<td><a target='_blank' href='documentodig/vista/" + d_m_doc_digital_id[i] + "/4/1'>" + d_m_nombre[i] + "</a></td><td><textarea name=\"observaciones_edit[]\">"+d_m_obs[i]+"</textarea></td>" ;
                         if (data.mf >= Cuadro.fecha_actual) {
                         html += '<td><a id="c_Delete"  name="c_Delete" class="btn btn-danger btn-xs" onClick="EliminarDoc(\'' + d_m_id[i] + '\',this)">' +
                                 '<i class="fa fa-trash fa-lg"></i>' +

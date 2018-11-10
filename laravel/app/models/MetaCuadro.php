@@ -37,47 +37,47 @@ class MetaCuadro extends Base
 			 mc.id as meta_cuadro_id,mc.actividad,IFNULL(mc.fecha_add,mc.fecha) as af,mc.fecha as af_ac,
                          mf1.id as id_d,mf1.comentario as d,IFNULL(mf1.fecha_add,mf1.fecha) as df,mf1.fecha as df_de,
                          mf2.id as id_p,mf2.comentario as p,IFNULL(mf2.fecha_add,mf2.fecha) as pf,mf2.fecha as pf_pa,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id),GROUP_CONCAT(ma.observacion))
 			 FROM metas_archivo ma
 			 WHERE  ma.tipo_avance=4 AND ma.avance_id=mf2.id AND ma.estado=1
 			 GROUP BY ma.avance_id) as a_p,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id),GROUP_CONCAT(md.observacion))
 			 FROM metas_docdigital md
 			 INNER JOIN doc_digital dd ON md.doc_digital_id=dd.id
 			 WHERE  md.tipo_avance=4 AND md.avance_id=mf2.id AND md.estado=1
 			 GROUP BY md.avance_id) as d_p,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id),GROUP_CONCAT(ma.observacion))
 			 FROM metas_archivo ma
 			 WHERE  ma.tipo_avance=3 AND ma.avance_id=mf1.id AND ma.estado=1
 			 GROUP BY ma.avance_id) as a_d,
-                        (SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id))
+                        (SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id),GROUP_CONCAT(md.observacion))
 			 FROM metas_docdigital md
 			 INNER JOIN doc_digital dd ON md.doc_digital_id=dd.id
 			 WHERE  md.tipo_avance=3 AND md.avance_id=mf1.id AND md.estado=1
 			 GROUP BY md.avance_id) as d_d,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id),GROUP_CONCAT(ma.valida))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id),GROUP_CONCAT(ma.valida),GROUP_CONCAT(ma.observacion))
 			 FROM metas_archivo ma
 			 WHERE  ma.tipo_avance=2 AND ma.avance_id=mc.id AND ma.estado=1
 			 GROUP BY ma.avance_id) as a_a,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(CONCAT_WS(' - ',DATE(md.created_at),dd.titulo)),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id),GROUP_CONCAT(md.valida))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(CONCAT_WS(' - ',DATE(md.created_at),dd.titulo)),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id),GROUP_CONCAT(md.valida),GROUP_CONCAT(md.observacion))
 			 FROM metas_docdigital md
 			 INNER JOIN doc_digital dd ON md.doc_digital_id=dd.id
 			 WHERE  md.tipo_avance=2 AND md.avance_id=mc.id AND md.estado=1
 			 GROUP BY md.avance_id) as d_a,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id),GROUP_CONCAT(ma.observacion))
 			 FROM metas_archivo ma
 			 WHERE  ma.tipo_avance=1 AND ma.avance_id=m.id AND ma.estado=1
                          GROUP BY ma.avance_id) as a_m,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id),GROUP_CONCAT(ma.fecha_id))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(ma.ruta),GROUP_CONCAT(ma.id),GROUP_CONCAT(ma.fecha_id),GROUP_CONCAT(ma.observacion))
 			 FROM metas_archivo ma
 			 WHERE  ma.tipo_avance=5 AND ma.avance_id=m.id AND ma.estado=1
                          GROUP BY ma.avance_id) as a_q,
-			(SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id),GROUP_CONCAT(md.fecha_id))
+			(SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id),GROUP_CONCAT(md.fecha_id),GROUP_CONCAT(md.observacion))
 			 FROM metas_docdigital md
 			 INNER JOIN doc_digital dd ON md.doc_digital_id=dd.id
 			 WHERE  md.tipo_avance=5 AND md.avance_id=m.id AND md.estado=1
 			 GROUP BY md.avance_id) as d_q,
-                        (SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id))
+                        (SELECT CONCAT_WS('|',GROUP_CONCAT(dd.titulo),GROUP_CONCAT(md.id),GROUP_CONCAT(md.doc_digital_id),GROUP_CONCAT(md.observacion))
 			 FROM metas_docdigital md
 			 INNER JOIN doc_digital dd ON md.doc_digital_id=dd.id
 			 WHERE  md.tipo_avance=1 AND md.avance_id=m.id AND md.estado=1
