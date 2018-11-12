@@ -448,7 +448,7 @@ class FormatoLicenciaController extends \BaseController
                         array('rst'=>1, 
                                 'msj'=>'Registro realizado correctamente.',
                                 'id'=>$persona->id,
-                                'nombres'=>$persona->nombre.' '.$persona->materno.' '.$persona->paterno));
+                                'nombres'=>$persona->nombre.' '.$persona->paterno.' '.$persona->materno));
         }
     }
 }
