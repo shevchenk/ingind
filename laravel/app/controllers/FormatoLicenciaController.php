@@ -20,7 +20,7 @@ class FormatoLicenciaController extends \BaseController
             //$cargos = FormatoLicenciaContruccion::get(Input::all());
             $sql = "SELECT lc.* 
                 FROM licencia_construccion lc
-                    WHERE estado = 1;";        
+                    WHERE estado = 1 ORDER BY id DESC;";        
             $cargos = DB::select($sql);
 
             return Response::json(array('rst'=>1,'datos'=>$cargos));
