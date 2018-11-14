@@ -1148,7 +1148,7 @@ class DocumentoDigitalController extends \BaseController {
                 $documenttittle= $DocumentoDigital->titulo;
             }
 
-            $quitar = ["height:100px; width:640px","height:6px; width:321px","height:6px; width:187px"];
+            $quitar = ["height:100px; width:640px","width:321px","width:187px"];
             $poner = [
             "width:640px; border:0px",
             "padding-top:-10px;padding-bottom:-10px;line-height: 12px; width:301px",
@@ -1160,6 +1160,7 @@ class DocumentoDigitalController extends \BaseController {
             }else{
                 $contenido = $DocumentoDigital->cuerpo;
             }
+                //$contenido = $DocumentoDigital->cuerpo;
 
             $params = [
                 'tamano'=>$tamano,
@@ -1187,7 +1188,7 @@ class DocumentoDigitalController extends \BaseController {
             $view = \View::make('admin.mantenimiento.templates.plantilla1', $params);
             $html = $view->render();
         
-            #die($DocumentoDigital->asunto.$params['contenido']);
+        #die($DocumentoDigital->asunto.$params['contenido']);
 
             $pdf = App::make('dompdf');
             $html = preg_replace('/>\s+</', '><', $html);
