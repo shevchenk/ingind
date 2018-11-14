@@ -1147,6 +1147,20 @@ class DocumentoDigitalController extends \BaseController {
             else{
                 $documenttittle= $DocumentoDigital->titulo;
             }
+
+            $quitar = ["height:100px; width:640px","height:6px; width:321px","height:6px; width:187px"];
+            $poner = [
+            "width:640px; border:0px",
+            "padding-top:-10px;padding-bottom:-10px;line-height: 12px; width:301px",
+            "padding-top:-10px;padding-bottom:-10px;line-height: 12px; width:167px"];
+
+
+            if(strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false){
+                $contenido = str_replace($quitar, $poner, $DocumentoDigital->cuerpo);
+            }else{
+                $contenido = $DocumentoDigital->cuerpo;
+            }
+
             $params = [
                 'tamano'=>$tamano,
                 'posicion'=>$oData[0]->posicion,
@@ -1157,13 +1171,14 @@ class DocumentoDigitalController extends \BaseController {
                 'area' => $DocumentoDigital->area_id,
                 'asunto' => $DocumentoDigital->asunto,
                 'conCabecera' => $cabecera,
-                'contenido' => $DocumentoDigital->cuerpo,
+                'contenido' => $contenido,
                 'fecha' => 'Independencia, '.$fechaa[2].' de '.$meses[$fechaa[1]*1].' del '.$fechaa[0],
                 'remitente' => $remitente,
                 'destinatario' => $destinatarios,
                 'imagen'=>$png,
                 'anio'=>$fechaa[0],
             ];  
+
             if($copias != '' && $copias != '<ul></ul>'){ 
                 $params['copias'] = $copias;                
             }
@@ -1171,6 +1186,8 @@ class DocumentoDigitalController extends \BaseController {
             
             $view = \View::make('admin.mantenimiento.templates.plantilla1', $params);
             $html = $view->render();
+        
+            #die($DocumentoDigital->asunto.$params['contenido']);
 
             $pdf = App::make('dompdf');
             $html = preg_replace('/>\s+</', '><', $html);
