@@ -178,7 +178,9 @@ class RutaDetalleController extends \BaseController
                     $doc_id = ($value->doc_dig_id == '' ? NULL : $value->doc_dig_id);
                     $rdv= RutaDetalleVerbo::find($value->rtverbo);
                     $rdv['documento'] = $value->edit;
+
                     $rdv['doc_digital_id'] = $doc_id;
+                    
                     $rdv['usuario_updated_at']= Auth::user()->id;
                     $rdv->save(); 
                     /*end update in rutas_detalle_verbo */
@@ -872,6 +874,8 @@ class RutaDetalleController extends \BaseController
                     $vidName = $v0.rawurlencode($v1);
                     $vidName = str_replace("A?O", 'A%D1O', $vidName);
                     $vidName = str_replace("%3F%20", '%BA%20', $vidName);
+                    $vidName = str_replace('?','%B0', $vidName);
+                    
                     $reference .= ' <b><a class="btn btn-info btn-sm" href="javascript:window.open(atob(\''.base64_encode( $vidName ).'\'));"> <i class="fa fa-film"></i></a></b>';
                 }
             }
