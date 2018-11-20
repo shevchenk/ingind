@@ -157,6 +157,10 @@ class RutaDetalleController extends \BaseController
             $tr['usuario_updated_at']=Auth::user()->id;
             $tr->save();
 
+            $ss = DB::update("UPDATE sustentos as S INNER JOIN referidos as R ON R.id = S.referido_id SET S.estado = 0 WHERE R.ruta_id = '$ruta_id'");
+
+            $rf = DB::update("UPDATE referidos SET estado = 0 WHERE ruta_id = '$ruta_id'");
+
             DB::commit();
             return Response::json(
                 array(
