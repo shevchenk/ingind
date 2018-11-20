@@ -1148,15 +1148,54 @@ class DocumentoDigitalController extends \BaseController {
                 $documenttittle= $DocumentoDigital->titulo;
             }
 
+            $cssClass="
+
+
+            <style>
+                table, th, td {
+                   border: 1px solid black;
+                }
+
+                table, th, td {
+                   border: 1px solid black;
+                }
+
+                table, tr, td {
+                   border: 1px solid black;
+                }
+
+            </style>
+
+            ";
+
+
             $quitar = ["height:100px; width:640px","width:321px","width:187px"];
+            $quitar2 = ["width:688px","width:331px","width:161px"];
+
             $poner = [
-            "width:640px; border:0px",
+            "height:50px; width:640px; border:0px",
             "padding-top:-10px;padding-bottom:-10px;line-height: 12px; width:301px",
             "padding-top:-10px;padding-bottom:-10px;line-height: 12px; width:167px"];
+
+            $poner2 = [
+            "height:50px; width:640px; border:0px",
+            "padding-top:-20px;padding-bottom:-20px;line-height: 12px; width:301px",
+            "padding-top:-20px;padding-bottom:-20px;line-height: 12px; width:167px"];
 
 
             if(strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false){
                 $contenido = str_replace($quitar, $poner, $DocumentoDigital->cuerpo);
+                $contenido = str_replace($quitar2, $poner2, $contenido);
+
+
+                $contenido = preg_replace('/(<[^>]+)style=".*?"/i', '$1', $contenido);
+
+                $contenido = str_replace("<td", '<td style="padding-top:-10px;padding-bottom:-10px;"', $contenido);
+
+
+                $contenido = str_replace('<td style="padding-top:-10px;padding-bottom:-10px;" rowspan="8" >', '<td style="padding-top:-10px;padding-bottom:-10px; width:167px" rowspan="8" >', $contenido);
+
+
             }else{
                 $contenido = $DocumentoDigital->cuerpo;
             }
@@ -1188,7 +1227,7 @@ class DocumentoDigitalController extends \BaseController {
             $view = \View::make('admin.mantenimiento.templates.plantilla1', $params);
             $html = $view->render();
         
-        #die($DocumentoDigital->asunto.$params['contenido']);
+       # die($DocumentoDigital->asunto.$params['contenido']);
 
             $pdf = App::make('dompdf');
             $html = preg_replace('/>\s+</', '><', $html);
