@@ -10,7 +10,7 @@ class DocumentoDigitalController extends \BaseController {
         }
     }
     
-        public function postCargarcompleto()
+    public function postCargarcompleto()
     {
         if ( Request::ajax() ) {
             /*********************FIJO*****************************/
@@ -1169,31 +1169,31 @@ class DocumentoDigitalController extends \BaseController {
             ";
 
 
-            $quitar = ["height:100px; width:640px","width:321px","width:187px"];
-            $quitar2 = ["width:688px","width:331px","width:161px"];
-
-            $poner = [
-            "height:50px; width:640px; border:0px",
-            "padding-top:-10px;padding-bottom:-10px;line-height: 12px; width:301px",
-            "padding-top:-10px;padding-bottom:-10px;line-height: 12px; width:167px"];
-
-            $poner2 = [
-            "height:50px; width:640px; border:0px",
-            "padding-top:-20px;padding-bottom:-20px;line-height: 12px; width:301px",
-            "padding-top:-20px;padding-bottom:-20px;line-height: 12px; width:167px"];
-
-
             if(strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false){
-                $contenido = str_replace($quitar, $poner, $DocumentoDigital->cuerpo);
-                $contenido = str_replace($quitar2, $poner2, $contenido);
+               
+
+                $contenido =$DocumentoDigital->cuerpo;
+
+                $ini = strpos($contenido, "<table");
+                $end = strpos($contenido, "</table>");
+
+                $p1=substr($contenido, 0,$ini);
+                $table=substr($contenido, $ini,$end-$ini+8);
+                $p2=substr($contenido, $end+8);
+                
 
 
-                $contenido = preg_replace('/(<[^>]+)style=".*?"/i', '$1', $contenido);
+              
 
-                $contenido = str_replace("<td", '<td style="padding-top:-10px;padding-bottom:-10px;"', $contenido);
+                $table = preg_replace('/(<[^>]+)style=".*?"/i', '$1', $table);
+
+                $table = str_replace("<td", '<td style="padding-top:-10px;padding-bottom:-10px;"', $table);
 
 
-                $contenido = str_replace('<td style="padding-top:-10px;padding-bottom:-10px;" rowspan="8" >', '<td style="padding-top:-10px;padding-bottom:-10px; width:167px" rowspan="8" >', $contenido);
+                $table = str_replace('<td style="padding-top:-10px;padding-bottom:-10px;" rowspan="8" >', '<td style="padding-top:-10px;padding-bottom:-10px; width:167px" rowspan="8" >', $table);
+
+
+                $contenido =$p1.$table.$p2;
 
 
             }else{
@@ -1227,7 +1227,7 @@ class DocumentoDigitalController extends \BaseController {
             $view = \View::make('admin.mantenimiento.templates.plantilla1', $params);
             $html = $view->render();
         
-       # die($DocumentoDigital->asunto.$params['contenido']);
+        #die($DocumentoDigital->asunto.$params['contenido']);
 
             $pdf = App::make('dompdf');
             $html = preg_replace('/>\s+</', '><', $html);
