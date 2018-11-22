@@ -233,6 +233,9 @@ class RutaDetalle extends Eloquent
                 LEFT join tipo_solicitante ts ON ts.id=tr.tipo_persona and ts.estado=1
                 LEFT JOIN areas a ON a.id=tr.area_id
                 WHERE r.estado=1
+                AND rd.fecha_inicio IS NOT NULL
+                AND rd.dtiempo_final IS NULL
+            
                 ".$array['tramite'].
                  $array['area'];
         //echo $sql;
