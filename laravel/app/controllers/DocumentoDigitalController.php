@@ -1168,9 +1168,8 @@ class DocumentoDigitalController extends \BaseController {
 
             ";
 
-
-            if(strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false){
-               
+                if(strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false
+                    || strpos($DocumentoDigital->cuerpo,"Autorización Municipal Temporal para el desarrollo de la Actividad Comercial en el espacio Público")!==false){
 
                 $contenido =$DocumentoDigital->cuerpo;
 
@@ -1227,7 +1226,7 @@ class DocumentoDigitalController extends \BaseController {
             $view = \View::make('admin.mantenimiento.templates.plantilla1', $params);
             $html = $view->render();
         
-        #die($DocumentoDigital->asunto.$params['contenido']);
+            #die($DocumentoDigital->asunto.$params['contenido']);
 
             $pdf = App::make('dompdf');
             $html = preg_replace('/>\s+</', '><', $html);
@@ -1240,6 +1239,272 @@ class DocumentoDigitalController extends \BaseController {
         }
 
     }
+
+
+
+
+
+
+
+
+
+
+
+/*********************************************/
+/*********************************************/
+/*********************************************/
+/*********************************************/
+/*********************************************/
+/*********************************************/
+
+    public function getVistatramite($id,$tamano,$tipo,$fecha,$ruta_flujo_id='')
+    {
+
+
+      //AuditoriaAcceso::getAuditoria();
+
+//      die();
+        
+      $array=array();
+
+      $array['fecha']='';
+      $array['ruta_flujo_id']='';$array['tramite']='';
+
+      
+      if($fecha!=''){
+        list($fechaini,$fechafin) = explode(" - ", $fecha);
+        $array['fecha']=" AND DATE(r.fecha_inicio) BETWEEN '".$fechaini."' AND '".$fechafin."' ";
+      }
+
+      if($ruta_flujo_id!='' ){
+        $array['ruta_flujo_id'].=" AND r.ruta_flujo_id='".$ruta_flujo_id."' ";
+      }
+
+      
+
+      
+      $r = Reporte::Tramite( $array );
+
+/************************************************************/
+
+    ini_set("max_execution_time", 300);
+    ini_set('memory_limit','512M');
+    $totalHTML = "";
+    $baseHTML = "";
+
+
+    $pdf = App::make('dompdf');
+
+
+    foreach ($r as $tramite) {
+        
+        if($tramite->doc_digital_id!=null){
+            $DocumentoDigital = DocumentoDigital::find($tramite->doc_digital_id);
+            $sql= "SELECT d.posicion,d.posicion_fecha
+                    FROM documentos d
+                    INNER JOIN plantilla_doc pd ON d.id=pd.tipo_documento_id
+                    WHERE pd.id=".$DocumentoDigital->plantilla_doc_id;
+            $oData = DB::select($sql);
+            
+            if ($DocumentoDigital) {
+                /*get remitente data*/
+                $persona = Persona::find($DocumentoDigital->persona_id);
+                $area = Area::find($DocumentoDigital->area_id);
+                $rol= Rol::find($persona->rol_id);
+                  $remitente = $persona->nombre." ".$persona->paterno." ".$persona->materno." - <span style='font-size:11px'>".$area->nombre."</span>";
+    //            $remitente = $persona->nombre." ".$persona->paterno." ".$persona->materno." - <span style='font-size:11px'>(".$rol->nombre.") ".$area->nombre."</span>";
+                /*end get remitente data */
+
+                /*get destinatario data*/
+                $copias = '';
+                $destinatarios = '';
+                if($DocumentoDigital->envio_total ==1){
+                    $copias = '';
+                    $destinatarios = 'Todas las Gerencias y Sub Gerencias';
+                }else{
+                    $copias.= '';
+                    $destinatarios.= '';
+                    $DocDigitalArea = DocumentoDigitalArea::where('doc_digital_id', '=', $id)->where('estado', '=', 1)->get();
+                    $salto=9;
+                    $nb="&nbsp;";
+                    if($tamano==5){
+                        $salto=6;
+                        $nb="&nbsp;";
+                    }
+                    foreach($DocDigitalArea as $key => $value){
+                        $persona2 = Persona::find($value->persona_id);
+                        $area2 = Area::find($value->area_id);
+                        $rol2= Rol::find($persona2->rol_id);
+                        if($value->tipo ==1){
+                            if($destinatarios!=""){
+                                /*$destinatarios.="<br><span>&nbsp;&nbsp;".$nb."<span style='padding-left: ".$salto."em;'>";*/
+                            }
+                            else{
+                                $destinatarios.="<span>";
+                            }
+                              $destinatarios.= $persona2->nombre.' '.$persona2->paterno.' '.$persona2->materno.' - </span><span style="font-size:11px">'.$area2->nombre.'</span><br>';
+    //                        $destinatarios.= $persona2->nombre.' '.$persona2->paterno.' '.$persona2->materno.' - </span><span style="font-size:11px">('.$rol2->nombre.') '.$area2->nombre.'</span><br>';
+                        }else{
+                            if($copias!=""){
+                                /*$copias.="<br><span>&nbsp;&nbsp;".$nb."<span style='padding-left: ".$salto."em;'>";*/
+                            }
+                            else{
+                                $copias.="<span>";
+                            }
+                              $copias.= $persona2->nombre.' '.$persona2->paterno.' '.$persona2->materno.' - </span><span style="font-size:11px">'.$area2->nombre.'</span><br>';
+    //                        $copias.= $persona2->nombre.' '.$persona2->paterno.' '.$persona2->materno.' - </span><span style="font-size:11px">('.$rol2->nombre.') '.$area2->nombre.'</span><br>';
+                        }        
+                    }
+                    //$destinatarios.= '</ul>';    
+                    //$copias.= '</ul>';          
+                }
+
+                /*end get destinatario data*/
+                if($tamano==4){
+                    $size=122;}
+                else if($tamano==5){
+                     $size=115;
+                }
+                
+                $png = QrCode::format('png')->margin(0)->size($size)->generate("http://proceso.munindependencia.pe/documentodig/vista/".$id."/".$tamano."/0");
+                $png = base64_encode($png);
+                $png= "<img src='data:image/png;base64," . $png . "'>";
+                $meses=array('','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre');
+                
+                $fechabase=$DocumentoDigital->created_at;
+                $fecha=explode(' ', $fechabase);
+                $fechaa=explode('-', $fecha[0]);
+                
+                $cabecera=1;
+                
+                if($DocumentoDigital->tipo_envio==4 || $DocumentoDigital->tipo_envio==7){
+                    $cabecera=null;
+                }
+    //            if($DocumentoDigital->tipo_envio==4 AND $DocumentoDigital->area_id==12){
+    //                $DocumentoDigital->area_id=1;
+    //            }
+    //            if($DocumentoDigital->tipo_envio==4 AND $DocumentoDigital->area_id==44){
+    //                $DocumentoDigital->area_id=1;
+    //            }
+                if($tipo==0){
+                    $vistaprevia='Documento Vista Previa';}
+                else if($tipo==1){
+                     $vistaprevia='';
+                }
+                $documenttittle= $DocumentoDigital->titulo;
+                if(strlen($documenttittle)>=59 AND $tamano==4){
+                    $maximo= substr($documenttittle, 0,59);
+                    $min=substr($documenttittle, 59);
+                    $parte1="";
+                    $parte2="";
+                    $dmaximo= explode("-",$maximo);
+                    for ($i=0; $i < count($dmaximo); $i++) { 
+                        if( count($dmaximo)>($i+1) ){
+                            $parte1.=$dmaximo[$i]."-";
+                        }
+                        else{
+                            $parte2=$dmaximo[$i].$min;
+                        }
+                    }
+                    $documenttittle=$parte1."<br><br>".$parte2;
+
+                }else if(strlen($documenttittle)>=47 AND $tamano==5){
+                    $maximo= substr($documenttittle, 0,47);
+                    $min=substr($documenttittle, 47);
+                    $parte1="";
+                    $parte2="";
+                    $dmaximo= explode("-",$maximo);
+                    for ($i=0; $i < count($dmaximo); $i++) { 
+                        if( count($dmaximo)>($i+1) ){
+                            $parte1.=$dmaximo[$i]."-";
+                        }
+                        else{
+                            $parte2=$dmaximo[$i].$min;
+                        }
+                    }
+                    $documenttittle=$parte1."<br><br>".$parte2;
+                }
+                else{
+                    $documenttittle= $DocumentoDigital->titulo;
+                }
+
+                $cssClass="<style>table, th, td {border: 1px solid black;}table, tr, td {border: 1px solid black;}</style>";
+
+                if(
+                strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false
+                || strpos($DocumentoDigital->cuerpo,"Autorización Municipal Temporal para el desarrollo de la Actividad Comercial en el espacio Público")!==false){
+                    
+                    $contenido =$DocumentoDigital->cuerpo;
+                    $ini = strpos($contenido, "<table");
+                    $end = strpos($contenido, "</table>");
+                    $p1=substr($contenido, 0,$ini);
+                    $table=substr($contenido, $ini,$end-$ini+8);
+                    $p2=substr($contenido, $end+8);
+                    $table = preg_replace('/(<[^>]+)style=".*?"/i', '$1', $table);
+                    $table = str_replace("<td", '<td style="padding-top:-10px;padding-bottom:-10px;"', $table);
+                    $table = str_replace('<td style="padding-top:-10px;padding-bottom:-10px;" rowspan="8" >', '<td style="padding-top:-10px;padding-bottom:-10px; width:167px" rowspan="8" >', $table);
+                    $contenido =$p1.$table.$p2;
+                }else{
+                    $contenido = $DocumentoDigital->cuerpo;
+                }
+
+                $params = [
+                    'tamano'=>$tamano,
+                    'posicion'=>$oData[0]->posicion,
+                    'posicion_fecha'=>$oData[0]->posicion_fecha,
+                    'tipo_envio'=>$DocumentoDigital->tipo_envio,
+                    'titulo' => $documenttittle,
+                    'vistaprevia'=>$vistaprevia,
+                    'area' => $DocumentoDigital->area_id,
+                    'asunto' => $DocumentoDigital->asunto,
+                    'conCabecera' => $cabecera,
+                    'contenido' => $contenido,
+                    'fecha' => 'Independencia, '.$fechaa[2].' de '.$meses[$fechaa[1]*1].' del '.$fechaa[0],
+                    'remitente' => $remitente,
+                    'destinatario' => $destinatarios,
+                    'imagen'=>$png,
+                    'anio'=>$fechaa[0],
+                ];  
+
+                if($copias != '' && $copias != '<ul></ul>'){ 
+                    $params['copias'] = $copias;                
+                }
+                $params = $params;
+                
+                $view = \View::make('admin.mantenimiento.templates.plantilla3', $params);
+                $html = $view->render();
+                    
+               
+                $html = preg_replace('/>\s+</', '><', $html);
+
+                $ini = strpos($html, "<body>");
+                $totalHTML .= '<div style="page-break-after: always;">'.substr($html, $ini).'</div>';
+                $baseHTML .= substr($html, 0,$ini);
+
+            }
+                
+        }
+    }
+
+    $pdf->loadHTML("<!DOCTYPE html><html>".$baseHTML.$totalHTML."</html>");
+    $pdf->setPaper('a'.$tamano)->setOrientation('portrait');
+
+    return $pdf->stream();
+    
+}
+
+
+
+/*********************************************/
+/*********************************************/
+/*********************************************/
+/*********************************************/
+/*********************************************/
+/*********************************************/
+
+
+
+
 
     public function getVistaprevia($id,$tamano=4,$tipo=1)
    {   $tipo=1;
