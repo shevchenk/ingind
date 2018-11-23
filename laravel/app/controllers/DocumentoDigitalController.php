@@ -1226,13 +1226,16 @@ class DocumentoDigitalController extends \BaseController {
             $view = \View::make('admin.mantenimiento.templates.plantilla1', $params);
             $html = $view->render();
         
-            #die($DocumentoDigital->asunto.$params['contenido']);
+            //die($DocumentoDigital->asunto.$params['contenido']);
 
             $pdf = App::make('dompdf');
             $html = preg_replace('/>\s+</', '><', $html);
-            $pdf->loadHTML($html);
+            
+            $pdf->loadHTML("<html>".$html."</html>");
 
-            $pdf->setPaper('a'.$tamano)->setOrientation('portrait');
+            $pdf->setPaper('A'.$tamano, 'portrait');
+
+            //$pdf->setOrientation('portrait');
 
             return $pdf->stream();
             //\PDFF::loadHTML($html)->setPaper('a4')->setOrientation('landscape')->setWarnings(false)->stream();
@@ -1257,14 +1260,17 @@ class DocumentoDigitalController extends \BaseController {
 /*********************************************/
 /*********************************************/
 
-    public function getVistatramite($id,$tamano,$tipo,$fecha,$ruta_flujo_id='')
+    public function getVistatramite($ruta_flujo_id,$tamano,$tipo,$fecha)
     {
-
-
-      //AuditoriaAcceso::getAuditoria();
-
-//      die();
         
+        /************************************************************/
+
+        ini_set("max_execution_time", 300);
+        ini_set('memory_limit','1024M');
+        $totalHTML = "";
+        $baseHTML = "";
+
+
       $array=array();
 
       $array['fecha']='';
@@ -1285,12 +1291,6 @@ class DocumentoDigitalController extends \BaseController {
       
       $r = Reporte::Tramite( $array );
 
-/************************************************************/
-
-    ini_set("max_execution_time", 300);
-    ini_set('memory_limit','512M');
-    $totalHTML = "";
-    $baseHTML = "";
 
 
     $pdf = App::make('dompdf');
@@ -1324,7 +1324,7 @@ class DocumentoDigitalController extends \BaseController {
                 }else{
                     $copias.= '';
                     $destinatarios.= '';
-                    $DocDigitalArea = DocumentoDigitalArea::where('doc_digital_id', '=', $id)->where('estado', '=', 1)->get();
+                    $DocDigitalArea = DocumentoDigitalArea::where('doc_digital_id', '=', $tramite->doc_digital_id)->where('estado', '=', 1)->get();
                     $salto=9;
                     $nb="&nbsp;";
                     if($tamano==5){
@@ -1366,7 +1366,7 @@ class DocumentoDigitalController extends \BaseController {
                      $size=115;
                 }
                 
-                $png = QrCode::format('png')->margin(0)->size($size)->generate("http://proceso.munindependencia.pe/documentodig/vista/".$id."/".$tamano."/0");
+                $png = QrCode::format('png')->margin(0)->size($size)->generate("http://proceso.munindependencia.pe/documentodig/vista/".$tramite->doc_digital_id."/".$tamano."/0");
                 $png = base64_encode($png);
                 $png= "<img src='data:image/png;base64," . $png . "'>";
                 $meses=array('','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre');
@@ -1501,8 +1501,6 @@ class DocumentoDigitalController extends \BaseController {
 /*********************************************/
 /*********************************************/
 /*********************************************/
-
-
 
 
 
@@ -1679,6 +1677,7 @@ class DocumentoDigitalController extends \BaseController {
  
            $pdf = App::make('dompdf');
            $html = preg_replace('/>\s+</', '><', $html);
+
            $pdf->loadHTML($html);
 
            $pdf->setPaper('a'.$tamano)->setOrientation('portrait');
