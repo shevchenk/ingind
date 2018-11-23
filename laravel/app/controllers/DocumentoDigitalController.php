@@ -1148,25 +1148,6 @@ class DocumentoDigitalController extends \BaseController {
                 $documenttittle= $DocumentoDigital->titulo;
             }
 
-            $cssClass="
-
-
-            <style>
-                table, th, td {
-                   border: 1px solid black;
-                }
-
-                table, th, td {
-                   border: 1px solid black;
-                }
-
-                table, tr, td {
-                   border: 1px solid black;
-                }
-
-            </style>
-
-            ";
 
                 if(strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false
                     || strpos($DocumentoDigital->cuerpo,"Autorización Municipal Temporal para el desarrollo de la Actividad Comercial en el espacio Público")!==false){
@@ -1231,7 +1212,7 @@ class DocumentoDigitalController extends \BaseController {
             $pdf = App::make('dompdf');
             $html = preg_replace('/>\s+</', '><', $html);
             
-            $pdf->loadHTML("<html>".$html."</html>");
+            $pdf->loadHTML($html);
 
             $pdf->setPaper('A'.$tamano, 'portrait');
 
@@ -1380,12 +1361,7 @@ class DocumentoDigitalController extends \BaseController {
                 if($DocumentoDigital->tipo_envio==4 || $DocumentoDigital->tipo_envio==7){
                     $cabecera=null;
                 }
-    //            if($DocumentoDigital->tipo_envio==4 AND $DocumentoDigital->area_id==12){
-    //                $DocumentoDigital->area_id=1;
-    //            }
-    //            if($DocumentoDigital->tipo_envio==4 AND $DocumentoDigital->area_id==44){
-    //                $DocumentoDigital->area_id=1;
-    //            }
+
                 if($tipo==0){
                     $vistaprevia='Documento Vista Previa';}
                 else if($tipo==1){
@@ -1428,8 +1404,6 @@ class DocumentoDigitalController extends \BaseController {
                     $documenttittle= $DocumentoDigital->titulo;
                 }
 
-                $cssClass="<style>table, th, td {border: 1px solid black;}table, tr, td {border: 1px solid black;}</style>";
-
                 if(
                 strpos($DocumentoDigital->cuerpo,"Temporal para el Desarrollo de la Actividad Comercial Ambulatoria en la Vía Pública")!==false
                 || strpos($DocumentoDigital->cuerpo,"Autorización Municipal Temporal para el desarrollo de la Actividad Comercial en el espacio Público")!==false){
@@ -1442,7 +1416,7 @@ class DocumentoDigitalController extends \BaseController {
                     $p2=substr($contenido, $end+8);
                     $table = preg_replace('/(<[^>]+)style=".*?"/i', '$1', $table);
                     $table = str_replace("<td", '<td style="padding-top:-10px;padding-bottom:-10px;"', $table);
-                    $table = str_replace('<td style="padding-top:-10px;padding-bottom:-10px;" rowspan="8" >', '<td style="padding-top:-10px;padding-bottom:-10px; width:167px" rowspan="8" >', $table);
+                    $table = str_replace('<td style="padding-top:-10px;padding-bottom:-10px;" rowspan="8">', '<td style="padding-top:-10px;padding-bottom:-10px; width:167px" rowspan="8">', $table);
                     $contenido =$p1.$table.$p2;
                 }else{
                     $contenido = $DocumentoDigital->cuerpo;
@@ -1474,7 +1448,6 @@ class DocumentoDigitalController extends \BaseController {
                 $view = \View::make('admin.mantenimiento.templates.plantilla3', $params);
                 $html = $view->render();
                     
-               
                 $html = preg_replace('/>\s+</', '><', $html);
 
                 $ini = strpos($html, "<body>");
