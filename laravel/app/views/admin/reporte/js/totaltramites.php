@@ -22,6 +22,7 @@ var tempOpt = 0;
             return false;
         }
     }
+
     var preventSubmit1 = function(event) {
         if(event.keyCode == 13) {
             event.preventDefault();
@@ -29,6 +30,7 @@ var tempOpt = 0;
             return false;
         }
     }
+
     var preventSubmit2 = function(event) {
         if(event.keyCode == 13) {
             event.preventDefault();
@@ -36,6 +38,7 @@ var tempOpt = 0;
             return false;
         }
     }
+
     var preventSubmit3 = function(event) {
         if(event.keyCode == 13) {
             event.preventDefault();
@@ -242,7 +245,8 @@ HTMLreportep=function(datos){
         html+="<td>"+data.ntramites+"</td>";
         html+="<td>"+data.inconclusos+"</td>";
         html+="<td>"+data.concluidos+"</td>";
-        html+='<td><a onClick="detalletra('+data.ruta_flujo_id+',this)" class="btn btn-primary btn-sm"><i class="fa fa-search fa-lg"></i> </a>'+btnruta+'</td>';
+
+        html+='<td><a onClick="detalletra('+data.ruta_flujo_id+',this)" class="btn btn-primary btn-sm"><i class="fa fa-search fa-lg"></i> </a>'+btnruta+' <a onClick="vistadoctramites('+data.ruta_flujo_id+')" class="btn btn-success btn-sm"><i class="fa fa-print fa-lg"></i> </a></td>';
             }
             else{
         html+="<td>&nbsp;</td>";
@@ -267,6 +271,9 @@ HTMLreportep=function(datos){
     $("#reportep_tab_"+Pest).show();
 };
 
+
+
+
 detalletra=function(ruta_flujo_id, boton){
     var tr = boton.parentNode.parentNode;
     var trs = tr.parentNode.children;
@@ -281,6 +288,16 @@ detalletra=function(ruta_flujo_id, boton){
     Tramite.mostrar( datos,HTMLreportet,'t' );
     $("#reported_tab_"+Pest).hide();
 }
+
+vistadoctramites=function(ruta_flujo_id){
+
+    var fecha = $("#txt_fecha_3").val();
+    window.open("documentodig/vistatramite/"+ruta_flujo_id+"/4/0/"+fecha);
+
+
+}
+
+
 
 detalle=function(ruta_id, boton){
     $("#btn_close").click();
