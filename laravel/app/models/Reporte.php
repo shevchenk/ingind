@@ -55,7 +55,7 @@ class Reporte extends Eloquent
 
     public static function Tramite( $array ){
 
-        $sql =" SELECT tr.id_union AS tramite, r.id, r.ruta_flujo_id, 
+        $sql =" SELECT tr.id_union AS tramite, r.id, r.ruta_flujo_id, r.doc_digital_id,
                 ts.nombre AS tipo_persona,
                 IF(tr.tipo_persona=1 or tr.tipo_persona=6,
                     CONCAT(IFNULL(tr.paterno,''),' ',IFNULL(tr.materno,''),', ',IFNULL(tr.nombre,'')),
