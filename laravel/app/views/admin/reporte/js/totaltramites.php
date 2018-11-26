@@ -292,8 +292,8 @@ detalletra=function(ruta_flujo_id, boton){
 vistadoctramites=function(ruta_flujo_id){
 
     var fecha = $("#txt_fecha_3").val();
-    mod=autorizado_por_lotes?1:0;
-    window.open("documentodig/vistatramite/"+ruta_flujo_id+"/4/0/"+fecha);
+    var mod=autorizado_por_lotes?1:0;
+    window.open("documentodig/vistatramite/"+ruta_flujo_id+"/4/"+mod+"/"+fecha);
 
 
 }
