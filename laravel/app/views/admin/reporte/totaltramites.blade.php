@@ -484,6 +484,30 @@
                 </div>
             </div>
         </form>
+
+                <?php
+
+                $sql = "SELECT C.id FROM 
+                `procesos`.`personas` as P 
+                INNER JOIN `procesos`.`cargo_persona` as CP ON CP.persona_id = P.id
+                INNER JOIN `procesos`.`cargos` as C ON C.id = CP.cargo_id
+                WHERE P.id = '".Auth::user()->id."' AND CP.estado = 1 AND P.estado=1 AND C.estado=1;";
+                $oData = DB::select($sql);  
+                $ok = false;
+                $autorizados = array(12,5);
+                foreach ($oData as $key => $value) {
+                    if(in_array($value->id,$autorizados)){
+                        $ok=true;
+                    }
+                }
+
+                if($ok){
+                    echo "<script>var autorizado_por_lotes=true;</script>";
+                }else{
+                    echo "<script>var autorizado_por_lotes=false;</script>";
+                }   
+
+                ?>
     </section><!-- /.content -->
 
 @stop
