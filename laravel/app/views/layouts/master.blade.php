@@ -1,27 +1,27 @@
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
+	<head>
+		<meta charset="utf-8">
         <meta name="token" id="token" value="{{ csrf_token() }}">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-        
-        @section('autor')
-        <meta name="author" content="Jorge Salcedo (Shevchenko)">
-        @show
-        
-        <link rel="shortcut icon" href="favicon.ico">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+		
+		@section('autor')
+		<meta name="author" content="Jorge Salcedo (Shevchenko)">
+		@show
+		
+		<link rel="shortcut icon" href="favicon.ico">
 
-        @section('descripcion')
-        <meta name="description" content="">
-        @show
-        <title>
-            @section('titulo')
-                JSProcesos
-            @show
-        </title>
+		@section('descripcion')
+		<meta name="description" content="">
+		@show
+		<title>
+			@section('titulo')
+				M. Independencia
+			@show
+		</title>
 
 
-        @section('includes')
+		@section('includes')
             {{ HTML::style('lib/bootstrap-3.3.1/css/bootstrap.min.css') }}
             {{ HTML::style('lib/font-awesome-4.2.0/css/font-awesome.min.css') }}
             {{ HTML::script('lib/jquery-2.1.3.min.js') }}
@@ -45,7 +45,7 @@
             
             @include( 'admin.js.app' )
             {{--       @include( 'css/admin/chat' ) --}}
-        @show
+		@show
 
         <!-- <script async defer src="lib/google_maps/gmaps.js"></script> -->
         <!-- 
@@ -53,7 +53,7 @@
         <script type="text/javascript" src="lib/gmaps/gmaps.js"></script> 
         -->
 
-    </head> 
+	</head>	
 
     <body class="skin-blue">
     <div id="msj" class="msjAlert"> </div>
@@ -96,7 +96,7 @@
         $ssql="  SELECT m.id as m_id,m.contenido,m.titulo,md.id as dm_id
                           FROM mensajes m
                           LEFT JOIN mensajes_detalle md ON m.id=md.mensaje_id AND md.usuario_created_at=".Auth::user()->id." AND md.estado=1
-              WHERE DATE(m.created_at)=CURDATE() AND m.estado=1";
+			  WHERE DATE(m.created_at)=CURDATE() AND m.estado=1";
         $mensaje= DB::select($ssql);
         if(count($mensaje)==0){
             $mensaje=array(
@@ -114,12 +114,8 @@
         }
 
 
-
-
-
-
-        ?>&nbsp;
-    <script>
+        ?>;
+	<script>
         var MensajeG9973=0;
         $(document).ready(function() { 
 
