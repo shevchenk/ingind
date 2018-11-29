@@ -40,7 +40,7 @@ class ActividadPersonalController extends \BaseController
             /************************************************************/
 
             if( Input::has("actividad") ){
-                $actividad=Input::get("actividad");
+                $actividad=trim(str_replace("%2F","/",Input::get("actividad")));
                 if( trim( $actividad )!='' ){
                     $array['where'].=" AND ap.actividad LIKE '%".$actividad."%' ";
                 }
