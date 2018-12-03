@@ -40,7 +40,7 @@ class TablaRelacion extends Eloquent
         $sSql=" SELECT CONCAT(r.id,'|',tr.id_union) id,f.nombre proceso, tr.id_union tramite, rd.fecha_inicio f1,rd2.fecha_inicio, COUNT(tr2.id) cant
                 FROM rutas r
                 INNER JOIN tablas_relacion tr ON tr.id=r.tabla_relacion_id AND tr.estado=1 AND tr.usuario_created_at!=1272
-                INNER JOIN flujos f ON f.id=r.flujo_id AND f.estado=1
+                INNER JOIN flujos f ON f.id=r.flujo_id AND f.estado=1 AND f.nombre LIKE 'PLAT%'
                 INNER JOIN rutas_detalle rd ON rd.ruta_id=r.id AND rd.estado=1 AND rd.norden=1 AND rd.area_id=52
                 INNER JOIN rutas_detalle rd2 ON rd2.ruta_id=r.id AND rd2.estado=1 AND rd2.norden=2
                 LEFT JOIN tablas_relacion tr2 ON tr2.id_union=tr.id_union AND tr2.estado=1 AND tr2.id>tr.id
