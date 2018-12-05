@@ -586,11 +586,13 @@ class RutaDetalleController extends \BaseController
                                             var_dump($i);
                                             var_dump($j);
                                             exit();*/
-                                            $idinvalido= $validaSiguiente[($i+$j)]->id;
-                                            $rdinv= RutaDetalle::find($idinvalido);
-                                            $rdinv['condicion']=1;
-                                            $rdinv['usuario_updated_at']= Auth::user()->id;
-                                            $rdinv->save();
+                                            if(isset($validaSiguiente[($i+$j)])){
+                                                $idinvalido=$validaSiguiente[($i+$j)]->id;
+                                                $rdinv= RutaDetalle::find($idinvalido);
+                                                $rdinv['condicion']=1;
+                                                $rdinv['usuario_updated_at']= Auth::user()->id;
+                                                $rdinv->save();
+                                            }
                                         }
 
                                         if( ($j+1)==$siguientefinal ){
