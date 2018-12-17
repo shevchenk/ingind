@@ -163,7 +163,7 @@ HTMLDatos=function(datos){
 
     $.each(datos,function(index,data){
         html+="<tr>"+
-            "<td >"+data.expediente+"</td>"+
+            "<td >"+data.correlativo+" - "+data.expediente+"</td>"+
             "<td >"+data.fecha_emision+"</td>"+
             "<td >"+data.fecha_vence+"</td>"+
             "<td >"+data.licencia_edifica+"</td>"+

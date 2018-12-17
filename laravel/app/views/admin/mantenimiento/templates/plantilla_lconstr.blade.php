@@ -301,7 +301,7 @@ footer .izq {
 
     <br/>
     <div style="overflow:hidden;">
-      <table style="width:44%; border: 0px solid #CCC; text-align: center;">
+      <table style="width:84%; border: 0px solid #CCC; text-align: center;">
       <tr>
         <td style="border: 1px solid #CCC; font-size:12px;" width="50%">{{ $piso }}</td>
         <td style="border: 1px solid #CCC; font-size:12px;" width="50%">{{ $area_techada }}</td>
