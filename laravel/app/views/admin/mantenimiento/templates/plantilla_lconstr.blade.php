@@ -300,7 +300,7 @@ footer .izq {
     </div>
 
     <br/>
-    <div style="overflow:hidden;">
+    <div style="overflow:hidden;" align="center">
       <table style="width:84%; border: 0px solid #CCC; text-align: center;">
       <tr>
         <td style="border: 1px solid #CCC; font-size:12px;" width="50%">{{ $piso }}</td>
@@ -345,6 +345,10 @@ footer .izq {
     <br/><br/>
     <div style="overflow:hidden;">
      <table style="width:100%">
+      
+
+      {{ $nota }}
+
       <tr>
         <td><strong>OBSERVACIONES</strong></td>
       </tr> 
@@ -463,8 +467,8 @@ footer .izq {
             <td>VALOR DE OBRA:&nbsp;&nbsp; <strong>{{ $valor_obra }}</strong></td>
         </tr>
         <tr>
-            <td>
-                <table style="width:44%; border: 0px solid #CCC; text-align: center;">
+            <td align="center">
+                <table style="width:84%; border: 0px solid #CCC; text-align: center;">
                   <tr>
                     <td style="border: 1px solid #CCC; font-size:12px;" width="50%">{{ $piso }}</td>
                     <td style="border: 1px solid #CCC; font-size:12px;" width="50%">{{ $area_techada }}</td>

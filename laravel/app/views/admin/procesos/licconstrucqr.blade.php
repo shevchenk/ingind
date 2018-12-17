@@ -202,6 +202,22 @@
                           </div>
                         </div>
 
+
+
+                          <div class="form-group row">
+                          <label for="" class="col-md-2 col-form-label">NOTA</label>
+                          <div class="col-md-6">
+                            <textarea  class="form-control" name="txt_nota" id="txt_nota" type="text" value="" placeholder="Agregar una nota..."></textarea>
+                          </div>
+                          <div class="col-md-3">
+                         
+                          </div>
+                          <div class="col-md-2">                            
+
+                          </div>
+                        </div>
+
+
                         <div class="form-group row">
                             <div class="col-md-12 text-center">
                             <button type="button" id="btnadd" name="btnadd" onclick="Agregar();" class="btn btn-primary">Guardar</button>

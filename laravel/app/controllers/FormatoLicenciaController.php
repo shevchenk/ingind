@@ -182,6 +182,9 @@ class FormatoLicenciaController extends \BaseController
             
             if(Input::get('fecha_recibo'))
                 $formatolic->fecha_recibo = Input::get('fecha_recibo');
+            
+            if(Input::get('nota'))
+                $formatolic->nota = Input::get('nota');
 
             $formatolic->anio = date('Y');
             $formatolic->estado = 1;
@@ -248,6 +251,14 @@ class FormatoLicenciaController extends \BaseController
         else if($mMes == '11') $mes_ac = 'Noviembre';
         else if($mMes == '12') $mes_ac = 'Diciembre';
 
+
+
+        if(isset($oData[0]->nota) && $oData[0]->nota != '' && $oData[0]->nota != null){
+            $mNote = '<tr><td><strong>NOTA: <br> </strong> '.$oData[0]->nota.'</td></tr>';
+        }else{
+            $mNote = '';
+        }
+
         $params = [
             'reporte'=>1,            
             'correlativo' => $oData[0]->correlativo,
@@ -283,7 +294,9 @@ class FormatoLicenciaController extends \BaseController
             'anio' => date("Y"),
             'tamano'=>$tamano,
             'vistaprevia'=>$vistaprevia,
-            'imagen'=>$png
+            'imagen'=>$png,
+
+            'nota'=>'c'
         ];
 
         $view = \View::make('admin.mantenimiento.templates.plantilla_lconstr', $params);
