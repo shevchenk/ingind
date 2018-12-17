@@ -296,7 +296,7 @@ class FormatoLicenciaController extends \BaseController
             'vistaprevia'=>$vistaprevia,
             'imagen'=>$png,
 
-            'nota'=>'c'
+            'nota'=>$mNote
         ];
 
         $view = \View::make('admin.mantenimiento.templates.plantilla_lconstr', $params);
