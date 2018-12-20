@@ -911,10 +911,7 @@ class DocumentoDigitalController extends \BaseController {
         // Gerencia Municipal
         // Gerencia de Modernización de la Gestión Municipal
         // Sub. Gerencia de Personal
-        if($area_id == 30){
-            $area = "G Secretaría General";
-        }
-        
+
         if($area_id == 21) //Gerencia de Gestion Ambiental
            $num_a = 7;        
         else
@@ -967,6 +964,12 @@ class DocumentoDigitalController extends \BaseController {
         {
             $area = $text;
         }        
+
+
+        if($area_id == 30){
+            $area = "Gerencia de Secretaría\r\n General";
+        }
+
 
         $font = 'fonts/carnet/Hack-Bold.ttf';
         $font2 = 'fonts/carnet/Hack-Regular.ttf';
