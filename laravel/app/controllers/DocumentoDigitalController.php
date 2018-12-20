@@ -967,7 +967,7 @@ class DocumentoDigitalController extends \BaseController {
 
 
         if($area_id == 30){
-            $area = "Gerencia de Secretaría\r\n General";
+            $area = "Gerencia de \r\nSecretaría General";
         }
 
 
