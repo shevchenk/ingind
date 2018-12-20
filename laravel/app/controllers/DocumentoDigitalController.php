@@ -911,6 +911,10 @@ class DocumentoDigitalController extends \BaseController {
         // Gerencia Municipal
         // Gerencia de Modernización de la Gestión Municipal
         // Sub. Gerencia de Personal
+        if($area_id == 30){
+            $area = "G Secretaría General";
+        }
+        
         if($area_id == 21) //Gerencia de Gestion Ambiental
            $num_a = 7;        
         else
