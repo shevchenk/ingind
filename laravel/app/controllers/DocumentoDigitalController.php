@@ -931,7 +931,7 @@ class DocumentoDigitalController extends \BaseController {
             }
             else
             {
-                $pos2 = strpos($nv_area,' ', $num_a); // $pos = 7, no 0
+                @$pos2 = strpos($nv_area,' ', $num_a); // $pos = 7, no 0
             
                 if ($pos2 !== false) {
                     $text .= "\r\n".substr($area,$pos+1, 20);
