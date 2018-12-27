@@ -316,7 +316,7 @@ footer .izq {
       echo '
       <tr>
         <td style="border: 1px solid #CCC;" width="50%">'.$key.'</td>
-        <td style="border: 1px solid #CCC;" width="50%">'.$value.substr(trim($value), -1)!='m'?' m2').'</td>
+        <td style="border: 1px solid #CCC;" width="50%">'.$value.(substr(trim($value), -1)!='m'?' m2':'').'</td>
       </tr>
 
       ';
