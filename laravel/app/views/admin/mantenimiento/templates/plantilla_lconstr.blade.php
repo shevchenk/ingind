@@ -311,12 +311,12 @@ footer .izq {
       
       $aPisos = json_decode($pisos);
       foreach ($aPisos as $key => $value) {
-        $tot_area+=$value;
+        $tot_area+=preg_replace("/[^0-9,.]/", "", $value);
 
       echo '
       <tr>
         <td style="border: 1px solid #CCC;" width="50%">'.$key.'</td>
-        <td style="border: 1px solid #CCC;" width="50%">'.$value.' m2</td>
+        <td style="border: 1px solid #CCC;" width="50%">'.$value.substr(trim($value), -1)!='m'?' m2').'</td>
       </tr>
 
       ';
