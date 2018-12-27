@@ -311,7 +311,11 @@ footer .izq {
       
       $aPisos = json_decode($pisos);
       foreach ($aPisos as $key => $value) {
-        $tot_area+=preg_replace("/[^0-9,.]/", "", $value);
+
+        if(substr(trim($value), -1)!="m"){
+          $tot_area+=preg_replace("/[^0-9,.]/", "", $value);
+        }
+        
 
       echo '
       <tr>
