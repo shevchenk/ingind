@@ -88,7 +88,7 @@ hr {
     position: absolute;
     top:  50px; 
     left: 240px;
-    font-size: 13px;
+    font-size: 14px;
     padding: 0px;
     margin: 10px;
 }
@@ -223,9 +223,6 @@ footer .izq {
     <?php }
         if ($anio==2018) {  ?> 
         <h4 class="nombre-anio" style="margin-left: -22px;">“Año del Diálogo y la Reconciliación Nacional”</h4>
-    <?php } 
-        if ($anio==2019) {  ?> 
-        <h4 class="nombre-anio" style="margin-left: -25px;">“Año de la Lucha contra la Corrupción y la Impunidad”</h4>
     <?php } ?>
 	<h4 class="nombre-anio">&nbsp;</h4>
     <h4 class="nombre-vistaprevia">{{ $vistaprevia }}</h4>
@@ -266,7 +263,7 @@ footer .izq {
 .nombre-anio {
     font-style: italic;
     position: absolute;
-    top:  25px; 
+    top:  50px; 
     left: 120px;
     font-size: 12px;
     padding: 0px;
@@ -319,10 +316,7 @@ footer .izq {
           <?php else: ?>
               <h4 class="nombre-anio">“Año del Diálogo y la Reconciliación Nacional”</h4>
           <?php endif; ?>
-    <?php }  
-        if ($anio==2019) {  ?> 
-        <h4 class="nombre-anio" style="margin-left: -25px;">“Año de la Lucha contra la Corrupción y la Impunidad”</h4>
-    <?php }?>
+    <?php } ?>
 	<h4 class="nombre-anio">&nbsp;</h4>
     <h4 class="nombre-vistaprevia">{{ $vistaprevia }}</h4>
    <div class="qr">{{ $imagen }}</div>
