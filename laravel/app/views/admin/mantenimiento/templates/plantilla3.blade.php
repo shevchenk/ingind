@@ -223,7 +223,7 @@ footer .izq {
         <h4 class="nombre-anio" style="margin-left: -22px;">“Año del Diálogo y la Reconciliación Nacional”</h4>
     <?php }  
         if ($anio==2019) {  ?> 
-        <h4 class="nombre-anio" style="margin-left: -22px;">“Año de la Lucha contra la Corrupción y la Impunidad”</h4>
+        <h4 class="nombre-anio" style="margin-left: -25px;">“Año de la Lucha contra la Corrupción y la Impunidad”</h4>
     <?php } ?>
 	<h4 class="nombre-anio">&nbsp;</h4>
     <h4 class="nombre-vistaprevia">{{ $vistaprevia }}</h4>
@@ -319,7 +319,7 @@ footer .izq {
           <?php endif; ?>
     <?php }  
         if ($anio==2019) {  ?> 
-        <h4 class="nombre-anio" style="margin-left: -22px;">“Año de la Lucha contra la Corrupción y la Impunidad”</h4>
+        <h4 class="nombre-anio" style="margin-left: -25px;">“Año de la Lucha contra la Corrupción y la Impunidad”</h4>
     <?php } ?>
 	<h4 class="nombre-anio">&nbsp;</h4>
     <h4 class="nombre-vistaprevia">{{ $vistaprevia }}</h4>
