@@ -813,7 +813,7 @@ class CargarController extends BaseController {
         ini_set('memory_limit', '512M');
         if (isset($_FILES['carga']) and $_FILES['carga']['size'] > 0) {
 
-            $uploadFolder = 'txt/asignacion';
+            $uploadFolder = '/var/www/html/ingind/public/txt/asignacion';
 
             if (!is_dir($uploadFolder)) {
                 mkdir($uploadFolder);
@@ -846,7 +846,7 @@ class CargarController extends BaseController {
             /* $file=file('C:\\xampp\\www\\htdocs\\ingind\\public\\txt\\asignacion\\'.$archivoNuevo); */
             //$file=file('/home/m1ndepen/public_html/procesosmuni/public/txt/asignacion/'.$archivoNuevo);
 
-            $file = file('txt/asignacion/' . $archivoNuevo);
+            $file = file('/var/www/html/ingind/public/txt/asignacion/' . $archivoNuevo);
             $tipoTramite['01'] = 'EN TRAMITE';
             $tipoTramite['02'] = 'ANULADO';
             $tipoTramite['03'] = 'RESUELTO';
