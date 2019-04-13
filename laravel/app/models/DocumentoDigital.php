@@ -91,17 +91,9 @@ class DocumentoDigital extends Base {
                                     $inicio = date('Y-m-d', $inicio);    
                                 }
                                 
-                                $query->whereRaw('  ((DATE(dd.created_at) BETWEEN "'.$inicio.'" AND "'.$fin.'")
-                                                    or ((SELECT COUNT(r.id) 
-                                                    FROM rutas r 
-                                                    where r.estado=1 AND dd.id=r.doc_digital_id)=0 AND 
-
-                                                    (SELECT COUNT(r.id)
-                                                    FROM rutas r 
-                                                    INNER JOIN rutas_detalle as rd on r.id=rd.ruta_id and rd.estado=1 and rd.condicion=0
-                                                    INNER JOIN rutas_detalle_verbo as rdv on rdv.ruta_detalle_id=rd.id and rdv.estado=1
-                                                    where r.estado=1 AND dd.id=rdv.doc_digital_id)=0
-                                                    ))');
+                                $query->whereRaw('  (
+                                                    (DATE(dd.created_at) BETWEEN "'.$inicio.'" AND "'.$fin.'")
+                                                    )');
                             
                         }
                     )->whereRaw( 
